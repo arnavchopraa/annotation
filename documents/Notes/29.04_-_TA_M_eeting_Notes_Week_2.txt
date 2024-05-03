@@ -1,0 +1,88 @@
+Notes Week 2
+
+Catch up:
+- we need review code of conduct
+- we need to get in touch with the coach
+
+
+What slowed us down:
+- a lot of information as we just started
+- waiting on getting to know the clients expectations
+how could we fix this: gitlab issues
+
+
+Whats left of the project planning:
+- risk analysys
+- review feasability study
+- add more requiremens engineering
+- development approach
+- we have enough scientific sources ( although some may need to be changed from websites to scientific articles )
+( references will be checked by research team) reference = scientific article ( exp: on google scholar )
+
+
+Work split:
+calin - scientific resources
+radu - rephrasing
+stefan - development approach
+rebecca - review
+
+
+Code of Conduct:
+- needs review
+
+
+Application scenarios:
+- we can use the libraries ( but we would still need to work on something else)
+- if we dont use it, we can write about it and explain why we didn't
+
+- this week we can start coding the application ( after the deadline for the project plan )
+
+
+Pipeline:
+
+- calin is working on it
+
+what should fail pipeline:
+- checkstyle ( indentation, long line, max method parameters, javadoc only for the code part )
+- code not running
+- tests failing
+
+
+
+
+Organizational ( next week ):
+
+- ta meeting - wednesday 16:00 ( pc-1 )
+- client - wednesday 10:00
+- contact the coach!
+- midterm meeting will be in week 6
+- endterm - monday preffered by client
+
+- we could do more thorough task division
+- think about the tasks for next week
+
+- talk to client to maybe add more requirements
+
+- will we receive feedback on pipeline? no
+
+- gitlab:
+introduce approval rule - each merge request requires an approval
+
+Requirements Engineering:
+- need more for must's ( needs to be enough work for at least 5-6 weeks )
+- we could move the shoulds relating to annotation tool to must
+
+- all sections of moscow should be roughly equal?
+yes, it's a general rule
+- don't leave won't haves with only 2-3 things (think about things that people would expect from the tool, but it doesn't do them )
+
+
+Feedback on the agenda:
+- add timestamps
+
+
+
+
+
+
+
