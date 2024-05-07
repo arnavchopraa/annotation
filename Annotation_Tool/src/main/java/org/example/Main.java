@@ -10,6 +10,13 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        testFunctionality();
+    }
+
+    /**
+     * This method tests the retrieval of the annotations from the MySQL database.
+     */
+    public static void testFunctionality() {
         Connection connection = DBConnection.startConnection("jdbc:mysql://localhost:3306/annotation");
         StringBuilder sb = new StringBuilder();
         sb.append("select codeContent from annotations where id = ");
