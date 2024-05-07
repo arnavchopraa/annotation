@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Annotations</title>
+    <link rel="stylesheet" type="text/css" href="Home.css">
+</head>
+
+<body>
+    <div id="controls">
+        <input type="file" id="fileInput" accept="application/pdf">
+        <button id="convertToPDFButton">Convert to PDF</button>
+    </div>
+
+    <div id="pdfContainer">
+<!--        use pdfText instead of pdfObject after text extraction from PDF is finalized -->
+        <div id="pdfText"></div>
+<!--        <iframe id="pdfObject" class="pdf" src=""></iframe>-->
+    </div>
+
+    <div id="annotationsContainer"></div>
+
+    <script src="Home.js"></script>
+</body>
+
+</html>
