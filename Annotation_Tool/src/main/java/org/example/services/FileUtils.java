@@ -11,7 +11,7 @@ public class FileUtils {
     public static File convertToFile(MultipartFile multipartFile) {
         if(multipartFile.getOriginalFilename() == null)
             throw new IllegalArgumentException("Filename cannot be null");
-        File file = new File("test.pdf");
+        File file = new File(System.getProperty("java.io.tmpdir") + "/" + multipartFile.getOriginalFilename());
         try {
             FileOutputStream stream = new FileOutputStream(file);
             stream.write(multipartFile.getBytes());
