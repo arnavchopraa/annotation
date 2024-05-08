@@ -11,20 +11,14 @@ public class DBConnection {
      *
      * @return an object of type connection
      */
-    private DBConnection() {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/annotation"   , "root", "Universitate!1");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static Connection getConnection() {
-        if (connection == null) {
-            synchronized (DBConnection.class) {
-                if (connection == null) {
-                    new DBConnection();
-                }
+        if(connection == null) {
+            System.out.println("con null");
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/annotation", "root", "Universitate!1");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return connection;
@@ -39,6 +33,7 @@ public class DBConnection {
      */
     public static List<String> queryExecution(String query, Connection connection) {
         try {
+            System.out.println(connection);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             List<String> result = new ArrayList<>();

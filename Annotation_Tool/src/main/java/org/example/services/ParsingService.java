@@ -17,6 +17,7 @@ import org.example.utils.PairUtils;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,12 +56,13 @@ public class ParsingService {
     }
 
     public String createQuery(String key) {
+        Connection con =  DBConnection.getConnection();
         StringBuilder sb = new StringBuilder();
         sb.append("select codeContent from annotations where id = ");
         sb.append("'");
         sb.append(key);
         sb.append("'");
-        List<String> results = DBConnection.queryExecution(sb.toString(), DBConnection.getConnection());
+        List<String> results = DBConnection.queryExecution(sb.toString(), con);
         return results.get(0);
     }
 
