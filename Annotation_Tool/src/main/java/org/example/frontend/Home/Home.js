@@ -23,20 +23,20 @@ function process(file) {
     })
     .then(response => {
             if(response.ok) {
-                return response.json(); // Assuming the response is JSON
+                return response.json();
             } else {
                 throw new Error('Failed to fetch');
             }
         })
     .then(data => {
         if(data.text) {
-            pdfText.innerHTML = data.text;
+            pdfText.innerHTML = data.text.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
         } else {
             pdfText.innerHTML = ""; // Clear the container if no text is received
         }
 
         if(data.annotations) {
-            annotationsText.innerHTML = data.annotations;
+            annotationsText.innerHTML = data.annotations.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
         } else {
             annotationsText.innerHTML = ""; // Clear the container if no annotations are received
         }
