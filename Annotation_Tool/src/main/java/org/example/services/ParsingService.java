@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
+import org.example.utils.PairUtils;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -26,7 +27,7 @@ public class ParsingService {
      * @return the parsed text
      * @throws PDFException if the file is not of type pdf
      */
-    public String parsePDF(File file) throws PDFException {
+    public PairUtils parsePDF(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -40,13 +41,12 @@ public class ParsingService {
                         annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
-                        annotations = annotations + "\n" + a.getSubtype() + "\n";
+                        annotations = annotations + "\n" + a.getContents() + "\n";
                     }
                 }
             }
-            text = text + "\n\n" + annotations;
 
-            return text;
+            return new PairUtils(text, annotations);
 
         } catch (IOException e) {
             throw new PDFException(file.getName());
@@ -59,8 +59,8 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<String> parseFilesFromFolder(File file) throws PDFException {
-        List<String> parsed = new LinkedList<>();
+    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
+        List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : file.listFiles()) {
             if(f.isDirectory())
@@ -78,8 +78,8 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<String> parseFilesList(File... files) throws PDFException {
-        List<String> parsed = new LinkedList<>();
+    public List<PairUtils> parseFilesList(File... files) throws PDFException {
+        List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : files) {
             if(f.isDirectory())

@@ -16,6 +16,14 @@ body {
     overflow-y: auto;
 }
 
+#pdfText {
+    flex: 1; /* Grow to take remaining space */
+    border: none;
+    margin: 10px;
+    width: calc(100% - 25px); /* Adjust width to account for margin */
+    height: calc(100% - 25px); /* Adjust height to account for margin */
+}
+
 #annotationsContainer {
     float: right;
     width: 26%;
@@ -24,30 +32,15 @@ body {
     border: 2px solid #ccc;
 }
 
-/*iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+#annotationsText {
+    flex: 1; /* Grow to take remaining space */
     border: none;
-}*/
-
-#pdfText {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 99%;
-    height: 99%;
-    border: none;
+    margin: 10px;
+    width: calc(100% - 25px); /* Adjust width to account for margin */
+    height: calc(100% - 25px); /* Adjust height to account for margin */
 }
 
 button {
     margin-left: 10px;
     margin-right: 10px;
 }
-
-/*#convertToPDFButton {
-    position: absolute;
-    right: 0;
-}*/
