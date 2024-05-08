@@ -16,6 +16,13 @@ public class FrontendController {
 
     private final ParsingService parsingService = new ParsingService();
 
+    /**
+     * Endpoint for retrieving pdf files from frontend, and passing them to backend
+     * @param file received file from frontend
+     * @return 200 OK - Parsed text from the file
+     *         400 Bad Request - Conversion to PDF fails
+     *         400 Bad Request - Parsing PDF fails
+     */
     @PostMapping("/frontend")
     public ResponseEntity<String> retrieveFile(@RequestParam("file") MultipartFile file) {
         File PDFFile;

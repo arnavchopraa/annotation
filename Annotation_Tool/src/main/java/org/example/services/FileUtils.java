@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class FileUtils {
 
+    /**
+     * Method for converting a Spring MultipartFile to a Java.io File
+     * @param multipartFile Spring file
+     * @return Java.io file
+     */
     public static File convertToFile(MultipartFile multipartFile) {
         if(multipartFile.getOriginalFilename() == null)
             throw new IllegalArgumentException("Filename cannot be null");
