@@ -5,20 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBConnection {
+    private static Connection connection = null;
     /**
      * This method establishes the connection to a MySQL database.
      *
-     * @param URL the URL of the database to connect to
      * @return an object of type connection
      */
-    public static Connection startConnection(String URL) {
-        // url is of the form: "jdbc:subprotocolName:subnameURL" last name is for the schema of the db
-        Connection connection = null;
+    private DBConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(URL, "root", "Universitate!1");
-        } catch (Exception e) {
-            System.out.println(e);
+            connection = DriverManager.getConnection(, "root", "Universitate!1");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() {
+        if (connection == null) {
+            synchronized (DBConnection.class) {
+                if (connection == null) {
+                    new DBConnection();
+                }
+            }
         }
         return connection;
     }
