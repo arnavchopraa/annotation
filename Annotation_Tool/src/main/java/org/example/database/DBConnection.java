@@ -13,7 +13,7 @@ public class DBConnection {
      */
     private DBConnection() {
         try {
-            connection = DriverManager.getConnection(, "root", "Universitate!1");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/annotation"   , "root", "Universitate!1");
         } catch (SQLException e) {
             e.printStackTrace();
         }

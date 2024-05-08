@@ -10,6 +10,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.example.database.DBConnection;
 import org.example.exceptions.PDFException;
 import org.example.utils.PairUtils;
 
@@ -38,7 +39,7 @@ public class ParsingService {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for(PDAnnotation a : annotationList) {
                     if(a.getSubtype().equals("Highlight")) {
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + createQuery(a.getContents()) + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
                         annotations = annotations + "\n" + a.getContents() + "\n";
@@ -51,6 +52,16 @@ public class ParsingService {
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
+    }
+
+    public String createQuery(String key) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select codeContent from annotations where id = ");
+        sb.append("'");
+        sb.append(key);
+        sb.append("'");
+        List<String> results = DBConnection.queryExecution(sb.toString(), DBConnection.getConnection());
+        return results.get(0);
     }
 
     /**
