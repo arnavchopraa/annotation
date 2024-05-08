@@ -10,19 +10,18 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
-import org.example.database.DBConnection;
 import org.example.exceptions.PDFException;
 import org.example.utils.PairUtils;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ParsingService {
 
+    private QueryService queryService = new QueryService();
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
@@ -40,7 +39,7 @@ public class ParsingService {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for(PDAnnotation a : annotationList) {
                     if(a.getSubtype().equals("Highlight")) {
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + createQuery(a.getContents()) + "\n";
+                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
                         annotations = annotations + "\n" + a.getContents() + "\n";
@@ -53,17 +52,6 @@ public class ParsingService {
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
-    }
-
-    public String createQuery(String key) {
-        Connection con =  DBConnection.getConnection();
-        StringBuilder sb = new StringBuilder();
-        sb.append("select codeContent from annotations where id = ");
-        sb.append("'");
-        sb.append(key);
-        sb.append("'");
-        List<String> results = DBConnection.queryExecution(sb.toString(), con);
-        return results.get(0);
     }
 
     /**
