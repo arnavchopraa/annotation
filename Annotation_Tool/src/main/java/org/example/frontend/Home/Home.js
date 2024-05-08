@@ -35,21 +35,20 @@ function process(file) {
         })
     .then(data => {
         if(data.text) {
-            pdfText.innerHTML = data.text.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
+            pdfText.innerText = data.text;
         } else {
-            pdfText.innerHTML = ""; // Clear the container if no text is received
+            pdfText.innerText = ""; // Clear the container if no text is received
         }
 
         if(data.annotations) {
-            annotationsText.innerHTML = data.annotations.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
+            annotationsText.innerText = data.annotations;
         } else {
-            annotationsText.innerHTML = ""; // Clear the container if no annotations are received
+            annotationsText.innerText = "";
         }
 
-        errorMessage.innerHTML = "";
+        errorMessage.innerText = "";
     })
     .catch(error => {
-        errorMessage.innerHTML = "An error occurred: " + error.message;
-        errorMessage.style.color = "red";
+        errorMessage.innerText = "An error occurred: " + error.message;
     });
 }

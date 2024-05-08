@@ -38,7 +38,9 @@ public class ParsingService {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for(PDAnnotation a : annotationList) {
                     if(a.getSubtype().equals("Highlight")) {
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
                         annotations = annotations + "\n" + a.getContents() + "\n";
