@@ -43,7 +43,9 @@ public class ParsingService {
                         annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
-                        annotations = annotations + "\n" + a.getContents() + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + a.getContents() + "\n";
                     }
                 }
             }
