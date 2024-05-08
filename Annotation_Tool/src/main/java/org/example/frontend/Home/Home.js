@@ -10,8 +10,13 @@ fileInput.addEventListener('change', function(e) {
         return;
 
     process(file)
+    // render the PDF file => change after text extraction is finalized
+    // pdfObject.src = URL.createObjectURL(file);
 });
 
+/**
+    Method using fetch API to communicate with backend
+**/
 function process(file) {
     const formData = new FormData();
     formData.append("file", file);
