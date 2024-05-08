@@ -12,6 +12,9 @@ fileInput.addEventListener('change', function(e) {
     // pdfObject.src = URL.createObjectURL(file);
 });
 
+/**
+    Method using fetch API to communicate with backend
+**/
 function process(file) {
     const formData = new FormData();
     formData.append("file", file);
@@ -23,25 +26,24 @@ function process(file) {
     })
     .then(data => {
             console.log(data)
-            if(data.status == 200) {
-                console.log("OK!");
+            if(data.status == 200) { // If succeeds, pass flag to mark success
                 return {success: true, message: data.text()}
             }
-            else {
+            else { // If fails, pass error text
                 return data.text()
             }
         })
     .then(data => {
-            if(!data.success) {
+            if(!data.success) { // If fails, display error text through a label and pass flag
                 errorMessage.innerHTML = data
                 errorMessage.style.color = "red"
                 return {error: true}
-            } else {
+            } else { // If succeeds, pass the message
                 return data.message
             }
         })
     .then(data => {
-            if(!data.error) {
+            if(!data.error) { // If succeeds, hide the error message and display text
                 pdfText.innerHTML = data
                 errorMessage.innerHTML = ""
             }
