@@ -1,0 +1,27 @@
+image: openjdk:19-slim
+
+stages:
+  - build_annotation_tool
+
+variables:
+  #Java_Home: "/usr/lib/jvm/java-8-openjdk-amd64"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  GRADLE_USER_HOME: ".gradle" # Change the gradle user home to cache the gradle dependencies
+
+cache:
+  key: "$CI_COMMIT_REF_NAME"
+  paths: # Cache the gradle dependencies
+    - .gradle/wrapper 
+    - .gradle/caches
+
+before_script:
+  - echo "Setting up the environment..."
+  - export PATH=$JAVA_HOME/bin:$PATH # Exporting Java path
+
+build_annotation_tool:
+  stage: build_annotation_tool
+  script:
+    - echo "Building the project..."
+    - cd Annotation_Tool
+    - chmod +x ./gradlew  # Change the gradlew file permission
+    - ./gradlew build # Build the project
