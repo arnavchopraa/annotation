@@ -16,6 +16,8 @@ fileInput.addEventListener('change', function(e) {
 
 /**
     Method using fetch API to communicate with backend
+    It parses the file and updates the text and annotations containers
+    @param file: The file to be processed
 **/
 function process(file) {
     const formData = new FormData();

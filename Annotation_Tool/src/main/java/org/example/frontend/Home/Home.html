@@ -10,18 +10,18 @@
 
 <body>
     <div id="controls">
-        <input type="file" id="fileInput" accept="application/pdf">
-        <button id="convertToPDFButton" onclick="">Convert to PDF</button>
+        <input class="btn" type="file" id="fileInput" accept="application/pdf">
+        <button class="btn" id="convertToPDFButton" onclick="">Convert to PDF</button>
         <span id="error"></span>
     </div>
 
-    <div id="pdfContainer">
-        <div id="pdfText" contenteditable="false"></div>
+    <div class="container" id="pdfContainer">
+        <div class="text" id="pdfText" contenteditable="false"></div>
         <div id="highlightOverlay"></div>
     </div>
 
-    <div id="annotationsContainer">
-        <div id="annotationsText" contenteditable="false"></div>
+    <div class="container" id="annotationsContainer">
+        <div class="text" id="annotationsText" contenteditable="false"></div>
     </div>
 
     <script src="Home.js"></script>

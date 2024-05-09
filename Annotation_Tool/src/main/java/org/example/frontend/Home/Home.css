@@ -7,9 +7,11 @@ body {
     background-color: white;
 }
 
-input[type="file"], button {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
+#controls {
+    margin-bottom: 20px;
+}
+
+.btn {
     font-size: 14px;
     padding: none;
     color: #2F2504;
@@ -25,15 +27,12 @@ button {
 
 button:hover {
     background-color: #EFECE6;
+    cursor: pointer;
 }
 
-#controls {
-    margin-bottom: 20px;
-}
-
-#pdfContainer, #annotationsContainer {
+.container {
     position: relative;
-    height: 88vh; /* 90% of the viewport height */
+    height: 88vh; /* 88% of the viewport height */
     border: 2px solid #ccc;
 
     background-color: #F7F6F3;
@@ -50,7 +49,7 @@ button:hover {
     width: 26%;
 }
 
-#pdfText, #annotationsText {
+.text {
     flex-grow: 1; /* Grow to take remaining space */
     border: none;
 
@@ -67,4 +66,9 @@ button:hover {
 #error {
     font-size: 15px;
     color: #A9554C;
+}
+
+#convertToPDFButton {
+    position: absolute;
+    right: 0; /* Align to the right */
 }
