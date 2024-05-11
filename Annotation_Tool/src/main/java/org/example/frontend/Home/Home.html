@@ -11,12 +11,13 @@
 <body>
     <div id="controls">
         <input type="file" id="fileInput" accept="application/pdf">
-        <button id="convertToPDFButton">Convert to PDF</button>
+        <button id="convertToPDFButton" onclick="">Convert to PDF</button>
+        <span id="error"></span>
     </div>
 
     <div id="pdfContainer">
 <!--        use pdfText instead of pdfObject after text extraction from PDF is finalized -->
-        <div id="pdfText"></div>
+        <textarea id="pdfText"></textarea>
 <!--        <iframe id="pdfObject" class="pdf" src=""></iframe>-->
     </div>
 
