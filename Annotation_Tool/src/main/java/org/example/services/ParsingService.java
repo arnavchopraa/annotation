@@ -21,6 +21,7 @@ import java.util.List;
 
 public class ParsingService {
 
+    private QueryService queryService = new QueryService();
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
@@ -38,6 +39,7 @@ public class ParsingService {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for(PDAnnotation a : annotationList) {
                     if(a.getSubtype().equals("Highlight")) {
+                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";

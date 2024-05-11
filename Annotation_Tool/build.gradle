@@ -31,6 +31,11 @@ dependencies {
     testImplementation 'org.mockito:mockito-all:1.9.5'
 
     implementation 'org.apache.pdfbox:pdfbox:3.0.2'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    implementation 'com.oracle.database.jdbc:ojdbc8:19.6.0.0'
+    implementation 'com.oracle.database.jdbc:ucp:19.6.0.0'
 }
 
 test {
