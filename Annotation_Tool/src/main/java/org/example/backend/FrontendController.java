@@ -1,8 +1,9 @@
 package org.example.backend;
 
 import org.example.exceptions.PDFException;
-import org.example.services.FileUtils;
+import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
+import org.example.utils.PairUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,20 +25,20 @@ public class FrontendController {
      *         400 Bad Request - Parsing PDF fails
      */
     @PostMapping("/frontend")
-    public ResponseEntity<String> retrieveFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<PairUtils> retrieveFile(@RequestParam("file") MultipartFile file) {
         File PDFFile;
         try {
             PDFFile = FileUtils.convertToFile(file);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null), HttpStatus.BAD_REQUEST);
         }
 
-        String result;
+        PairUtils result;
         try {
             result = parsingService.parsePDF(PDFFile);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (PDFException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null), HttpStatus.BAD_REQUEST);
         }
     }
 }

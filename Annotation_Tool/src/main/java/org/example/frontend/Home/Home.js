@@ -1,12 +1,14 @@
 const fileInput = document.getElementById('fileInput');
-// const pdfObject = document.getElementById('pdfObject');
+
 const pdfText = document.getElementById('pdfText');
+const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
 
 fileInput.addEventListener('change', function(e) {
     var file = e.target.files[0];
     if (!file)
         return;
+
     process(file)
     // render the PDF file => change after text extraction is finalized
     // pdfObject.src = URL.createObjectURL(file);
@@ -14,6 +16,8 @@ fileInput.addEventListener('change', function(e) {
 
 /**
     Method using fetch API to communicate with backend
+    It parses the file and updates the text and annotations containers
+    @param file: The file to be processed
 **/
 function process(file) {
     const formData = new FormData();
@@ -24,28 +28,29 @@ function process(file) {
         method: "POST",
         body: formData
     })
-    .then(data => {
-            console.log(data)
-            if(data.status == 200) { // If succeeds, pass flag to mark success
-                return {success: true, message: data.text()}
-            }
-            else { // If fails, pass error text
-                return data.text()
+    .then(response => {
+            if(response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch');
             }
         })
     .then(data => {
-            if(!data.success) { // If fails, display error text through a label and pass flag
-                errorMessage.innerHTML = data
-                errorMessage.style.color = "red"
-                return {error: true}
-            } else { // If succeeds, pass the message
-                return data.message
-            }
-        })
-    .then(data => {
-            if(!data.error) { // If succeeds, hide the error message and display text
-                pdfText.innerHTML = data
-                errorMessage.innerHTML = ""
-            }
+        if(data.text) {
+            pdfText.innerText = data.text;
+        } else {
+            pdfText.innerText = ""; // Clear the container if no text is received
+        }
+
+        if(data.annotations) {
+            annotationsText.innerText = data.annotations;
+        } else {
+            annotationsText.innerText = "";
+        }
+
+        errorMessage.innerText = "";
     })
+    .catch(error => {
+        errorMessage.innerText = "An error occurred: " + error.message;
+    });
 }
