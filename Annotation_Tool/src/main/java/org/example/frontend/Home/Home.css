@@ -7,9 +7,11 @@ body {
     background-color: white;
 }
 
-input[type="file"], button {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
+#controls {
+    margin-bottom: 20px;
+}
+
+.btn {
     font-size: 14px;
     padding: none;
     color: #2F2504;
@@ -25,17 +27,13 @@ button {
 
 button:hover {
     background-color: #EFECE6;
+    cursor: pointer;
 }
 
-#controls {
-    margin-bottom: 20px;
-}
-
-#pdfContainer, #annotationsContainer {
+.container {
     position: relative;
-    height: 90vh; /* 90% of the viewport height */
+    height: 88vh; /* 88% of the viewport height */
     border: 2px solid #ccc;
-    overflow-y: auto;
 
     background-color: #F7F6F3;
 }
@@ -46,24 +44,31 @@ button:hover {
     float: left;
 }
 
-#pdfText, #annotationsText {
-    flex: 1; /* Grow to take remaining space */
-    border: none;
-    margin: 10px;
-
-    /* Adjust to account for margin */
-    width: calc(100% - 25px);
-    height: calc(100% - 25px);
-
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent text wrapping */
-
-    display: flex;
-    justify-content: center;
-}
-
 #annotationsContainer {
     float: right;
     width: 26%;
-    overflow-y: auto;
+}
+
+.text {
+    flex-grow: 1; /* Grow to take remaining space */
+    border: none;
+
+    margin-top: 10px; margin-bottom: 10px;
+    margin-left: 20px; margin-right: 20px;
+
+    /* Adjust to account for margin */
+    width: calc(100% - 25px);
+    height: calc(100% - 15px);
+
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+#error {
+    font-size: 15px;
+    color: #A9554C;
+}
+
+#convertToPDFButton {
+    position: absolute;
+    right: 0; /* Align to the right */
 }
