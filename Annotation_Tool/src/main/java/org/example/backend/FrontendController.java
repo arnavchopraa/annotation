@@ -1,5 +1,6 @@
 package org.example.backend;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.exceptions.PDFException;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
@@ -10,12 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class FrontendController {
 
     private final ParsingService parsingService = new ParsingService();
+    private final FileUtils fileUtils = new FileUtils();
 
     /**
      * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
@@ -30,7 +33,7 @@ public class FrontendController {
         try {
             PDFFile = FileUtils.convertToFile(file);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);
         }
 
         PairUtils result;
@@ -38,7 +41,25 @@ public class FrontendController {
             result = parsingService.parsePDF(PDFFile);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (PDFException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);
         }
     }
+
+    /**
+     * POST - Endpoint for exporting the parsed text and annotations to a PDF file
+     * @param text the text to be exported
+     * @param annotations the annotations to be exported
+     * @param response the response to be sent back to the frontend
+     */
+    /*@PostMapping("/frontend/export")
+    public ResponseEntity<String> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations,
+                          HttpServletResponse response) {
+        try {
+            fileUtils.generatePDF(text, annotations, response);
+
+            return new ResponseEntity<>("Exported successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Export failed", HttpStatus.BAD_REQUEST);
+        }
+    }*/
 }

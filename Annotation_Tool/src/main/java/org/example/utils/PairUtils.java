@@ -3,10 +3,18 @@ package org.example.utils;
 public class PairUtils {
     String text;
     String annotations;
+    String fileName;
 
-    public PairUtils(String text, String annotations) {
+    /**
+     * Constructor for PairUtils
+     * @param text the text within the PDF
+     * @param annotations the annotations within the PDF
+     * @param fileName the name of the file
+     */
+    public PairUtils(String text, String annotations, String fileName) {
         this.text = text;
         this.annotations = annotations;
+        this.fileName = fileName;
     }
 
     /**
@@ -24,6 +32,13 @@ public class PairUtils {
     }
 
     /**
+     * Getter for the file name.
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
      * Setter for the text within the PDF.
      */
     public void setText(String text) {
@@ -35,5 +50,12 @@ public class PairUtils {
      */
     public void setAnnotations(String annotations) {
         this.annotations = annotations;
+    }
+
+    /**
+     * Setter for the file name.
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
