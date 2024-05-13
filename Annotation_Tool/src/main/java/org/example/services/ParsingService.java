@@ -35,6 +35,7 @@ public class ParsingService {
             String text = pdfStripper.getText(document);
             System.out.println(text);
             // this gets rid of the references
+            text = removeAbstract(text);
             text = text.split("References\r\n")[0];
             text = preprocess(text);
             String annotations = "";
@@ -159,8 +160,10 @@ public class ParsingService {
             try {
                 if(text.charAt(i) == '-' && text.charAt(i - 1) != ' ') {
                     if(text.charAt(i + 1) == '\r' && text.charAt(i + 2) == '\n') {
+                        // skip over the indices containing EOL characters
                         i += 3;
                         while(text.charAt(i) != ' ') {
+                            // check if the next characters are EOL such that to not search next space
                             if(text.charAt(i) == '\r') {
                                 i ++;
                                 break;
@@ -168,21 +171,37 @@ public class ParsingService {
                             sb.append(text.charAt(i));
                             i ++;
                         }
-                        System.out.println();
+                        // after the word is finished add EOL
                         sb.append("\r\n");
                     }
+                    // hyphen is in the middle of the line
                     else {
                         sb.append(text.charAt(i));
                     }
                 }
+                // there is no hyphen
                 else {
                     sb.append(text.charAt(i));
                 }
                 i ++;
-            } catch (IndexOutOfBoundsException e) {
+            }
+            // if the hyphen goes past the last character of the file
+            catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * This method removes all content presented before the abstract
+     *
+     * @param text the text we want to remove the lines before the abstract from
+     * @return processed text
+     */
+    public String removeAbstract(String text) {
+        int index = text.indexOf("Abstract\r\n");
+        // skip over the Abstract\r\n characters
+        return text.substring(index + 10);
     }
 }
