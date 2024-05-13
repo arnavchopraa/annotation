@@ -1,6 +1,7 @@
 package org.example.backend;
 
 import org.example.exceptions.PDFException;
+import org.example.services.FileService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
@@ -18,7 +19,7 @@ import java.io.File;
 public class FrontendController {
 
     private final ParsingService parsingService = new ParsingService();
-    private final FileUtils fileUtils = new FileUtils();
+    private final FileService fileService = new FileService();
 
     /**
      * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
@@ -55,7 +56,7 @@ public class FrontendController {
     @PostMapping("/frontend/export")
     public ResponseEntity<byte[]> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations) {
         try {
-            byte[] pdfBytes = fileUtils.generatePDF(text, annotations);
+            byte[] pdfBytes = fileService.generatePDF(text, annotations);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "exported.pdf");
