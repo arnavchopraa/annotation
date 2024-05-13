@@ -4,7 +4,7 @@ const pdfText = document.getElementById('pdfText');
 const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
 
-const exportButton = document.getElementById('exportButton');
+//const exportButton = document.getElementById('exportButton');
 
 /**
     Detect when a file has been inputted and call the process method
@@ -62,14 +62,14 @@ function process(file) {
 /**
     Detect when the export button has been pressed and call the exportPDF method
 **/
-exportButton.addEventListener('click', function() {
+/*exportButton.addEventListener('click', function() {
     const text = pdfText.innerText;
     const annotations = annotationsText.innerText;
 
     var pdfContent = "Text: \n" + text + "\n\n" + "Annotations: \n" + annotations;
 
     exportPDF(text, annotations);
-});
+});*/
 
 /*function exportPDF(text, annotations, pdfContent) {
     var blob = new Blob([pdfContent], { type: 'text/plain' , endings: 'transparent'});
@@ -112,7 +112,7 @@ exportButton.addEventListener('click', function() {
  * @param text: The text to be included in the PDF
  * @param annotations: The annotations to be included in the PDF
  **/
-function exportPDF(text, annotations) {
+/*function exportPDF(text, annotations) {
     const formData = new FormData();
     formData.append("text", text);
     formData.append("annotations", annotations);
@@ -145,6 +145,6 @@ function exportPDF(text, annotations) {
     .catch(error => {
         errorMessage.innerText = "An error occurred: " + error.message;
     });
-}
+}*/
 
 

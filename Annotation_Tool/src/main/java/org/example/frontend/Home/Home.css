@@ -11,7 +11,7 @@ body {
     margin-bottom: 20px;
 }
 
-.btn {
+.btn, button {
     font-size: 14px;
     padding: none;
     color: #2F2504;
@@ -66,4 +66,32 @@ button:hover {
 #error {
     font-size: 15px;
     color: #A9554C;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+
+  /* Position to the right next to the export button */
+  top: 0;
+  left: 100%;
+
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content button {
+    display: block;
+    cursor: pointer;
+}
+
+/* On hover, show the dropdown menu */
+.dropdown:hover .dropdown-content {
+  display: block;
 }
