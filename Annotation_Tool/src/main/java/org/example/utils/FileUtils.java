@@ -73,6 +73,8 @@ public class FileUtils {
         PDType1Font contentFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
         int contentFontSize = 14;
 
+        // PDFBox cannot parse newlines and carriage returns
+        // Replace after data pre-processing is finished
         text = text.replaceAll("\\r", "");
         text = text.replaceAll("\\n", " ");
         annotations = annotations.replaceAll("\\r", "");
