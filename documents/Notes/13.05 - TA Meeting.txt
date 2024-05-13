@@ -1,0 +1,48 @@
+﻿Date: 16.45 - 17.45, 13.05.2024
+Present: Rebecca, Radu, Paul, Stefan, Calin, TA Andreea
+Chairman: Calin
+Note Taker: Rebecca
+
+
+Organizational:
+* are we still meeting next week? Monday, 20.05, 16:20
+* do we split the midterm presentation? wait until the next meeting to divide the roles
+* TA is available Tuesday, Wednesday, Friday of week 10 for the endterm => present the Tuesday idea => we have to book a room ourselves or ask Gosia for a room in VMB
+
+
+Agenda points:
+* progress check
+* code of conduct: we shouldn't be too ambitious because in real life it’s impossible to satisfy all client requirements
+
+
+General Notes:
+* next sprint issues:
+   * start working on the annotation tool - making it external so we don’t have to wait on a response for the brightspace integration
+   * if we don’t get brightspace response by Thursday, we should start working on some kind of login functionality
+   * allow users to edit text and annotations in real-time and save their changes to some database => changes done on metadata, the listener on HTML highlighting
+      * we can save the original version of the pdf to the database
+      * extract text from frontend and add it to the already-preserved version in the backend to preserve images and tables
+   * finish the first version of the tool => almost close to the end of scenario 1
+
+
+Questions:
+* who to contact about a server?
+* can we contact the coach about brightspace? not really, it’s doubtful, try to email him and see if he has any advice on this
+* should we have a separate repository for the first tool? no
+* are we on the right track? => The waiting around for the client is unfavorable
+* core quadrants assignment? is it an individual or group assignment? it’s probably a group assignment
+
+
+Feedback:
+* improve issues: detailed description, checks
+* milestones: move unfinished issues to new milestones after it ends
+* add a title/description to the milestones for each sprint
+* start creating sprint retrospectives!! => who worked on what, what issues we encountered, what went well, what didn’t 
+* pipeline: 35% pipeline pass for commits => increase the passing rate => merge pipeline
+* requirements? get updated must and should requirement progress by Thursday
+
+
+Conclusion:
+* buddycheck next week
+* talk to the client and coach when they would be available for endterm presentation because the slots will become available either this week or next week
+* pick up the pace from Thursday
