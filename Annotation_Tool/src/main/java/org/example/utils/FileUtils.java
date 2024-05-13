@@ -74,67 +74,108 @@ public class FileUtils {
         int contentFontSize = 14;
 
         // Calculate text height
-        float textHeight = (contentFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * contentFontSize;
+        float contentHeight = (contentFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * contentFontSize;
 
+        // Write text content
         PDPage page = new PDPage();
         document.addPage(page);
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
-
         contentStream.beginText();
-
         contentStream.setFont(titleFont, titleFontSize);
         contentStream.newLineAtOffset(100, 700);
         contentStream.showText("Text:");
+        contentStream.newLine();
 
-        // Split text into multiple lines
-        String[] textLines = text.split("\\n");
+        // Split text into multiple lines and handle word wrapping and page breaks
+        String[] words = text.split("\\s+");
+        StringBuilder line = new StringBuilder();
         float yOffset = 700; // Initial y-offset
-        for (String line : textLines) {
-            float lineWidth = contentFont.getStringWidth(line) / 1000 * contentFontSize;
-            if (yOffset - 1.5 * textHeight < 50) { // Check if there's enough space for the next line
-                contentStream.endText();
-                contentStream.close();
+        for (String word : words) {
+            // Calculate the width of the current line
+            float lineWidth = contentFont.getStringWidth(line + " " + word) / 1000 * contentFontSize;
+            if (lineWidth > 400) { // Check if the line exceeds the page width
+                contentStream.newLineAtOffset(0, -1.5f * contentHeight); // Move to the next line
+                contentStream.setFont(contentFont, contentFontSize); // Set content font
+                contentStream.showText(line.toString()); // Show the current line
+                line.setLength(0); // Reset the line buffer
+                line.append(word); // Start a new line with the current word
+                yOffset -= 1.5f * contentHeight; // Update y-offset
+                if (yOffset < 50) { // Check if there's enough space for the next line
+                    contentStream.endText(); // End current text
+                    contentStream.close(); // Close content stream
 
-                page = new PDPage();
-                document.addPage(page);
-                contentStream = new PDPageContentStream(document, page);
-
-                contentStream.beginText();
-                contentStream.setFont(titleFont, titleFontSize);
-                contentStream.newLineAtOffset(100, 700);
-                yOffset = 700;
+                    page = new PDPage(); // Create a new page
+                    document.addPage(page); // Add page to document
+                    contentStream = new PDPageContentStream(document, page); // Create new content stream
+                    contentStream.beginText(); // Begin new text
+                    contentStream.setFont(titleFont, titleFontSize); // Set title font
+                    contentStream.newLineAtOffset(100, 700); // Set new y-offset
+                    yOffset = 700; // Reset y-offset
+                }
+            } else {
+                if (line.length() > 0) {
+                    line.append(" "); // Add space between words
+                }
+                line.append(word); // Add the word to the current line
             }
-
-            contentStream.newLineAtOffset(0, (float)-1.5 * textHeight); // Adjust vertical offset
+        }
+        // Show the remaining text on the last line
+        if (line.length() > 0) {
+            contentStream.newLineAtOffset(0, -1.5f * contentHeight);
             contentStream.setFont(contentFont, contentFontSize);
-            contentStream.showText(line); // Show text without adding dot
-            yOffset -= 1.5 * textHeight; // Update yOffset
+            contentStream.showText(line.toString());
         }
 
-        // Calculate annotations height
-        float annotationsHeight = (contentFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * contentFontSize;
+        contentStream.endText();
+        contentStream.close();
 
-        // Split annotations into multiple lines
-        String[] annotationsLines = annotations.split("\\n");
-        for (String line : annotationsLines) {
-            float lineWidth = contentFont.getStringWidth(line) / 1000 * contentFontSize;
-            if (yOffset - 1.5 * annotationsHeight < 50) { // Check if there's enough space for the next line
-                contentStream.endText();
-                contentStream.close();
+        // Write annotations content on a new page
+        page = new PDPage();
+        document.addPage(page);
+        contentStream = new PDPageContentStream(document, page);
+        contentStream.beginText();
+        contentStream.setFont(titleFont, titleFontSize);
+        contentStream.newLineAtOffset(100, 700);
+        contentStream.showText("Annotations:");
+        contentStream.newLine();
 
-                page = new PDPage();
-                document.addPage(page);
-                contentStream = new PDPageContentStream(document, page);
+        // Split annotations into multiple lines and handle word wrapping and page breaks
+        words = annotations.split("\\s+");
+        line.setLength(0); // Reset the line buffer
+        yOffset = 700; // Reset y-offset
+        for (String word : words) {
+            float lineWidth = contentFont.getStringWidth(line + " " + word) / 1000 * contentFontSize;
+            if (lineWidth > 400) { // Check if the line exceeds the page width
+                contentStream.newLineAtOffset(0, -1.5f * contentHeight); // Move to the next line
+                contentStream.setFont(contentFont, contentFontSize); // Set content font
+                contentStream.showText(line.toString()); // Show the current line
+                line.setLength(0); // Reset the line buffer
+                line.append(word); // Start a new line with the current word
+                yOffset -= 1.5f * contentHeight; // Update y-offset
+                if (yOffset < 50) { // Check if there's enough space for the next line
+                    contentStream.endText(); // End current text
+                    contentStream.close(); // Close content stream
 
-                contentStream.beginText();
-                contentStream.setFont(titleFont, titleFontSize);
-                contentStream.newLineAtOffset(100, 700);
-                yOffset = 700;
+                    page = new PDPage(); // Create a new page
+                    document.addPage(page); // Add page to document
+                    contentStream = new PDPageContentStream(document, page); // Create new content stream
+                    contentStream.beginText(); // Begin new text
+                    contentStream.setFont(titleFont, titleFontSize); // Set title font
+                    contentStream.newLineAtOffset(100, 700); // Set new y-offset
+                    yOffset = 700; // Reset y-offset
+                }
+            } else {
+                if (line.length() > 0) {
+                    line.append(" "); // Add space between words
+                }
+                line.append(word); // Add the word to the current line
             }
-            contentStream.newLineAtOffset(0, (float)-1.5 * annotationsHeight); // Adjust vertical offset
+        }
+        // Show the remaining text on the last line
+        if (line.length() > 0) {
+            contentStream.newLineAtOffset(0, -1.5f * contentHeight);
             contentStream.setFont(contentFont, contentFontSize);
-            contentStream.showText(line);
-            yOffset -= 1.5 * annotationsHeight; // Update yOffset
+            contentStream.showText(line.toString());
         }
 
         contentStream.endText();
