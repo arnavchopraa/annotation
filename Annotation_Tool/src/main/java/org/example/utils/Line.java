@@ -12,6 +12,10 @@ public class Line {
     private float endX;
     private float endY;
 
+    /**
+     * Method that checks whether the line is horizontal or vertical
+     * @return true => Line is vertical; false => otherwise
+     */
     public boolean isVertical() {
         return startX == endX;
     }

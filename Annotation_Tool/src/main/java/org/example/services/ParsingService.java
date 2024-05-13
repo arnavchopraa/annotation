@@ -13,8 +13,10 @@ import org.apache.pdfbox.rendering.PageDrawerParameters;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
+import org.example.utils.Line;
 import org.example.utils.PageDrawerUtils;
 import org.example.utils.PairUtils;
+import org.example.utils.Table;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -41,6 +43,7 @@ public class ParsingService {
             PDPage myPage = document.getPage(3);
             PageDrawerUtils pdu = new PageDrawerUtils(myPage);
             pdu.processPage(myPage);
+            List<Line> lines = pdu.getLines();
             // TODO - *end testing lines*
 
             String annotations = "";
@@ -150,5 +153,14 @@ public class ParsingService {
         //annot = annot.replace("\n", "");
 
         return annot;
+    }
+
+    /**
+     * Given a list of lines, separates tables
+     * @param lines list of identified lines
+     * @return list of identified table coordinates
+     */
+    public List<Table> processLines(List<Line> lines) {
+        return null;
     }
 }
