@@ -33,7 +33,10 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-
+            System.out.println(text);
+            // this gets rid of the references
+            text = text.split("References\r\n")[0];
+            text = preprocess(text);
             String annotations = "";
             for(PDPage page : document.getPages()) {
                 List<PDAnnotation> annotationList = page.getAnnotations();
@@ -141,5 +144,45 @@ public class ParsingService {
         //annot = annot.replace("\n", "");
 
         return annot;
+    }
+
+    /**
+     * This method removes hyphenation from end of lines.
+     *
+     * @param text the string we want to remove unnecessary hyphenation from
+     * @return the processed text
+     */
+    public String preprocess(String text) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        while(i < text.length()) {
+            try {
+                if(text.charAt(i) == '-' && text.charAt(i - 1) != ' ') {
+                    if(text.charAt(i + 1) == '\r' && text.charAt(i + 2) == '\n') {
+                        i += 3;
+                        while(text.charAt(i) != ' ') {
+                            if(text.charAt(i) == '\r') {
+                                i ++;
+                                break;
+                            }
+                            sb.append(text.charAt(i));
+                            i ++;
+                        }
+                        System.out.println();
+                        sb.append("\r\n");
+                    }
+                    else {
+                        sb.append(text.charAt(i));
+                    }
+                }
+                else {
+                    sb.append(text.charAt(i));
+                }
+                i ++;
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 }
