@@ -8,9 +8,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.rendering.PageDrawerParameters;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
+import org.example.utils.PageDrawerUtils;
 import org.example.utils.PairUtils;
 
 import java.awt.geom.Rectangle2D;
@@ -33,6 +36,12 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
+
+            // TODO - Remove testing lines, replace with actual functionality
+            PDPage myPage = document.getPage(3);
+            PageDrawerUtils pdu = new PageDrawerUtils(myPage);
+            pdu.processPage(myPage);
+            // TODO - *end testing lines*
 
             String annotations = "";
             for(PDPage page : document.getPages()) {
