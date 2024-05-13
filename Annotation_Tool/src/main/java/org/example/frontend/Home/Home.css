@@ -77,7 +77,7 @@ button:hover {
   display: none;
   position: absolute;
 
-  /* Position to the right next to the export button */
+  /* Position to the right of the export button */
   top: 0;
   left: 100%;
 

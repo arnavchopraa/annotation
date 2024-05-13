@@ -58,6 +58,7 @@ function processFile(file) {
     });
 }
 
+
 const pdfConvert = document.getElementById('convertToPDFButton');
 const txtConvert = document.getElementById('convertToTxtButton');
 
@@ -118,53 +119,18 @@ function exportPDF(text, annotations) {
         }
     })
     .then(response => {
-        const pdfBlob = new Blob([response], { type: 'application/pdf' });
+        var url = window.URL.createObjectURL(response);
+        var anchor = document.createElement('a');
 
-        const url = URL.createObjectURL(pdfBlob);
+        anchor.href = url;
+        anchor.download = fileInput.name + ".pdf";
 
-        var link = document.createElement('a');
-        link.href = url;
-        link.download = fileInput.name + ".pdf";
-        link.click();
+        document.body.appendChild(anchor);
+        anchor.click();
 
-        URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(url);
     })
     .catch(error => {
         errorMessage.innerText = "An error occurred: " + error.message;
     });
 }
-
-
-/*function exportPDF(text, annotations, pdfContent) {
-    var blob = new Blob([pdfContent], { type: 'text/plain' , endings: 'transparent'});
-    var anchor = document.createElement('a');
-
-    anchor.download = fileInput.name;
-    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-    anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
-    anchor.click();
-
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-
-    /*var blob = new Blob([pdfContent], {type: 'text/plain', endings: 'transparent'});
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        window.navigator.msSaveOrOpenBlob(blob, fileInput.name);
-    } else {
-        var e = document.createEvent('MouseEvents'),
-        a = document.createElement('a');
-        a.download = "download.txt";
-        a.href = window.URL.createObjectURL(blob);
-        a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
-        e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        a.dispatchEvent(e);
-    }
-}*/

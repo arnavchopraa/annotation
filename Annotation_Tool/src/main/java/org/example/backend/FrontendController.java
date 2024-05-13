@@ -1,17 +1,17 @@
 package org.example.backend;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.example.exceptions.PDFException;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -53,13 +53,17 @@ public class FrontendController {
      *        400 Bad Request - The file cannot be created
      */
     @PostMapping("/frontend/export")
-    public ResponseEntity<File> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations) {
+    public ResponseEntity<byte[]> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations) {
         try {
-            File result = fileUtils.generatePDF(text, annotations);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            byte[] pdfBytes = fileUtils.generatePDF(text, annotations);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "exported.pdf");
+            headers.setContentLength(pdfBytes.length);
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new File(""), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }
