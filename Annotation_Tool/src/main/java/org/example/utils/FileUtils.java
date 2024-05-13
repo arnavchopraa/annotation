@@ -1,6 +1,5 @@
 package org.example.utils;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -11,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class FileUtils {
     /**
@@ -43,10 +40,9 @@ public class FileUtils {
      * Method for generating a PDF file from existing text and annotations
      * @param text the text modified by the user
      * @param annotations the annotations modified by the user
-     * @param response the response to be sent back to the frontend
      * @throws IOException if the file cannot be created
      */
-    /*public void generatePDF(String text, String annotations, HttpServletResponse response) throws IOException {
+    public File generatePDF(String text, String annotations) throws IOException {
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
@@ -59,12 +55,7 @@ public class FileUtils {
             document.save(tempFile);
             document.close();
 
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "attachment; filename=exported.pdf");
-            try (OutputStream out = response.getOutputStream()) {
-                Files.copy(tempFile.toPath(), out);
-                out.flush();
-            }
+            return tempFile;
         }
     }
 
@@ -75,18 +66,23 @@ public class FileUtils {
      * @param annotations the annotations to be written
      * @throws IOException if the text cannot be written
      */
-    /*public void writeToFile(PDPageContentStream contentStream, String text, String annotations) throws IOException {
+    public void writeToFile(PDPageContentStream contentStream, String text, String annotations) throws IOException {
         PDType1Font titleFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
         int titleFontSize = 16;
 
         PDType1Font contentFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
         int contentFontSize = 14;
 
+        text = text.replaceAll("\\r", "");
+        text = text.replaceAll("\\n", " ");
+        annotations = annotations.replaceAll("\\r", "");
+        annotations = annotations.replaceAll("\\n", " ");
+
         contentStream.beginText();
 
         contentStream.setFont(titleFont, titleFontSize);
         contentStream.newLineAtOffset(100, 700);
-        contentStream.showText("Text: \n");
+        contentStream.showText("Text:");
 
         contentStream.setFont(contentFont, contentFontSize);
         contentStream.newLine();
@@ -94,12 +90,12 @@ public class FileUtils {
 
         contentStream.setFont(titleFont, titleFontSize);
         contentStream.newLine();
-        contentStream.showText("Annotations: \n");
+        contentStream.showText("Annotations:");
 
         contentStream.setFont(contentFont, contentFontSize);
         contentStream.newLine();
         contentStream.showText(annotations);
 
         contentStream.endText();
-    }*/
+    }
 }

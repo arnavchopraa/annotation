@@ -49,17 +49,17 @@ public class FrontendController {
      * POST - Endpoint for exporting the parsed text and annotations to a PDF file
      * @param text the text to be exported
      * @param annotations the annotations to be exported
-     * @param response the response to be sent back to the frontend
+     * @return 200 OK - The exported PDF file
+     *        400 Bad Request - The file cannot be created
      */
-    /*@PostMapping("/frontend/export")
-    public ResponseEntity<String> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations,
-                          HttpServletResponse response) {
+    @PostMapping("/frontend/export")
+    public ResponseEntity<File> exportPDF(@RequestParam("text") String text, @RequestParam("annotations") String annotations) {
         try {
-            fileUtils.generatePDF(text, annotations, response);
-
-            return new ResponseEntity<>("Exported successfully", HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>("Export failed", HttpStatus.BAD_REQUEST);
+            File result = fileUtils.generatePDF(text, annotations);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new File(""), HttpStatus.BAD_REQUEST);
         }
-    }*/
+    }
 }

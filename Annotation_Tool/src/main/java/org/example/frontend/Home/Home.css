@@ -67,8 +67,3 @@ button:hover {
     font-size: 15px;
     color: #A9554C;
 }
-
-#convertToPDFButton {
-    position: absolute;
-    right: 0; /* Align to the right */
-}

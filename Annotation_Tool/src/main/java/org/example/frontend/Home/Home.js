@@ -4,7 +4,7 @@ const pdfText = document.getElementById('pdfText');
 const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
 
-const exportButton = document.getElementById('exportAsPDFButton');
+const exportButton = document.getElementById('exportButton');
 
 /**
     Detect when a file has been inputted and call the process method
@@ -32,12 +32,12 @@ function process(file) {
         body: formData
     })
     .then(response => {
-            if(response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Failed to fetch');
-            }
-        })
+        if(response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to fetch');
+        }
+    })
     .then(data => {
         if(data.text) {
             pdfText.innerText = data.text;
@@ -59,7 +59,6 @@ function process(file) {
     });
 }
 
-
 /**
     Detect when the export button has been pressed and call the exportPDF method
 **/
@@ -69,17 +68,29 @@ exportButton.addEventListener('click', function() {
 
     var pdfContent = "Text: \n" + text + "\n\n" + "Annotations: \n" + annotations;
 
-    exportPDF(text, annotations, pdfContent);
+    exportPDF(text, annotations);
 });
 
-function exportPDF(text, annotations, pdfContent) {
-    var blob = new Blob([pdfContent], { type: 'text/plain' }),
-        anchor = document.createElement('a');
+/*function exportPDF(text, annotations, pdfContent) {
+    var blob = new Blob([pdfContent], { type: 'text/plain' , endings: 'transparent'});
+    var anchor = document.createElement('a');
 
-    anchor.download = "hello.txt";
+    anchor.download = fileInput.name;
     anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-    anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+    anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
     anchor.click();
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+
     /*var blob = new Blob([pdfContent], {type: 'text/plain', endings: 'transparent'});
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveOrOpenBlob(blob, fileInput.name);
@@ -91,8 +102,8 @@ function exportPDF(text, annotations, pdfContent) {
         a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
         e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
         a.dispatchEvent(e);
-    }*/
-}
+    }
+}*/
 
 /**
  * Method using fetch API to communicate with backend
@@ -101,36 +112,39 @@ function exportPDF(text, annotations, pdfContent) {
  * @param text: The text to be included in the PDF
  * @param annotations: The annotations to be included in the PDF
  **/
-/*function exportPDF(text, annotations) {
-
+function exportPDF(text, annotations) {
     const formData = new FormData();
     formData.append("text", text);
     formData.append("annotations", annotations);
 
-    var endpoint = "http://localhost:8080/frontend/export"; // Endpoint for exporting PDF
+    var endpoint = "http://localhost:8080/frontend/export";
+
     fetch(endpoint, {
         method: "POST",
         body: formData
     })
     .then(response => {
         if(response.ok) {
-            // Initiate download process
-            response.blob().then(blob => {
-                const url = window.URL.createObjectURL(new Blob([blob.text]));
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'exported.pdf'; // Set the filename for download
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            });
+            return response.blob();
         } else {
-            throw new Error('Failed to export PDF');
+            throw new Error('Failed to fetch');
         }
+    })
+    .then(response => {
+        const pdfBlob = new Blob([response], { type: 'application/pdf' });
+
+        const url = URL.createObjectURL(pdfBlob);
+
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = fileInput.name + ".pdf";
+        link.click();
+
+        URL.revokeObjectURL(url);
     })
     .catch(error => {
         errorMessage.innerText = "An error occurred: " + error.message;
     });
-}*/
+}
 
 
