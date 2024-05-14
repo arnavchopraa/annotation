@@ -21,6 +21,7 @@ import org.example.utils.Table;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class ParsingService {
             PDPage myPage = document.getPage(3);
             PageDrawerUtils pdu = new PageDrawerUtils(myPage);
             pdu.processPage(myPage);
-            List<Line> lines = pdu.getLines();
+            List<Line> lines = mergeLines(pdu.getLines());
             // TODO - *end testing lines*
 
             String annotations = "";
@@ -161,6 +162,32 @@ public class ParsingService {
      * @return list of identified table coordinates
      */
     public List<Table> processLines(List<Line> lines) {
-        return null;
+
+    }
+
+    /**
+     * Given a list of Lines, merge lines that are close to each other
+     * @param lines list of lines extracted
+     * @return list of lines after executing the merges
+     */
+    public List<Line> mergeLines(List<Line> lines) {
+        float error = 0.4f; // define error parameter; Observed error is always 0.398, leave room for precision errors
+
+        Collections.sort(lines);
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            for(int i = 0;i < lines.size();i++) {
+                Line current = lines.get(i);
+                for(int j = i + 1;j < lines.size();j++) {
+                    Line other = lines.get(j);
+                    if(current.mergeWith(other, error)) {
+                        changes = true;
+                        lines.remove(j);
+                    }
+                }
+            }
+        }
+        return lines;
     }
 }
