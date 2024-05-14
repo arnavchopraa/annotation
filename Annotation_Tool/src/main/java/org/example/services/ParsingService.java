@@ -21,9 +21,7 @@ import org.example.utils.Table;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ParsingService {
 
@@ -39,13 +37,6 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-
-            // TODO - Remove testing lines, replace with actual functionality
-            PDPage myPage = document.getPage(3);
-            PageDrawerUtils pdu = new PageDrawerUtils(myPage);
-            pdu.processPage(myPage);
-            List<Line> lines = mergeLines(pdu.getLines());
-            // TODO - *end testing lines*
 
             String annotations = "";
             for(PDPage page : document.getPages()) {
@@ -63,6 +54,12 @@ public class ParsingService {
                         annotations = annotations + a.getContents() + "\n";
                     }
                 }
+
+                PageDrawerUtils pdu = new PageDrawerUtils(page);
+                pdu.processPage(page);
+                List<Line> lines = mergeLines(pdu.getLines());
+                List<Table> tables = processLines(lines);
+                text = removeTables(text, tables, page);
             }
 
             return new PairUtils(text, annotations);
@@ -162,7 +159,51 @@ public class ParsingService {
      * @return list of identified table coordinates
      */
     public List<Table> processLines(List<Line> lines) {
+        List<Line> horizontalLines = new ArrayList<>();
+        List<Line> verticalLines = new ArrayList<>();
+        List<Table> tables = new ArrayList<>();
+        Map<Line, Integer> correspondingTable = new HashMap<>();
 
+        for(Line l : lines) {           //splitting vertical and horizontal lines
+            if(l.isVertical())
+                verticalLines.add(l);
+            else
+                horizontalLines.add(l);
+        }
+
+        for(Line horizontal : horizontalLines) {
+            Table table = new Table(horizontal.getStartX(), horizontal.getStartY(), horizontal.getEndX(), horizontal.getEndY());
+            List<Line> addedLines = new ArrayList<>();
+            int pos = -1;
+
+            for(Line vertical : verticalLines) {
+                if(horizontal.intersectsWith(vertical)) {
+                    if(correspondingTable.containsKey(vertical)) {
+                        pos = correspondingTable.get(vertical);
+                        table = tables.get(pos);
+
+                        table.combineTable(horizontal);         //what if we need to combine 2 tables?
+                    }
+                    else {
+                        table.combineTable(vertical);
+                        addedLines.add(vertical);
+                    }
+                }
+            }
+
+            if(pos == -1) {
+                tables.add(table);
+                for(Line l : addedLines) {
+                    correspondingTable.put(l, tables.size() - 1);
+                }
+            }
+            else {
+                for(Line l : addedLines) {
+                    correspondingTable.put(l, pos);
+                }
+            }
+        }
+        return tables;
     }
 
     /**
@@ -188,6 +229,39 @@ public class ParsingService {
                 }
             }
         }
+        for(Line i: lines) {
+            System.out.println(i);
+        }
         return lines;
+    }
+
+    /**
+     * Remove the text present in the given tables from the specified text
+     * @param text Text to remove from
+     * @param tables Tables which contain the text that needs to be removed
+     * @param page Page in which the tables are located
+     * @return The initial text without the text in the tables
+     * @throws IOException if the text can't be read
+     */
+    public String removeTables(String text, List<Table> tables, PDPage page) throws IOException {
+        PDFTextStripperByArea stripperByArea = new PDFTextStripperByArea();
+        for(Table t : tables) {
+            float xStart = t.getTopLeftX();
+            float yStart = t.getBottomRightY();
+            float width = t.getBottomRightX() - xStart;
+            float height = t.getBottomRightY() - t.getTopLeftY();
+
+            PDRectangle pageSize = page.getMediaBox();
+            yStart = pageSize.getHeight() - yStart;
+
+            Rectangle2D.Float box = new Rectangle2D.Float(xStart, yStart, width, height);
+            stripperByArea.addRegion("table", box);
+            stripperByArea.extractRegions(page);
+
+            String remove = stripperByArea.getTextForRegion("table");
+
+            text = text.replace(remove, "");
+        }
+        return text;
     }
 }

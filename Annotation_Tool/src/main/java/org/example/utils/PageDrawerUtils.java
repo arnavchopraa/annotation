@@ -75,7 +75,6 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      */
     @Override
     public void moveTo(float x, float y) throws IOException {
-        System.out.println("line starts at: x = " + x + ",y = " + y + "\n");
         lastx = x;
         lasty = y;
         path.moveTo(x, y);
@@ -91,7 +90,6 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
     @Override
     public void lineTo(float x, float y) throws IOException {
         Line line = new Line(lastx, lasty, x, y);
-        System.out.println("line ends at: x = " + x + ",y = " + y + "\n");
         lines.add(line);
         path.lineTo(x, y);
     }
