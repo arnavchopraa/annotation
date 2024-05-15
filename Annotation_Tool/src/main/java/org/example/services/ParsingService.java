@@ -229,9 +229,6 @@ public class ParsingService {
                 }
             }
         }
-        for(Line i: lines) {
-            System.out.println(i);
-        }
         return lines;
     }
 

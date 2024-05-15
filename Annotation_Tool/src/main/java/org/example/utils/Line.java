@@ -80,9 +80,4 @@ public class Line implements Comparable<Line> {
     public String toString() {
         return "startX = " + this.startX + ", startY = " + this.startY + ", endX = " + this.endX + ", endY = " + this.endY;
     }
-
-    // TODO - unite vertical lines (add an error of approx 0.4)
-    // TODO - unite lines of a single table
-    // TODO - find out table coordinates
-    // TODO - Extract text from tables, remove them from PDF
 }
