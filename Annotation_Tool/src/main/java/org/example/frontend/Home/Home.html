@@ -10,17 +10,19 @@
 
 <body>
     <div id="controls">
-        <input type="file" id="fileInput" accept="application/pdf">
-        <button id="convertToPDFButton">Convert to PDF</button>
+        <input class="btn" type="file" id="fileInput" accept="application/pdf">
+        <button class="btn" id="convertToPDFButton" onclick="">Convert to PDF</button>
+        <span id="error"></span>
     </div>
 
-    <div id="pdfContainer">
-<!--        use pdfText instead of pdfObject after text extraction from PDF is finalized -->
-        <div id="pdfText"></div>
-<!--        <iframe id="pdfObject" class="pdf" src=""></iframe>-->
+    <div class="container" id="pdfContainer">
+        <div class="text" id="pdfText" contenteditable="false"></div>
+        <div id="highlightOverlay"></div>
     </div>
 
-    <div id="annotationsContainer"></div>
+    <div class="container" id="annotationsContainer">
+        <div class="text" id="annotationsText" contenteditable="false"></div>
+    </div>
 
     <script src="Home.js"></script>
 </body>
