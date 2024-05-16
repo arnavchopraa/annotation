@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class ParsingService {
 
@@ -54,6 +57,47 @@ public class ParsingService {
 
             return new PairUtils(text, annotations);
 
+        } catch (IOException e) {
+            throw new PDFException(file.getName());
+        }
+    }
+
+    public PairUtils parsePDFwithNer(File file) throws PDFException {
+        try {
+            PDDocument document = Loader.loadPDF(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(document);
+
+            String annotations = "";
+            for(PDPage page : document.getPages()) {
+                List<PDAnnotation> annotationList = page.getAnnotations();
+                for (PDAnnotation a : annotationList) {
+                    if (a.getSubtype().equals("Highlight")) {
+                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                    } else if (a.getSubtype().equals("Text")) {
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + a.getContents() + "\n";
+                    }
+                }
+            }
+            try {
+                String nerScriptPath = "../../python/org/example/ner.py";
+                ProcessBuilder pb = new ProcessBuilder("python3", nerScriptPath);
+                Process process = pb.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                String modifiedText = "";
+                while ((line = reader.readLine()) != null) {
+                    modifiedText += line;
+                }
+                return new PairUtils(modifiedText, annotations);
+            } catch (IOException e) {
+                throw new PDFException(file.getName());
+            }
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
