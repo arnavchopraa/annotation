@@ -8,22 +8,6 @@
   box-sizing: inherit;
 }
 
-html {
-  box-sizing: border-box;
-  font-size: var(--htmlFontSize);
-}
-
-body {
-  background-color: var(--bodyBackgroundColor);
-  color: var(--bodyColor);
-  font-family: var(--bodyFontFamily), var(--bodyFontFamilyFallback);
-  font-size: var(--bodyFontSize);
-  font-weight: var(--bodyFontWeight);
-  line-height: var(--bodyLineHeight);
-  margin: 0;
-  min-block-size: 100vh;
-}
-
 :root {
   --baseColor: #606468;
   --iconFill: var(--baseColor);
@@ -42,7 +26,7 @@ body {
 
   --formGap: 0.875rem;
 
-  --loginBorderRadus: 0.25rem;
+  --loginBorderRadius: 0.25rem;
   --loginColor: #eee;
 
   --loginInputBackgroundColor: #3b4148;
@@ -53,6 +37,22 @@ body {
   --loginSubmitBackgroundColor: #18293A;
   --loginSubmitColor: #eee;
   --loginSubmitHoverBackgroundColor: #1E3348;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: var(--htmlFontSize);
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+  color: var(--bodyColor);
+  font-family: var(--bodyFontFamily), var(--bodyFontFamilyFallback);
+  font-size: var(--bodyFontSize);
+  font-weight: var(--bodyFontWeight);
+  line-height: var(--bodyLineHeight);
+  margin: 0;
+  min-block-size: 100vh;
 }
 
 .align {
@@ -89,19 +89,6 @@ body {
   fill: var(--iconFill);
   inline-size: 1em;
   vertical-align: middle;
-}
-
-/* Anchor */
-
-a {
-  color: var(--anchorColor);
-  outline: 0;
-  text-decoration: none;
-}
-
-a:focus,
-a:hover {
-  text-decoration: underline;
 }
 
 /* Login Fields */
@@ -148,7 +135,7 @@ input[type="submit"] {
 .login input[type="text"],
 .login input[type="password"],
 .login input[type="submit"] {
-  border-radius: var(--loginBorderRadus);
+  border-radius: var(--loginBorderRadius);
   padding: 1rem;
 }
 
