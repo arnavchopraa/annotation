@@ -89,4 +89,5 @@ input[type="submit"]:focus, input[type="submit"]:hover {
 
 input[type="file"] {
     color: var(--buttonColor);
+    font-size: 14px;
 }
