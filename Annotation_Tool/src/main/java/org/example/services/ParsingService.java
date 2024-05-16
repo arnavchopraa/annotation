@@ -55,7 +55,7 @@ public class ParsingService {
                 }
             }
 
-            return new PairUtils(text, annotations);
+            return new PairUtils(text, annotations, file.getName());
 
         } catch (IOException e) {
             throw new PDFException(file.getName());
