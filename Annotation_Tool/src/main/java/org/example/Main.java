@@ -6,6 +6,11 @@ import org.example.services.ParsingService;
 import java.io.File;
 
 public class Main {
+    /**
+     * Initial main file
+     *
+     * @param args args to main
+     */
     public static void main(String[] args) {
 
         ParsingService ps = new ParsingService();
