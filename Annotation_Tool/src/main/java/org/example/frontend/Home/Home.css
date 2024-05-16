@@ -8,9 +8,9 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    font-size: 0.875rem
+    font-size: 18px;
     line-height: 30.8px;
-    color: #2F2504;
+    color: #E0E1DD;
     background-color: #2c3338;
 }
 
@@ -78,7 +78,8 @@ input[type="submit"] {
   cursor: hover;
 
   border-radius: var(--buttonBorderRadius);
-  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 input[type="submit"]:focus, input[type="submit"]:hover {

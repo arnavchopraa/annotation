@@ -4,6 +4,8 @@ const pdfText = document.getElementById('pdfText');
 const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
 
+var fileName; // Global variable to store the name of the input file
+
 /**
     * Detect when a file has been inputted and call the process method.
 **/
@@ -51,7 +53,7 @@ function processFile(file) {
         }
 
         errorMessage.innerText = "";
-        fileInput.name = data.fileName;
+        fileName = data.fileName;
     })
     .catch(error => {
         errorMessage.innerText = "An error occurred: " + error.message;
@@ -75,7 +77,7 @@ txtConvert.addEventListener('click', function() {
     var blob = new Blob([pdfContent], { type: 'text/plain' , endings: 'transparent'});
     var anchor = document.createElement('a');
 
-    anchor.download = fileInput.name;
+    anchor.download = fileName;
     anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
     anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
     anchor.click();
@@ -123,7 +125,7 @@ function exportPDF(text, annotations) {
         var anchor = document.createElement('a');
 
         anchor.href = url;
-        anchor.download = fileInput.name + ".pdf";
+        anchor.download = fileName;
 
         document.body.appendChild(anchor);
         anchor.click();
