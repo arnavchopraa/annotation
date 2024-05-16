@@ -14,10 +14,13 @@ import org.example.exceptions.PDFException;
 import org.example.utils.PairUtils;
 
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class ParsingService {
 
@@ -60,6 +63,53 @@ public class ParsingService {
     }
 
     /**
+     * Parses a pdf file including text and annotations using NER
+     * @param file the file that needs to be parsed
+     * @return the parsed text
+     * @throws PDFException if the file is not of type pdf
+     */
+    public PairUtils parsePDFwithNer(File file) throws PDFException {
+        try {
+            PDDocument document = Loader.loadPDF(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(document);
+
+            String annotations = "";
+            for(PDPage page : document.getPages()) {
+                List<PDAnnotation> annotationList = page.getAnnotations();
+                for (PDAnnotation a : annotationList) {
+                    if (a.getSubtype().equals("Highlight")) {
+                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                    } else if (a.getSubtype().equals("Text")) {
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + a.getContents() + "\n";
+                    }
+                }
+            }
+            try {
+                String nerScriptPath = "../../python/org/example/ner.py";
+                ProcessBuilder pb = new ProcessBuilder("python3", nerScriptPath);
+                Process process = pb.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                String modifiedText = "";
+                while ((line = reader.readLine()) != null) {
+                    modifiedText += line;
+                }
+                return new PairUtils(modifiedText, annotations, file.getName());
+            } catch (IOException e) {
+                throw new PDFException(file.getName());
+            }
+        } catch (IOException e) {
+            throw new PDFException(file.getName());
+        }
+    }
+
+    /**
      * Recursively parses all pdfs in a given folder
      * @param file the folder from which to parse the files
      * @return the list of parsed texts from each file in the folder
@@ -68,7 +118,7 @@ public class ParsingService {
     public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
         List<PairUtils> parsed = new LinkedList<>();
 
-        for(File f : file.listFiles()) {
+        for(File f : Objects.requireNonNull(file.listFiles())) {
             if(f.isDirectory())
                 parseFilesFromFolder(f);
             else if(f.isFile())
