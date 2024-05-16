@@ -33,10 +33,12 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-            System.out.println(text);
             // this gets rid of the references
+            CaptionExtractionService.imageCoordinates(file);
+            // what about abstract??
             text = removeAbstract(text);
-            text = text.split("References\r\n")[0];
+            // still need to separate references and appendices
+            // remove bad hyphenation of the text (EOL)
             text = preprocess(text);
             String annotations = "";
             for(PDPage page : document.getPages()) {
@@ -46,7 +48,8 @@ public class ParsingService {
                         //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
-                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))
@@ -201,7 +204,7 @@ public class ParsingService {
      */
     public String removeAbstract(String text) {
         int index = text.indexOf("Abstract\r\n");
-        // skip over the Abstract\r\n characters
+        // skip over the Abstract\r\n characters (Abstract\r\n is 10 characters)
         return text.substring(index + 10);
     }
 }
