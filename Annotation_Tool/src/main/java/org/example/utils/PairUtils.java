@@ -28,6 +28,7 @@ public class PairUtils {
 
     /**
      * Getter for the text within the PDF.
+     * @return the text within the PDF
      */
     public String getText() {
         return text;
@@ -35,6 +36,7 @@ public class PairUtils {
 
     /**
      * Getter for the annotations within the PDF.
+     * @return the annotations within the PDF
      */
     public String getAnnotations() {
         return annotations;
@@ -42,6 +44,7 @@ public class PairUtils {
 
     /**
      * Getter for the file name.
+     * @return the file name
      */
     public String getFileName() {
         return fileName;
@@ -49,6 +52,7 @@ public class PairUtils {
 
     /**
      * Setter for the text within the PDF.
+     * @param text the text within the PDF
      */
     public void setText(String text) {
         this.text = text;
@@ -56,6 +60,7 @@ public class PairUtils {
 
     /**
      * Setter for the annotations within the PDF.
+     * @param annotations the annotations within the PDF
      */
     public void setAnnotations(String annotations) {
         this.annotations = annotations;
@@ -63,6 +68,7 @@ public class PairUtils {
 
     /**
      * Setter for the file name.
+     * @param fileName the file name
      */
     public void setFileName(String fileName) {
         this.fileName = fileName;

@@ -2,7 +2,6 @@ package org.example.services;
 
 import org.example.database.DBConnection;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class QueryService {
      * This method queries the database for a code associated to a piece of text
      * and returns the text.
      *
-     * @param key
+     * @param key the key to be queried
      * @return the text associated with the query
      */
     public String queryResults(String key) {

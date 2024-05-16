@@ -18,9 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class ParsingService {
 
@@ -57,47 +54,6 @@ public class ParsingService {
 
             return new PairUtils(text, annotations, file.getName());
 
-        } catch (IOException e) {
-            throw new PDFException(file.getName());
-        }
-    }
-
-    public PairUtils parsePDFwithNer(File file) throws PDFException {
-        try {
-            PDDocument document = Loader.loadPDF(file);
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String text = pdfStripper.getText(document);
-
-            String annotations = "";
-            for(PDPage page : document.getPages()) {
-                List<PDAnnotation> annotationList = page.getAnnotations();
-                for (PDAnnotation a : annotationList) {
-                    if (a.getSubtype().equals("Highlight")) {
-                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                    } else if (a.getSubtype().equals("Text")) {
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        annotations = annotations + a.getContents() + "\n";
-                    }
-                }
-            }
-            try {
-                String nerScriptPath = "../../python/org/example/ner.py";
-                ProcessBuilder pb = new ProcessBuilder("python3", nerScriptPath);
-                Process process = pb.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                String modifiedText = "";
-                while ((line = reader.readLine()) != null) {
-                    modifiedText += line;
-                }
-                return new PairUtils(modifiedText, annotations);
-            } catch (IOException e) {
-                throw new PDFException(file.getName());
-            }
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
@@ -158,17 +114,17 @@ public class ParsingService {
         while(rectangle < quads.size()) {
 
             //getting the coordinates of the rectangle
-            COSFloat ULX = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
-            COSFloat ULY = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
-            COSFloat URX = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
-            COSFloat URY = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
-            COSFloat LLX = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
-            COSFloat LLY = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
+            COSFloat ulx = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
+            COSFloat uly = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
+            COSFloat urx = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
+            COSFloat ury = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
+            COSFloat llx = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
+            COSFloat lly = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
 
-            float xStart = ULX.floatValue() - 1;                    //x coordinate at the top left of the rectangle
-            float yStart = ULY.floatValue();                        //y coordinate at the top left of the rectangle
-            float width = URX.floatValue() - LLX.floatValue();      //width of rectangle
-            float height = URY.floatValue() - LLY.floatValue();     //height of the rectangle
+            float xStart = ulx.floatValue() - 1;                    //x coordinate at the top left of the rectangle
+            float yStart = uly.floatValue();                        //y coordinate at the top left of the rectangle
+            float width = urx.floatValue() - llx.floatValue();      //width of rectangle
+            float height = ury.floatValue() - lly.floatValue();     //height of the rectangle
 
             PDRectangle pageSize = page.getMediaBox();
             yStart = pageSize.getHeight() - yStart;             //aligning box with corresponding page

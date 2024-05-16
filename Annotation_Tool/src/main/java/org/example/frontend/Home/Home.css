@@ -24,7 +24,7 @@ body {
 
 #leftButtons {
     display: flex;
-    align-items: center; /* Align items vertically center */
+    align-items: center;
 }
 
 #nextFile {

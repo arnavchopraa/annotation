@@ -11,12 +11,21 @@
 <body>
     <div id="controls">
         <input class="btn" type="file" id="fileInput" accept="application/pdf">
-        <button class="btn" id="convertToPDFButton" onclick="">Convert to PDF</button>
+
+        <div class="dropdown">
+            <button class="btn" id="exportButton" value="Download">Export</button>
+            <div class="dropdown-content">
+                <button id="convertToPDFButton">.pdf</button>
+                <button id="convertToTxtButton">.txt</button>
+            </div>
+        </div>
+
         <span id="error"></span>
     </div>
 
     <div class="container" id="pdfContainer">
         <div class="text" id="pdfText" contenteditable="false"></div>
+        <div id="highlightOverlay"></div>
     </div>
 
     <div class="container" id="annotationsContainer">
