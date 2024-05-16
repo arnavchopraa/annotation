@@ -1,0 +1,69 @@
+﻿Date: 11.00 - 12.00, 16.05.2024
+Present: Rebecca, Radu, Paul, Stefan, Calin, TA Andreea
+Chairman: Calin
+Note Taker: Rebecca
+
+
+
+
+Organizational:
+* Midterm: 30th of May, 11 am
+* Endterm: preferably Monday after 1.30pm, but could do Tuesday at 11 am, but also  as well
+* Next meeting: 23.05 at 10am - 11am - regular meeting
+* Week 6 presentation meeting
+
+
+
+
+General Notes:
+* parse appendices as well (rn we’re ignoring everything below Reference)
+* make an interface to add new codes in the database
+* second scenario: 
+   * extract reports through Brightspace and assign them to supervisors (export everything from Brightspace and import everything to our tool)
+      * we need SSO integration - do basic login until we get in touch with the Brightspace people
+   * supervisor should see only the reports they’re assigned to through our tool
+   * they can open the pdf
+   * they should add annotations directly through our tool
+   * they should be able to submit the annotated pdf anonymously and for it to go back to the student on Brightspace => they should be saved into some form of database
+   * they should be able to download the pdf in its original form along with the new annotations, having the original images, tables, etc
+   * they should also be able to download the parsed text as a .txt, for LLM training purposes
+* see if we can batch-download PDFs and link the batch to the supervisor net id
+   * pdfs should be grouped by supervisors (?)
+   * add student number to the name of the pdf so it’s easier to match it
+* should be able to select text and select codes, as well as free type => you can’t add more codes, but coordinators should be able to define those codes
+* ideally, when the pdf is uploaded, it should have 0 annotations
+
+
+
+
+Questions:
+* Brightspace? They replied they received the email - Gosia will get in touch with the CEO of FeedbackFruits
+   * start building the website 
+* can we get a database running from TU Delft?
+   * will get back to you on that
+* when we parse a PDF, the line length is kept, it just adds a new line character, and we lose images and tables. is it necessary for the downloaded PDF to be in the same format, with the tables and everything
+   * yes, for the second scenario it must look the same
+   * after it has been annotated, it should be parsed into a text file and annotate it
+* how much do captions matter? 
+   * parse them separately, and mark them as related to an image, they should be separate
+   * main text, references, captions, and appendices
+   * references should be before appendices if people write it properly
+* will it always be just the 1st letter capitalized? ideally yes, but you can’t count on that
+* can you send us the contact information for a Brigthspace systems engineer from TU Delft? 
+   * yes, will do later
+
+
+
+
+Feedback:
+* just converting to PDF is sufficient, no need for new paragraphs => download the original one
+* the short lines don’t matter - it’s not necessary to remove the ‘\r’
+* make the website look a bit better
+* add a readme of the project
+   * include how to add new categories
+
+
+Conclusion:
+* Gosia should create a sendbox and give us access so we can experiment with batch-downloads
+* CONTACT BRIGHTSPACE!!!
+* get adding annotations functional
