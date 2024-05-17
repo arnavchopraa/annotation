@@ -8,8 +8,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
-import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.rendering.PageDrawerParameters;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
@@ -23,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ParsingService {
@@ -72,6 +69,12 @@ public class ParsingService {
         }
     }
 
+    /**
+     *
+     * @param file File from which to parse
+     * @return Pair utils containing the modified text and annotations
+     * @throws PDFException
+     */
     public PairUtils parsePDFwithNer(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
@@ -168,17 +171,17 @@ public class ParsingService {
         while(rectangle < quads.size()) {
 
             //getting the coordinates of the rectangle
-            COSFloat ULX = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
-            COSFloat ULY = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
-            COSFloat URX = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
-            COSFloat URY = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
-            COSFloat LLX = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
-            COSFloat LLY = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
+            COSFloat ulx = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
+            COSFloat uly = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
+            COSFloat urx = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
+            COSFloat ury = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
+            COSFloat llx = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
+            COSFloat lly = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
 
-            float xStart = ULX.floatValue() - 1;                    //x coordinate at the top left of the rectangle
-            float yStart = ULY.floatValue();                        //y coordinate at the top left of the rectangle
-            float width = URX.floatValue() - LLX.floatValue();      //width of rectangle
-            float height = URY.floatValue() - LLY.floatValue();     //height of the rectangle
+            float xStart = ulx.floatValue() - 1;                    //x coordinate at the top left of the rectangle
+            float yStart = uly.floatValue();                        //y coordinate at the top left of the rectangle
+            float width = urx.floatValue() - llx.floatValue();      //width of rectangle
+            float height = ury.floatValue() - lly.floatValue();     //height of the rectangle
 
             PDRectangle pageSize = page.getMediaBox();
             yStart = pageSize.getHeight() - yStart;             //aligning box with corresponding page

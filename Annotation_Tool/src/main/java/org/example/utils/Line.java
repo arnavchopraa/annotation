@@ -50,8 +50,10 @@ public class Line implements Comparable<Line> {
         if(this.isVertical() != other.isVertical())
             return false;
 
-        float v1 = (float) Math.sqrt((this.getEndX() - other.getStartX()) * (this.getEndX() - other.getStartX()) + (this.getEndY() - other.getStartY()) * (this.getEndY() - other.getStartY()));
-        float v2 = (float) Math.sqrt((this.getStartX() - other.getEndX()) * (this.getStartX() - other.getEndX()) + (this.getStartY() - other.getEndY()) * (this.getStartY() - other.getEndY()));
+        float v1 = (float) Math.sqrt((this.getEndX() - other.getStartX()) * (this.getEndX() - other.getStartX()) +
+            (this.getEndY() - other.getStartY()) * (this.getEndY() - other.getStartY()));
+        float v2 = (float) Math.sqrt((this.getStartX() - other.getEndX()) * (this.getStartX() - other.getEndX()) +
+            (this.getStartY() - other.getEndY()) * (this.getStartY() - other.getEndY()));
         if(v1 < error) {
             this.endX = other.endX;
             this.endY = other.endY;

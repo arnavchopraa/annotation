@@ -20,45 +20,4 @@ public class PairUtils {
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
-    /**
-     * Getter for the text within the PDF.
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * Getter for the annotations within the PDF.
-     */
-    public String getAnnotations() {
-        return annotations;
-    }
-
-    /**
-     * Getter for the file name.
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * Setter for the text within the PDF.
-     */
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    /**
-     * Setter for the annotations within the PDF.
-     */
-    public void setAnnotations(String annotations) {
-        this.annotations = annotations;
-    }
-
-    /**
-     * Setter for the file name.
-     */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 }
