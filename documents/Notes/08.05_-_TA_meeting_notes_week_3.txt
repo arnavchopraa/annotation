@@ -1,0 +1,38 @@
+Notes week 3
+
+1. Catch up:
+ALL : Table of contents
+Stefan : 
+Radu : Connected frontend and backend through endpoints
+Paul : SQL Database for the annotations + dependencies on gradle
+Rebeca: Frontend 
+Calin: Pipeline + checkstyle
+
+2. Review project plan feedack
+
+Section 1.1: Rewrite, it is mostly a solution not the problem statement
+Section 1.2.3: We did not explain what tools we will use ( We are just using PDFBox )
+Section 3.1.2: We did not explain why we chose Java ( we chose based on the available frameworks )
+Section 3.1.3: We did not explain how we decide what is impractical
+Section 4.1.1: We did not explain what machine readable format is ( plain text )
+Section 4.2: No justifications for the numbers used + vague statement
+
+3. Review Table of Contents
+
+Everything looks good. The sections might change when we start writing the full report
+
+4. Split work for next week
+
+Calin: Apply ner to our output with a python script
+Stefan + Radu: Work on table parsing + start the annotation tool
+Rebeca: Export to PDF functionality
+Paul: Pre-processing
+
+5. TODO
+Brainstorm for new requirements
+Work on annotation tool and client request of using NER
+
+6. Additional Notes
+Midterm presentation : Thursday, May 30th, week 4.6 at 11:00 AM
+We are expected to finish must haves in week 8. Project seems too simplistic, so we will need to brainstorm for new requirements
+
