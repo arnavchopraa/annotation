@@ -104,7 +104,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations);
+                return new PairUtils(modifiedText, annotations, null);
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }
