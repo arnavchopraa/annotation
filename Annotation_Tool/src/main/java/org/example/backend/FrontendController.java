@@ -2,6 +2,7 @@ package org.example.backend;
 
 import org.example.exceptions.PDFException;
 import org.example.services.FileService;
+import org.example.services.QueryService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -61,5 +63,15 @@ public class FrontendController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * GET - Endpoint for retrieving the list of codes from the database
+     * @return 200 OK - List of codes
+     */
+    @GetMapping("/frontend/codes")
+    public List<String> getCodes() {
+        String query = "SELECT code FROM annotations";
+        return QueryService.queryExecution(query);
     }
 }
