@@ -1,0 +1,49 @@
+Notes Monday 20.5.2024:
+
+- Catching up:
+Rebecca on frontend: Pages that reflect client's desires for this week
+Table parsing done
+Stefan on preprocessing
+Radu on table processing and cleaning repository
+Calin finished python script
+Paul researching on captions
+
+- Organizational scheduling:
+Midterm presentation: 30th May 11:00 Mirzakhani (2.W950) in Building 28 (VMB)
+Endterm presentation: Client prefers Monday after 1 o'clock; TA prefers 1:00 - 2:30; Coach available anytime on Monday
+No separate TA meeting next week -> Only midterm presentation
+
+Midterm presentation:
+- Content: Check in -> everything done so far, issues with brightspace
+		-> Refinement on requirements: talk about that!!
+		-> Problem statement present
+		-> Live demo; Comments on code; README
+		-> Not worth talking about scrum too much, more about project
+		-> Q&A estimated: 10 minutes; total time of presentation is 15 minutes
+		-> Up to us whether script is necessary. Powerpoint is necessary, with slides.
+		-> Also talk about progress on requirements, what is left, how we plan to overcome future difficulties
+		-> At least one time everyone presents, but everyone should answer Q&A in both presentations
+- Presentation strategy does not really matter, up to us
+- Rebecca Radu and Calin in midterm presentation, Stefan Paul and someone else in the endterm.
+- Client has changed project expectations -> maybe reach compromise until midterm presentation
+- Requirements have to be updated because of this
+- Inform client on the compromises, and that we will not be finishing by Thursday
+- Client's promises are not kept or maybe delayed.
+- By the next meeting, we should have this cleared up 100%
+- Code first, then research (as focus)
+- It's expected that we have more code, more commits, more MR's. 
+- !! Way too little code -> start working more
+- Issues are not properly represented -> too little.
+- Contribution to MR's is not equal -> reviews, comments etc.
+- Code and Test contribution is not equal -> catch up on that
+
+Requirement split:
+- Login functionality maybe
+- Testing 
+- Create a global database
+- Database for PDF files.
+- Exporting files individually - Stefan
+- Supporting multiple files
+
+- On Thursday meeting with the client - be definitive so we can get back on track
+- Buddycheck: released this week
