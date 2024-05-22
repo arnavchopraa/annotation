@@ -107,7 +107,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations, null);
+                return new PairUtils(modifiedText, annotations, file.getName());
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }
@@ -122,14 +122,18 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
+    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
 
-        for(File f : file.listFiles()) {
-            if(f.isDirectory())
-                parseFilesFromFolder(f);
-            else if(f.isFile())
-                parsed.add(parsePDF(f));
+        if(file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                if (f.isDirectory())
+                    parsed.addAll(parseFilesFromFolder(f));
+                else if (f.isFile())
+                    parsed.add(parsePDF(f));
+            }
+        } else {
+            throw new IOException("Uploaded file is not a folder");
         }
 
         return parsed;
@@ -141,12 +145,12 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<PairUtils> parseFilesList(File... files) throws PDFException {
+    public List<PairUtils> parseFilesList(File... files) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : files) {
             if(f.isDirectory())
-                parseFilesFromFolder(f);
+                parsed.addAll(parseFilesFromFolder(f));
             else if(f.isFile())
                 parsed.add(parsePDF(f));
         }

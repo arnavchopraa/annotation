@@ -1,4 +1,4 @@
-package org.example.backend;
+package org.example.controllers;
 
 import org.example.exceptions.PDFException;
 import org.example.services.FileService;

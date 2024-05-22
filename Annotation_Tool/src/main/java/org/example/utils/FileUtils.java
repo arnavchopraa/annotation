@@ -1,16 +1,14 @@
 package org.example.utils;
 
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
+@NoArgsConstructor
 public class FileUtils {
-    /**
-     * Constructor for FileUtils
-     */
-    public FileUtils() {
-    }
+
 
     /**
      * Method for converting a Spring MultipartFile to a Java.io File
