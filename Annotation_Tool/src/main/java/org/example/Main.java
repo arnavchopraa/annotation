@@ -1,23 +1,18 @@
 package org.example;
 
-import org.example.exceptions.PDFException;
-import org.example.services.ParsingService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 
+@SpringBootApplication
 public class Main {
+    /**
+     * Initial main file
+     *
+     * @param args args to main
+     */
     public static void main(String[] args) {
-
-        ParsingService ps = new ParsingService();
-
-        //testing
-        File file = new File("C:\\Users\\stefa\\Desktop\\testSP\\sample3.pdf");
-
-        try {
-            System.out.println(ps.parsePDF(file));
-        } catch (PDFException e) {
-            System.out.println("Invalid PDF File: " + e.getMessage());
-        }
-
+        SpringApplication.run(Main.class, args);
     }
 }

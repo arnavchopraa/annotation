@@ -11,22 +11,27 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
+import org.example.utils.PairUtils;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class ParsingService {
 
+    private QueryService queryService = new QueryService();
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
      * @return the parsed text
      * @throws PDFException if the file is not of type pdf
      */
-    public String parsePDF(File file) throws PDFException {
+    public PairUtils parsePDF(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -37,17 +42,62 @@ public class ParsingService {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for(PDAnnotation a : annotationList) {
                     if(a.getSubtype().equals("Highlight")) {
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
-                        annotations = annotations + "\n" + a.getSubtype() + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + a.getContents() + "\n";
                     }
                 }
             }
-            text = text + "\n\n" + annotations;
 
-            return text;
+            return new PairUtils(text, annotations, file.getName());
 
+        } catch (IOException e) {
+            throw new PDFException(file.getName());
+        }
+    }
+
+    public PairUtils parsePDFwithNer(File file) throws PDFException {
+        try {
+            PDDocument document = Loader.loadPDF(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(document);
+
+            String annotations = "";
+            for(PDPage page : document.getPages()) {
+                List<PDAnnotation> annotationList = page.getAnnotations();
+                for (PDAnnotation a : annotationList) {
+                    if (a.getSubtype().equals("Highlight")) {
+                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                    } else if (a.getSubtype().equals("Text")) {
+                        if (!annotations.equals(""))
+                            annotations = annotations + "\n";
+                        annotations = annotations + a.getContents() + "\n";
+                    }
+                }
+            }
+            try {
+                String nerScriptPath = "../../python/org/example/ner.py";
+                ProcessBuilder pb = new ProcessBuilder("python3", nerScriptPath);
+                Process process = pb.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                String modifiedText = "";
+                while ((line = reader.readLine()) != null) {
+                    modifiedText += line;
+                }
+                return new PairUtils(modifiedText, annotations);
+            } catch (IOException e) {
+                throw new PDFException(file.getName());
+            }
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
@@ -59,8 +109,8 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<String> parseFilesFromFolder(File file) throws PDFException {
-        List<String> parsed = new LinkedList<>();
+    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
+        List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : file.listFiles()) {
             if(f.isDirectory())
@@ -78,8 +128,8 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<String> parseFilesList(File... files) throws PDFException {
-        List<String> parsed = new LinkedList<>();
+    public List<PairUtils> parseFilesList(File... files) throws PDFException {
+        List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : files) {
             if(f.isDirectory())
