@@ -62,6 +62,14 @@ public class ParsingService {
         }
     }
 
+    /**
+     * Parses a pdf file including text and annotations and applyes the NER model
+     *
+     * @param file the file that needs to be parsed
+     * @return the parsed text
+     * @throws PDFException if the file is not of type pdf
+     */
+
     public PairUtils parsePDFwithNer(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
@@ -94,7 +102,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations);
+                return new PairUtils(modifiedText, annotations, file.getName());
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }

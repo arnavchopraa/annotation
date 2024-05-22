@@ -20,12 +20,11 @@ public class FileService {
      * Method for generating a PDF file from existing text and annotations
      * @param text the text modified by the user
      * @param annotations the annotations modified by the user
+     * @return the PDF file as a byte array
      * @throws IOException if the file cannot be created
      */
     public byte[] generatePDF(String text, String annotations) throws IOException {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             PDDocument document = new PDDocument()) {
-
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); PDDocument document = new PDDocument()) {
             // PDFBox cannot parse newlines and carriage returns
             // Replace after data pre-processing is finished
             text = text.replaceAll("\\r", "");
@@ -42,10 +41,10 @@ public class FileService {
      * Helper method for writing text and annotations to a PDF file
      * @param text the text to be written
      * @param annotations the annotations to be written
+     * @param document the PDF document to write to
      * @throws IOException if the text cannot be written
      */
-    public void writeToFile(PDDocument document,
-                            String text, String annotations) throws IOException {
+    public void writeToFile(PDDocument document, String text, String annotations) throws IOException {
 
         float contentHeight = (contentFont.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * contentFontSize;
 
