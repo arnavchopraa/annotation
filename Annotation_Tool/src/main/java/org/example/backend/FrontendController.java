@@ -30,16 +30,16 @@ public class FrontendController {
      */
     @PostMapping("/frontend")
     public ResponseEntity<PairUtils> retrieveFile(@RequestParam("file") MultipartFile file) {
-        File PDFFile;
+        File pdfFile;
         try {
-            PDFFile = FileUtils.convertToFile(file);
+            pdfFile = FileUtils.convertToFile(file);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);
         }
 
         PairUtils result;
         try {
-            result = parsingService.parsePDF(PDFFile);
+            result = parsingService.parsePDF(pdfFile);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (PDFException e) {
             return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);

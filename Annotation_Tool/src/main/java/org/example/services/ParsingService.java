@@ -11,15 +11,16 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.exceptions.PDFException;
+import org.example.utils.Line;
+import org.example.utils.PageDrawerUtils;
 import org.example.utils.PairUtils;
+import org.example.utils.Table;
 
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ParsingService {
@@ -53,6 +54,12 @@ public class ParsingService {
                         annotations = annotations + a.getContents() + "\n";
                     }
                 }
+
+                PageDrawerUtils pdu = new PageDrawerUtils(page);
+                pdu.processPage(page);
+                List<Line> lines = mergeLines(pdu.getLines());
+                List<Table> tables = processLines(lines);
+                text = removeTables(text, tables, page);
             }
 
             return new PairUtils(text, annotations, file.getName());
@@ -62,6 +69,12 @@ public class ParsingService {
         }
     }
 
+    /**
+     *
+     * @param file File from which to parse
+     * @return Pair utils containing the modified text and annotations
+     * @throws PDFException
+     */
     public PairUtils parsePDFwithNer(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
@@ -94,7 +107,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations);
+                return new PairUtils(modifiedText, annotations, null);
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }
@@ -158,17 +171,17 @@ public class ParsingService {
         while(rectangle < quads.size()) {
 
             //getting the coordinates of the rectangle
-            COSFloat ULX = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
-            COSFloat ULY = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
-            COSFloat URX = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
-            COSFloat URY = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
-            COSFloat LLX = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
-            COSFloat LLY = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
+            COSFloat ulx = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
+            COSFloat uly = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
+            COSFloat urx = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
+            COSFloat ury = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
+            COSFloat llx = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
+            COSFloat lly = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
 
-            float xStart = ULX.floatValue() - 1;                    //x coordinate at the top left of the rectangle
-            float yStart = ULY.floatValue();                        //y coordinate at the top left of the rectangle
-            float width = URX.floatValue() - LLX.floatValue();      //width of rectangle
-            float height = URY.floatValue() - LLY.floatValue();     //height of the rectangle
+            float xStart = ulx.floatValue() - 1;                    //x coordinate at the top left of the rectangle
+            float yStart = uly.floatValue();                        //y coordinate at the top left of the rectangle
+            float width = urx.floatValue() - llx.floatValue();      //width of rectangle
+            float height = ury.floatValue() - lly.floatValue();     //height of the rectangle
 
             PDRectangle pageSize = page.getMediaBox();
             yStart = pageSize.getHeight() - yStart;             //aligning box with corresponding page
@@ -185,5 +198,114 @@ public class ParsingService {
         //annot = annot.replace("\n", "");
 
         return annot;
+    }
+
+    /**
+     * Given a list of lines, separates tables
+     * @param lines list of identified lines
+     * @return list of identified table coordinates
+     */
+    public List<Table> processLines(List<Line> lines) {
+        List<Line> horizontalLines = new ArrayList<>();
+        List<Line> verticalLines = new ArrayList<>();
+        List<Table> tables = new ArrayList<>();
+        Map<Line, Integer> correspondingTable = new HashMap<>();
+
+        for(Line l : lines) {           //splitting vertical and horizontal lines
+            if(l.isVertical())
+                verticalLines.add(l);
+            else
+                horizontalLines.add(l);
+        }
+
+        for(Line horizontal : horizontalLines) {
+            Table table = new Table(horizontal.getStartX(), horizontal.getStartY(), horizontal.getEndX(), horizontal.getEndY());
+            List<Line> addedLines = new ArrayList<>();
+            int pos = -1;
+
+            for(Line vertical : verticalLines) {
+                if(horizontal.intersectsWith(vertical)) {
+                    if(correspondingTable.containsKey(vertical)) {
+                        pos = correspondingTable.get(vertical);
+                        table = tables.get(pos);
+
+                        table.combineTable(horizontal);         //what if we need to combine 2 tables?
+                    }
+                    else {
+                        table.combineTable(vertical);
+                        addedLines.add(vertical);
+                    }
+                }
+            }
+
+            if(pos == -1) {
+                tables.add(table);
+                for(Line l : addedLines) {
+                    correspondingTable.put(l, tables.size() - 1);
+                }
+            }
+            else {
+                for(Line l : addedLines) {
+                    correspondingTable.put(l, pos);
+                }
+            }
+        }
+        return tables;
+    }
+
+    /**
+     * Given a list of Lines, merge lines that are close to each other
+     * @param lines list of lines extracted
+     * @return list of lines after executing the merges
+     */
+    public List<Line> mergeLines(List<Line> lines) {
+        float error = 0.4f; // define error parameter; Observed error is always 0.398, leave room for precision errors
+
+        Collections.sort(lines);
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            for(int i = 0;i < lines.size();i++) {
+                Line current = lines.get(i);
+                for(int j = i + 1;j < lines.size();j++) {
+                    Line other = lines.get(j);
+                    if(current.mergeWith(other, error)) {
+                        changes = true;
+                        lines.remove(j);
+                    }
+                }
+            }
+        }
+        return lines;
+    }
+
+    /**
+     * Remove the text present in the given tables from the specified text
+     * @param text Text to remove from
+     * @param tables Tables which contain the text that needs to be removed
+     * @param page Page in which the tables are located
+     * @return The initial text without the text in the tables
+     * @throws IOException if the text can't be read
+     */
+    public String removeTables(String text, List<Table> tables, PDPage page) throws IOException {
+        PDFTextStripperByArea stripperByArea = new PDFTextStripperByArea();
+        for(Table t : tables) {
+            float xStart = t.getTopLeftX();
+            float yStart = t.getBottomRightY();
+            float width = t.getBottomRightX() - xStart;
+            float height = t.getBottomRightY() - t.getTopLeftY();
+
+            PDRectangle pageSize = page.getMediaBox();
+            yStart = pageSize.getHeight() - yStart;
+
+            Rectangle2D.Float box = new Rectangle2D.Float(xStart, yStart, width, height);
+            stripperByArea.addRegion("table", box);
+            stripperByArea.extractRegions(page);
+
+            String remove = stripperByArea.getTextForRegion("table");
+
+            text = text.replace(remove, "");
+        }
+        return text;
     }
 }
