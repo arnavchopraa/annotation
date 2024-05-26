@@ -12,7 +12,6 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationHighlight;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,10 +38,10 @@ public class TestUtils {
      */
     public PDDocument generatePDF(String text) throws IOException {
         PDDocument document = new PDDocument();
-        PDPage first_page = new PDPage();
-        document.addPage(first_page);
+        PDPage firstPage = new PDPage();
+        document.addPage(firstPage);
 
-        PDPageContentStream pageContentStream = new PDPageContentStream(document, first_page);
+        PDPageContentStream pageContentStream = new PDPageContentStream(document, firstPage);
         pageContentStream.beginText();
         pageContentStream.setFont(font, fontSize);
         pageContentStream.newLineAtOffset(xOffset, yOffset);
@@ -70,6 +69,7 @@ public class TestUtils {
      * This method should only be used for testing purposes, as it has hardcoded behaviour <p>
      * This method can also be used for inspiration, in case future code requires adding annotations
      * @param document document to add annotations on
+     * @param content content of annotation
      * @throws IOException if the annotation could not be generated
      */
     public void addAnnotation(PDDocument document, String content) throws IOException {
