@@ -1,0 +1,11 @@
+NER - Named Entity Recognition, will recognize the entities in text
+Hugging phase - ML API, they have NER model ( will use python )
+
+TODO:
+- see if the output works with NER 
+- finishing the database
+- fix tables parsing
+- fix hyphens parsing
+- fix front page parsing
+
+

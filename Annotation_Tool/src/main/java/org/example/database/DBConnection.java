@@ -1,8 +1,6 @@
 package org.example.database;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DBConnection {
     private static Connection connection = null;
