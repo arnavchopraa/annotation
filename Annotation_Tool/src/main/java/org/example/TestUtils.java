@@ -30,6 +30,8 @@ public class TestUtils {
     private final float xOffset = 20.0f;
     private final float yOffset = 700.0f;
 
+    private static int fileNo = 0;
+
     /**
      * Generates a PDDocument from a string of text
      * @param text Given text
@@ -59,7 +61,9 @@ public class TestUtils {
      * @throws IOException if File could not be created / converted
      */
     public File convertPDFtoFile(PDDocument document) throws IOException {
-        final File file = new File(System.getProperty("java.io.tmpdir") + "/test.pdf");
+        String filename = "/test" + fileNo + ".pdf";
+        final File file = new File(System.getProperty("java.io.tmpdir") + filename);
+        fileNo++;
         //final File file = File.createTempFile("test", ".pdf");
         document.save(file);
         return file;
