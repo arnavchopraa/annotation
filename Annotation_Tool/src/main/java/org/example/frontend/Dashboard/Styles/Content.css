@@ -68,3 +68,37 @@
 .top-icons .nav-link {
     margin-bottom: 0px;
 }
+
+.content-all-pdfs {
+    overflow: auto;
+    margin-top: 40px;
+    margin-bottom: 60px;
+}
+
+.content-table {
+    padding-bottom: 10px;
+}
+
+.table-line {
+    display: grid;
+
+    grid-auto-columns: 1fr;
+    grid-column-gap: 40px;
+    grid-row-gap: 40px;
+
+    grid-template-columns: minmax(160px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr) minmax(50px, 1fr);
+    grid-template-rows: auto;
+
+    color: hsla(0, 0%, 70.59%, 1.00);
+}
+
+.table-line.first {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: hsla(0, 0%, 0%, 0.10);
+
+    color: hsla(0, 0%, 0%, 1.00);
+}
