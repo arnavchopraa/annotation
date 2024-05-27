@@ -59,7 +59,8 @@ public class TestUtils {
      * @throws IOException if File could not be created / converted
      */
     public File convertPDFtoFile(PDDocument document) throws IOException {
-        final File file = File.createTempFile("test", ".pdf");
+        final File file = new File(System.getProperty("java.io.tmpdir") + "/test.pdf");
+        //final File file = File.createTempFile("test", ".pdf");
         document.save(file);
         return file;
     }
