@@ -70,10 +70,10 @@ public class ParsingService {
     }
 
     /**
-     *
-     * @param file File from which to parse
-     * @return Pair utils containing the modified text and annotations
-     * @throws PDFException
+     * Parses a pdf file including text and annotations using NER
+     * @param file the file that needs to be parsed
+     * @return the parsed text
+     * @throws PDFException if the file is not of type pdf
      */
     public PairUtils parsePDFwithNer(File file) throws PDFException {
         try {
@@ -107,7 +107,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations, null);
+                return new PairUtils(modifiedText, annotations, file.getName());
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }
@@ -125,7 +125,7 @@ public class ParsingService {
     public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
         List<PairUtils> parsed = new LinkedList<>();
 
-        for(File f : file.listFiles()) {
+        for(File f : Objects.requireNonNull(file.listFiles())) {
             if(f.isDirectory())
                 parseFilesFromFolder(f);
             else if(f.isFile())
