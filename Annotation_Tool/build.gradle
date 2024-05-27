@@ -32,6 +32,7 @@ dependencies {
     testImplementation 'org.springframework:spring-test'
 
     implementation 'com.h2database:h2'
+    implementation 'commons-io:commons-io:2.7'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'

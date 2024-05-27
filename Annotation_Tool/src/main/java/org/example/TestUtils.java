@@ -1,5 +1,6 @@
 package org.example;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -62,7 +63,7 @@ public class TestUtils {
      */
     public File convertPDFtoFile(PDDocument document) throws IOException {
         String filename = "/test" + fileNo + ".pdf";
-        final File file = new File(System.getProperty("java.io.tmpdir") + filename);
+        final File file = new File(FileUtils.getTempDirectoryPath() + filename);
         fileNo++;
         //final File file = File.createTempFile("test", ".pdf");
         document.save(file);
