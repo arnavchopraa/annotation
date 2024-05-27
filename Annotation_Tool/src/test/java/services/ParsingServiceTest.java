@@ -75,7 +75,7 @@ public class ParsingServiceTest {
         try {
             File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
             PairUtils pair = ps.parsePDF(pdf);
-            //assertEquals(text + "\r\n", pair.getText());
+            assertEquals(text + "\r", pair.getText());
             assertEquals("", pair.getAnnotations());
             assertEquals(pdf.getName(), pair.getFileName());
             pdf.deleteOnExit();
