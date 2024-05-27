@@ -19,7 +19,12 @@ checkstyle {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.12"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
@@ -53,6 +58,7 @@ dependencies {
 
     testImplementation 'org.mockito:mockito-all:1.9.5'
 
+    implementation 'org.apache.pdfbox:pdfbox:3.0.2'
     implementation 'org.apache.pdfbox:pdfbox:3.0.2'
 
     runtimeOnly 'com.mysql:mysql-connector-j'

@@ -14,6 +14,7 @@ cache:
   paths: # Cache the gradle dependencies
     - .gradle/wrapper 
     - .gradle/caches
+    - build/
 
 before_script:
   - echo "Setting up the environment..."
