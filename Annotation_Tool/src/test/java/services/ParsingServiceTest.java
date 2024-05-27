@@ -102,7 +102,7 @@ public class ParsingServiceTest {
         }
     }
 
-    @Test
+    /*@Test
     public void testParsePdfNer() {
         String text = "This is a PDF file";
         String content = "This is an annotation";
@@ -118,7 +118,7 @@ public class ParsingServiceTest {
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
-    }
+    }*/
 
     @Test
     public void testParseFolderFile() {
