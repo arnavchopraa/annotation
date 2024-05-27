@@ -29,6 +29,9 @@ build_annotation_tool:
 test:
   stage: test
   script:
+    - echo "Running the tests..."
+    - cd Annotation_Tool
+    - chmod +x ./gradlew  # Change the gradlew file permission
     - ./gradlew test jacocoTestReport
   artifacts:
     paths:
