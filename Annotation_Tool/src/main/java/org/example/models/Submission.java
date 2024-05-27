@@ -3,8 +3,14 @@ package org.example.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +19,18 @@ import java.util.List;
 public class Submission {
     @Id
     private Long id;
-
-    @Column(name="user")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name="files")
-    private List<File> files;
+    @Lob
+    @Column(name = "files")
+    private List<FileEntity> files;
+
     /**
      * Basic constructor for Submission
      *
-     * @param id the id of the submission
+     * @param id   the id of the submission
      * @param user the user of the submission
      */
     public Submission(Long id, User user) {
@@ -34,28 +42,48 @@ public class Submission {
     /**
      * Basic constructor for Submission
      *
-     * @param id the id of the submission
+     * @param id   the id of the submission
      * @param user the user of the submission
      * @param file the file of the submission
+     * @throws IOException if the file could not be read
      */
-    public Submission(Long id, User user, File file){
+    public Submission(Long id, User user, File file) throws IOException {
         this.id = id;
         this.user = user;
-        this.files = new ArrayList<>();
-        this.files.add(file);
+        this.files = new ArrayList<FileEntity>();
+        byte[] fileContent = new byte[(int) file.length()];
+        try (FileInputStream fis = new FileInputStream(file)) {
+            int bytesRead = fis.read(fileContent);
+            if (bytesRead != fileContent.length) {
+                throw new IOException("Could not read the entire file");
+            }
+        }
+        files.add(new FileEntity(fileContent));
     }
 
     /**
      * Basic constructor for Submission
      *
-     * @param id the id of the submission
-     * @param user the user of the submission
+     * @param id    the id of the submission
+     * @param user  the user of the submission
      * @param files the files of the submission
+     * @throws IOException if the files could not be read
      */
-    public Submission(Long id, User user, List<File> files){
+    public Submission(Long id, User user, List<File> files) throws IOException{
         this.id = id;
         this.user = user;
-        this.files = files;
+        for (File file : files) {
+            byte[] fileContent = new byte[(int) file.length()];
+            try (FileInputStream fis = new FileInputStream(file)) {
+                int bytesRead = fis.read(fileContent);
+                if (bytesRead != fileContent.length) {
+                    throw new IOException("Could not read the entire file");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.files.add(new FileEntity(fileContent));
+        }
     }
 
     /**
@@ -93,5 +121,50 @@ public class Submission {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Getter for the files of the submission
+     *
+     * @return the files of the submission
+     * @throws IOException if the files could not be read
+     */
+    public List<File> getFiles() throws IOException{
+        List<File> files = new ArrayList<>();
+        for (FileEntity fileContent : this.files) {
+            try {
+                File file = File.createTempFile("submission", ".tmp");
+                file.deleteOnExit();
+                try (FileOutputStream fis = new FileOutputStream(file)) {
+                    fis.write(fileContent.getData());
+                }
+                files.add(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return files;
+    }
+
+    /**
+     * Setter for the files of the submission
+     *
+     * @param files the files of the submission
+     * @throws IOException if the files could not be read
+     */
+    public void setFiles(List<File> files) throws IOException{
+        this.files = new ArrayList<>();
+        for (File file : files) {
+            byte[] fileContent = new byte[(int) file.length()];
+            try (FileInputStream fis = new FileInputStream(file)) {
+                int bytesRead = fis.read(fileContent);
+                if (bytesRead != fileContent.length) {
+                    throw new IOException("Could not read the entire file");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.files.add(new FileEntity(fileContent));
+        }
     }
 }

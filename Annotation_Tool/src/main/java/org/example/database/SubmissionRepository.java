@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import org.example.models.Submission;
 
 @Repository
-public interface SubmissionRepository extends JpaRepository<Submission, Long>{
-}
+public interface SubmissionRepository extends JpaRepository<Submission, Long>{ }
