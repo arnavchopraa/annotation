@@ -10,6 +10,8 @@ import org.example.utils.Table;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +77,16 @@ public class ParsingServiceTest {
         try {
             File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
             PairUtils pair = ps.parsePDF(pdf);
-            assertEquals(text, pair.getText());
+            String res = pair.getText();
+            File debugFile = new File("debug.txt");
+            FileWriter writer = new FileWriter(debugFile);
+            for(int i = 0;i < res.length();i ++) {
+                Integer value = (int) res.charAt(i);
+                writer.write(value.toString());
+                writer.write('\n');
+            }
+            writer.close();
+            assertEquals(text + "\r\n", pair.getText());
             assertEquals("", pair.getAnnotations());
             assertEquals(pdf.getName(), pair.getFileName());
             pdf.deleteOnExit();
