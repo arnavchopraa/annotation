@@ -11,9 +11,6 @@
 }
 
 .content-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     width: 75%;
 }
 
@@ -92,6 +89,11 @@
     color: hsla(0, 0%, 70.59%, 1.00);
 }
 
+.table-cell {
+    display: flex;
+    justify-content: center;
+}
+
 .table-line.first {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -101,4 +103,99 @@
     border-bottom-color: hsla(0, 0%, 0%, 0.10);
 
     color: hsla(0, 0%, 0%, 1.00);
+}
+
+.content-bottom {
+    display: flex;
+    grid-column-gap: 80px;
+    grid-row-gap: 80px;
+    margin-top: auto;
+}
+
+.content-map {
+    width: 100%;
+}
+
+.map-wrap {
+    margin-top: 20px;
+}
+
+.map-line {
+    display: flex;
+    margin-bottom: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grey-p {
+    margin-top: 0px;
+    color: hsla(0, 0%, 70.59%, 1.00);
+}
+
+.big-p {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.map-icons {
+    display: flex;
+    align-items: center;
+}
+
+.content-support {
+    display: flex;
+    width: 100%;
+    max-width: 360px;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.support-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    min-height: 260px;
+    margin-top: 40px;
+    padding: 15px;
+    border-radius: 20px;
+    background-color: black;
+}
+
+.support-line {
+    display: flex;
+    align-items: center;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    color: hsla(0, 0%, 100%, 1.0);
+}
+
+.support-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 41px;
+    height: 41px;
+    border-radius: 10px;
+    background-color: #636363;
+
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+
+.support-icon:hover {
+    background-color: hsla(0, 0%, 100%, 1.00);
+}
+
+.support-icon:hover path {
+    fill: hsla(0, 0%, 0%, 1.00);
+    z-index: 1;
+}
+
+.support-text {
+    margin: 0px;
 }
