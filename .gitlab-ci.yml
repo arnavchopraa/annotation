@@ -29,6 +29,8 @@ build_annotation_tool:
     - ./gradlew clean build # Build the project
 test:
   stage: test
+  dependencies:
+    - build_annotation_tool
   script:
     - echo "Running the tests..."
     - cd Annotation_Tool
