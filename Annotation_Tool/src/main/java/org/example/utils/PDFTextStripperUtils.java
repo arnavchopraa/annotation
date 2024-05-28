@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PDFTextStripperUtils extends PDFTextStripper {
-    List<List<TextPosition>> currentLine = new ArrayList<>();
-    List<List<List<TextPosition>>> allLines = new ArrayList<>();
+    private List<List<TextPosition>> currentLine = new ArrayList<>();
+    private List<List<List<TextPosition>>> allLines = new ArrayList<>();
 
+    /**
+     * Constructor for our custom PDFTextStripper
+     */
     public PDFTextStripperUtils() {
         super();
     }
@@ -36,6 +39,10 @@ public class PDFTextStripperUtils extends PDFTextStripper {
         super.endDocument(document);
     }
 
+    /**
+     * Returns all lines in the document
+     * @return The lines containing words containing letters
+     */
     public List<List<List<TextPosition>>> getAllLines() {
         return allLines;
     }

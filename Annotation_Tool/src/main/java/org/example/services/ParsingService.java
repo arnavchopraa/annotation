@@ -306,6 +306,13 @@ public class ParsingService {
         return text;
     }
 
+    /**
+     * Removes the references in the document from the given text
+     * @param text Text that needs references removed
+     * @param document Document which we are parsing
+     * @return Updated text with references removed
+     * @throws IOException When parsing the document fails
+     */
     public String removeReferences(String text, PDDocument document) throws IOException {
 
         PDFTextStripperUtils ptsu = new PDFTextStripperUtils();
@@ -317,6 +324,13 @@ public class ParsingService {
             return text;
 
         String[] cut1 = text.split("\r\nReferences\r\n");
+
+        if(cut1.length == 1)
+            cut1 = text.split("\r\nreferences\r\n");
+
+        if(cut1.length == 1)
+            return text;
+
         String[] cut2 = cut1[1].split(lastLine);
 
         text = cut1[0] + "\r\n" + cut2[1];
@@ -324,6 +338,11 @@ public class ParsingService {
         return text;
     }
 
+    /**
+     * Finds the text from the last line in the references subsection
+     * @param allLines All lines contained in the document
+     * @return Text from the last line in the references
+     */
     public String findLastLineFromReferences(List<List<List<TextPosition>>> allLines) {
         //first we need to find the "References" line
 
@@ -385,24 +404,7 @@ public class ParsingService {
         if(!found)              //there are no references
             return null;
 
-        found = false;
-        while(lineNumber < allLines.size() && !found) {
-            List<List<TextPosition>> line = allLines.get(lineNumber);
-            for(List<TextPosition> word : line)
-                for(TextPosition letter : word) {
-                    String currentFont = letter.getFont().getName();
-                    float currentHeight = letter.getHeightDir();
-
-
-                    if (currentFont.contains(font) && currentHeight == height)           //the letters have to be of the same font and size as "References" title
-                        found = true;
-                }
-
-            lineNumber++;
-        }
-
-        if(!found)
-            return null;
+        lineNumber = findNextSubsectionTitleLine(lineNumber, allLines, font, height);
 
         lineNumber--;
 
@@ -422,5 +424,35 @@ public class ParsingService {
 
         lastLine = lastLine.trim();             //removing the last "_"
         return lastLine + "\r\n";
+    }
+
+    /**
+     * Finds the line number of the next subsection title
+     * @param lineNumber Line number of the current subsection title
+     * @param allLines All lines in the document
+     * @param font The font of the title
+     * @param height The size of the title
+     * @return Line number of the next subsection title
+     */
+    public int findNextSubsectionTitleLine(int lineNumber, List<List<List<TextPosition>>> allLines, String font, float height) {
+        //finding the next subsection title
+
+        boolean found = false;
+        while(lineNumber < allLines.size() && !found) {
+            List<List<TextPosition>> line = allLines.get(lineNumber);
+            for(List<TextPosition> word : line)
+                for(TextPosition letter : word) {
+                    String currentFont = letter.getFont().getName();
+                    float currentHeight = letter.getHeightDir();
+
+                    //the letters have to be of the same font and size as "References" title
+                    if (currentFont.contains(font) && currentHeight == height)
+                        found = true;
+                }
+
+            lineNumber++;
+        }
+
+        return lineNumber;
     }
 }
