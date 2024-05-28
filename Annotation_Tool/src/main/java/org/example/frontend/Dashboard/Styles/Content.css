@@ -136,6 +136,10 @@
     width: 100%;
 }
 
+.map-title {
+    margin-left: 2.5px;
+}
+
 .map-wrap {
     flex-grow: 1;
     overflow-y: auto;
@@ -150,6 +154,7 @@
 
     margin-bottom: 10px;
     margin-right: 10px;
+    margin-left: 2.5px;
     border-radius: 10px;
 
     display: flex;
@@ -176,6 +181,7 @@
 }
 
 .map-line:hover {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }
 
@@ -236,11 +242,16 @@
     transition-timing-function: ease;
 }
 
-.support-icon:hover {
+.support-line:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.support-line:hover .support-icon {
     background-color: hsla(0, 0%, 100%, 1.00);
 }
 
-.support-icon:hover path {
+.support-line:hover .support-icon path {
     fill: hsla(0, 0%, 0%, 1.00);
     z-index: 1;
 }
