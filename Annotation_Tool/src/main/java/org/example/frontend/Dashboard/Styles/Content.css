@@ -1,6 +1,7 @@
 .content {
     width: 100%;
     padding: 40px;
+    padding-right: 30px;
 }
 
 .content-wrap {
@@ -14,14 +15,7 @@
     width: 75%;
 }
 
-.content-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 25%;
-    padding-left: 20px;
-    padding-right: 20px;
-}
+/* Search Bar and Upload Button */
 
 .content-top {
     display: flex;
@@ -66,6 +60,8 @@
     margin-bottom: 0px;
 }
 
+/* All PDFs Display */
+
 .content-all-pdfs {
     overflow: auto;
     margin-top: 40px;
@@ -95,6 +91,13 @@
 .table-cell {
     display: flex;
     justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.table-cell.name:hover {
+    color: hsla(0, 0%, 0%, 1.00);
+    cursor: pointer;
 }
 
 .table-line.first {
@@ -109,29 +112,40 @@
     background-color: transparent;
 }
 
+.table-cell .check {
+    position: absolute;
+    right: 10px;
+    display: none;
+}
+
+/* Content Bottom */
+
 .content-bottom {
     display: flex;
     grid-column-gap: 80px;
     grid-row-gap: 80px;
 }
 
+/* Recently Accessed PDFs Display */
+
 .content-map {
     width: 100%;
 }
 
 .map-wrap {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    background-color: #f0f0f0;
     margin-top: 20px;
     border-radius: 10px;
 }
 
 .map-line {
-    display: flex;
+    background-color: #f0f0f0;
+    padding: 10px;
+
     margin-bottom: 10px;
-    margin-left: 10px;
     margin-right: 10px;
+    border-radius: 10px;
+
+    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -145,12 +159,10 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
+    margin-top: 0px;
 }
 
-.map-icons {
-    display: flex;
-    align-items: center;
-}
+/* Support Options Display */
 
 .content-support {
     display: flex;
@@ -209,4 +221,85 @@
 
 .support-text {
     margin: 0px;
+}
+
+/* Recently Submitted PDFs Display */
+
+.content-right {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+
+    width: 25%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.ml-10 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.right-wrap {
+    flex-grow: 1;
+    overflow-y: auto;
+
+    width: calc(100% + 20px);
+    margin-right: -10px;
+    margin-left: -10px;
+    padding-right: 10px;
+    padding-left: 10px;
+
+    margin-bottom: 60px;
+}
+
+.right-line {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    transition-property: box-shadow;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+
+    color: hsla(0, 0%, 70.59%, 1.00);
+    text-decoration: none;
+}
+
+.right-line:hover {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.4);
+    color: hsla(0, 0%, 0%, 1.00);
+}
+
+.right-button {
+    display: flex;
+    width: 100%;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+
+    background-color: hsla(0, 0%, 0%, 1.00);
+    color: hsla(0, 0%, 100%, 1.00);
+    text-decoration: none;
+
+    transition-property: color, background-color;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: ease, ease;
+}
+
+.right-button:hover {
+    background-color: #f0f0f0;
+    color: hsla(0, 0%, 0%, 1.00);
 }
