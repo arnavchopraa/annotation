@@ -2,8 +2,6 @@ package org.example.models;
 
 import lombok.*;
 
-import java.io.File;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,8 +12,18 @@ public class Submission {
     private String groupName;
     private String studentName;
     private String date;
-    private File submittedFile;
+    private byte[] submittedFile;
 
+    /**
+     * Constructor for submission, excluding the submittedFile, which is set in another method
+     * inside ImportService.
+     *
+     * @param groupNo Group number of student who submitted
+     * @param assignmentNo Assignment number for which submission was recorded
+     * @param groupName Group name of student who submitted
+     * @param studentName Name of student who submitted
+     * @param date Date when the assignment was submitted
+     */
     public Submission(String groupNo, String assignmentNo, String groupName, String studentName, String date) {
         this.groupNo = groupNo;
         this.assignmentNo = assignmentNo;
@@ -25,6 +33,11 @@ public class Submission {
         this.submittedFile = null;
     }
 
+    /**
+     * Override of toString method from Object class
+     *
+     * @return A string representation of a Submission object.
+     */
     @Override
     public String toString() {
         return "Submission@" + Integer.toHexString(hashCode()) +
@@ -33,6 +46,6 @@ public class Submission {
                 ",groupName=" + groupName +
                 ",studentName=" + studentName +
                 ",date=" + date +
-                ",fileName=" + submittedFile.getName() + "].\n";
+                ",file length=" + (submittedFile != null ? submittedFile.length : "null") + "]";
     }
 }
