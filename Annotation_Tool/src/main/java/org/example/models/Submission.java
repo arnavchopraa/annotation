@@ -72,6 +72,7 @@ public class Submission implements Serializable{
     public Submission(Long id, User user, List<File> files) throws IOException{
         this.id = id;
         this.user = user;
+        this.files = new ArrayList<FileEntity>();
         for (File file : files) {
             byte[] fileContent = new byte[(int) file.length()];
             try (FileInputStream fis = new FileInputStream(file)) {
