@@ -11,7 +11,7 @@
 body {
     font-family: 'Inter-Tight', sans-serif;
     color: hsla(0, 0%, 0%, 1.00);
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.2;
     font-weight: 500;
     overflow: hidden;
@@ -40,13 +40,14 @@ section {
     width: 100%;
     height: 100vh;
     max-width: 1920px;
+
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .controls {
     margin-top: 10px;
     margin-bottom: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
     height: 5vh;
 
     display: flex;
@@ -57,11 +58,6 @@ section {
     display: flex;
     align-items: center;
     height: 100%;
-
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-    transition-property: box-shadow;
-    transition-duration: 0.2s;
-    transition-timing-function: ease;
 }
 
 .control-buttons .last {
