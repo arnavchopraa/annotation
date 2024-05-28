@@ -69,7 +69,7 @@ public class Submission implements Serializable{
      * @param files the files of the submission
      * @throws IOException if the files could not be read
      */
-    public Submission(Long id, User user, List<File> files) throws IOException{
+    public Submission(Long id, User user, List<File> files) throws IOException {
         this.id = id;
         this.user = user;
         this.files = new ArrayList<FileEntity>();
@@ -80,8 +80,6 @@ public class Submission implements Serializable{
                 if (bytesRead != fileContent.length) {
                     throw new IOException("Could not read the entire file");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             this.files.add(new FileEntity(fileContent));
         }
