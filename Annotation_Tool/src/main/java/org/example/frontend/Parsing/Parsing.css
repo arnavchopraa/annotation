@@ -159,7 +159,7 @@ input[type="file"] {
   position: absolute;
 
   /* Position to the right of the export button */
-  top: -10%;
+  top: -10px;
   left: 100%;
 
   background-color: none;
@@ -170,9 +170,10 @@ input[type="file"] {
     display: block;
     cursor: pointer;
 
-    margin: 5px;
+    margin: 10px;
     inline-size: 95%;
     margin-inline: auto;
+    padding: 10px;
 }
 
 /* On hover, show the dropdown menu */
