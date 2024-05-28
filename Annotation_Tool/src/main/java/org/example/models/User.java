@@ -1,6 +1,5 @@
 package org.example.models;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,9 +35,10 @@ public class User {
         this.password = password;
     }
 
-    public User() {
-
-    }
+    /**
+     * Basic constructor for User
+     */
+    public User() { }
 
     /**
      * Getter for the id of the user

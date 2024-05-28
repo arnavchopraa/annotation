@@ -21,9 +21,10 @@ public class FileEntity implements Serializable {
     @ManyToOne
     private Submission submission;
 
-    public FileEntity(){
-
-    }
+    /**
+     * Basic constructor for FileEntity
+     */
+    public FileEntity(){ }
 
     /**
      * Basic constructor for FileEntity

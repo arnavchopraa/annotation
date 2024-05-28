@@ -1,16 +1,11 @@
 package org.example.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import org.springframework.boot.autoconfigure.ssl.SslProperties;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -91,9 +86,11 @@ public class Submission implements Serializable{
         }
     }
 
-    public Submission() {
+    /**
+     * Basic constructor for Submission
+     */
 
-    }
+    public Submission() { }
 
     /**
      * Getter for the id of the submission
