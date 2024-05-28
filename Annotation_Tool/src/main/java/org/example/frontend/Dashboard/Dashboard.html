@@ -92,35 +92,59 @@
                         </div>
                     </div>
 
+                    <div class="content-heading">
+                        <h2>All Reports</h2>
+                    </div>
+
                     <div class="content-all-pdfs">
-                        <div class="content-heading">
-                            <h2>All Reports</h2>
-                        </div>
 
                         <!--PDFs will be displayed here-->
                         <div class="content-table">
                             <!--Table Headers-->
-                            <div class="table-line first">
+                            <div class="table-line table-headers">
                                 <p class="table-cell">Student Name</p>
                                 <p class="table-cell">Last Edited</p>
                                 <p class="table-cell">Complete</p>
                                 <p class="table-cell">Submitted</p>
                             </div>
 
-                            <!--Table Content - will be added dynamically once pdf distribution is configured-->
-                            <!--Example-->
-                            <div class="table-line">
-                                <p class="table-cell name" id="studentName">John Smith</p>
-                                <p class="table-cell" id="lastEdited">23.06.2024</p>
-                                <p class="table-cell" id="complete">Yes</p>
-                                <p class="table-cell submitted" id="submitted">No</p>
-                            </div>
+                            <div class="table-content">
+                                <!--Table Content - will be added dynamically once pdf distribution is configured-->
+                                <!--Example-->
+                                <div class="table-line">
+                                    <p class="table-cell" id="studentName">John Smith</p>
+                                    <p class="table-cell" id="lastEdited">23.06.2024</p>
+                                    <p class="table-cell" id="complete">No</p>
+                                    <p class="table-cell submitted" id="submitted">No</p>
+                                </div>
 
-                            <div class="table-line">
-                                <p class="table-cell name">Mary McDonald</p>
-                                <p class="table-cell">20.06.2024</p>
-                                <p class="table-cell">Yes</p>
-                                <p class="table-cell">Yes</p>
+                                <div class="table-line">
+                                    <p class="table-cell">Mary McDonald</p>
+                                    <p class="table-cell">20.06.2024</p>
+                                    <p class="table-cell">No</p>
+                                    <p class="table-cell">No</p>
+                                </div>
+
+                                <div class="table-line">
+                                    <p class="table-cell">Rachel Weiss</p>
+                                    <p class="table-cell">20.06.2024</p>
+                                    <p class="table-cell">Yes</p>
+                                    <p class="table-cell">No</p>
+                                </div>
+
+                                <div class="table-line">
+                                    <p class="table-cell">Philip Downing</p>
+                                    <p class="table-cell">20.06.2024</p>
+                                    <p class="table-cell">Yes</p>
+                                    <p class="table-cell">Yes</p>
+                                </div>
+
+                                <div class="table-line">
+                                    <p class="table-cell">Mary McDonald</p>
+                                    <p class="table-cell">20.06.2024</p>
+                                    <p class="table-cell">Yes</p>
+                                    <p class="table-cell">Yes</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,25 +155,25 @@
                             <h2>Recently Edited</h2>
 
                             <div class="map-wrap">
-                                <!--They should be retrieved automatically from the database-->
+                                <!--Max. 3, should be retrieved automatically from the database-->
                                 <!--Example-->
                                 <div class="map-line">
                                     <div class="map-text">
-                                        <p class="big-p" id="title">Matt McIntosch 57777654 - First Draft</p>
+                                        <p class="big-p" id="title">Matthew Rogers 57777654 - First Draft</p>
                                         <p class="grey-p" id="lastAccessed">Edited May 30, 2024</p>
                                     </div>
                                 </div>
 
                                 <div class="map-line">
                                     <div class="map-text">
-                                        <p class="big-p">Matt McIntosch</p>
-                                        <p class="grey-p">Edited May 30, 2024</p>
+                                        <p class="big-p">Third Draft - Jeremy Spencer 56708324</p>
+                                        <p class="grey-p">Edited May 27, 2024</p>
                                     </div>
                                 </div>
 
                                 <div class="map-line">
                                     <div class="map-text">
-                                        <p class="big-p">Matt McIntosch</p>
+                                        <p class="big-p">Thijs Berg 765433987</p>
                                         <p class="grey-p">Edited May 30, 2024</p>
                                     </div>
                                 </div>
