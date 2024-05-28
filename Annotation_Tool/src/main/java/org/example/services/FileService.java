@@ -22,6 +22,7 @@ public class FileService {
      * @param annotations the annotations modified by the user
      * @return the PDF file as a byte array
      * @throws IOException if the file cannot be created
+     * @return the PDF file as a byte array
      */
     public byte[] generatePDF(String text, String annotations) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); PDDocument document = new PDDocument()) {
@@ -39,6 +40,7 @@ public class FileService {
 
     /**
      * Helper method for writing text and annotations to a PDF file
+     * @param document the PDF document to write to
      * @param text the text to be written
      * @param annotations the annotations to be written
      * @param document the PDF document to write to

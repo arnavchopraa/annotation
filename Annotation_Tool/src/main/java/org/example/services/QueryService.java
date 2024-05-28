@@ -12,7 +12,7 @@ public class QueryService {
      * This method queries the database for a code associated to a piece of text
      * and returns the text.
      *
-     * @param key
+     * @param key the key to be queried
      * @return the text associated with the query
      */
     public String queryResults(String key) {

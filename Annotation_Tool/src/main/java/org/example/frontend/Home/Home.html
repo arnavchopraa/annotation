@@ -10,26 +10,26 @@
 
 <body>
     <div id="controls">
-        <input class="btn" type="file" id="fileInput" accept="application/pdf">
+        <div id="leftButtons">
+            <input type="submit" id="prevFile" value="Previous">
 
-        <div class="dropdown">
-            <button class="btn" id="exportButton" value="Download">Export</button>
-            <div class="dropdown-content">
-                <button id="convertToPDFButton">.pdf</button>
-                <button id="convertToTxtButton">.txt</button>
-            </div>
+            <!--            delete after integration-->
+            <input type="file" id="fileInput" accept="application/pdf">
+
+            <form action="../Parsing/Parsing.html" method="get">
+                <input type="submit" id="submitFile" value="Submit">
+            </form>
         </div>
 
-        <span id="error"></span>
+        <input type="submit" id="nextFile" value="Next">
     </div>
 
     <div class="container" id="pdfContainer">
-        <div class="text" id="pdfText" contenteditable="false"></div>
-        <div id="highlightOverlay"></div>
+        <iframe id="pdfObject" class="pdf" src=""></iframe>
     </div>
 
-    <div class="container" id="annotationsContainer">
-        <div class="text" id="annotationsText" contenteditable="false"></div>
+    <div class="container" id="codesContainer">
+        <div id="codes"></div>
     </div>
 
     <script src="Home.js"></script>

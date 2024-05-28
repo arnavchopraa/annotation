@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Annotations</title>
+    <link rel="stylesheet" type="text/css" href="Parsing.css">
+</head>
+
+<body>
+    <div id="controls">
+        <div id="leftButtons">
+            <input type="submit" id="prevFile" value="Previous">
+
+            <!--        delete after passing the modified document from Home.html to here or at least hide input-->
+            <input type="file" id="fileInput" accept="application/pdf">
+
+            <div class="dropdown">
+                <input type="submit" id="exportButton" value="Export">
+                <div class="dropdown-content">
+                    <input type="submit" id="convertToPDFButton" value=".pdf">
+                    <input type="submit" id="convertToTxtButton" value=".txt">
+                </div>
+            </div>
+
+            <span id="error"></span>
+        </div>
+
+        <input type="submit" id="nextFile" value="Next">
+    </div>
+
+    <div class="container" id="pdfContainer">
+        <div class="text" id="pdfText" contenteditable="false"></div>
+        <div id="highlightOverlay"></div>
+    </div>
+
+    <div class="container" id="annotationsContainer">
+        <div class="text" id="annotationsText" contenteditable="false"></div>
+    </div>
+
+    <script src="Parsing.js"></script>
+</body>
+
+</html>
