@@ -10,18 +10,13 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.apache.pdfbox.text.TextPosition;
 import org.example.exceptions.PDFException;
-import org.example.utils.Line;
-import org.example.utils.PageDrawerUtils;
-import org.example.utils.PairUtils;
-import org.example.utils.Table;
+import org.example.utils.*;
 
 import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class ParsingService {
 
@@ -61,6 +56,8 @@ public class ParsingService {
                 List<Table> tables = processLines(lines);
                 text = removeTables(text, tables, page);
             }
+
+            text = removeReferences(text, document);
 
             return new PairUtils(text, annotations, file.getName());
 
@@ -309,5 +306,155 @@ public class ParsingService {
             text = text.replace(remove, "");
         }
         return text;
+    }
+
+    /**
+     * Removes the references in the document from the given text
+     * @param text Text that needs references removed
+     * @param document Document which we are parsing
+     * @return Updated text with references removed
+     * @throws IOException When parsing the document fails
+     */
+    public String removeReferences(String text, PDDocument document) throws IOException {
+
+        PDFTextStripperUtils ptsu = new PDFTextStripperUtils();
+        ptsu.getText(document);
+
+        String lastLine = findLastLineFromReferences(ptsu.getAllLines());
+
+        if(lastLine == null)
+            return text;
+
+        String[] cut1 = text.split("\r\nReferences\r\n");
+
+        if(cut1.length == 1)
+            cut1 = text.split("\r\nreferences\r\n");
+
+        if(cut1.length == 1)
+            return text;
+
+        String[] cut2 = cut1[1].split(lastLine);
+
+        text = cut1[0] + "\r\n" + cut2[1];
+
+        return text;
+    }
+
+    /**
+     * Finds the text from the last line in the references subsection
+     * @param allLines All lines contained in the document
+     * @return Text from the last line in the references
+     */
+    public String findLastLineFromReferences(List<List<List<TextPosition>>> allLines) {
+        //first we need to find the "References" line
+
+        List<String> referencesUnicode = new ArrayList<>(); //we will use this to compare it with each line
+        referencesUnicode.add("R");
+        referencesUnicode.add("e");
+        referencesUnicode.add("f");
+        referencesUnicode.add("e");
+        referencesUnicode.add("r");
+        referencesUnicode.add("e");
+        referencesUnicode.add("n");
+        referencesUnicode.add("c");
+        referencesUnicode.add("e");
+        referencesUnicode.add("s");
+
+        int lineNumber = 0;
+        boolean found = false;
+        String font = null;
+        float height = 0;
+
+
+        while(lineNumber < allLines.size() && !found) {
+            List<List<TextPosition>> line = allLines.get(lineNumber);
+
+            if(line.size() > 1) {                             //if it's more than 1 word it can't be references
+                lineNumber++;
+                continue;
+            }
+
+            List<TextPosition> word = line.get(0);
+
+            if(word.size() != referencesUnicode.size()) {   //if the word is not of the same size it can't be references
+                lineNumber++;
+                continue;
+            }
+
+            //if it doesn't start with r/R it can't be references
+            //we check the first letter manually in case it is not capitalised
+            if(!Objects.equals(word.get(0).toString(), "r") && !Objects.equals(word.get(0).toString(), "R")) {
+                lineNumber++;
+                continue;
+            }
+
+            int i = 1;
+
+            while(i < word.size() && Objects.equals(word.get(i).toString(), referencesUnicode.get(i)))
+                i++;
+
+            if(i == word.size()) {                               //if we reached the end it's the same word
+                found = true;
+                font = word.get(0).getFont().getName();
+                height = word.get(0).getHeightDir();
+
+            }
+
+            lineNumber++;
+        }
+
+        if(!found)              //there are no references
+            return null;
+
+        lineNumber = findNextSubsectionTitleLine(lineNumber, allLines, font, height);
+
+        lineNumber--;
+
+        String lastLine = "\r\n";
+        List<List<TextPosition>> line = allLines.get(lineNumber);
+
+        for(List<TextPosition> word : line) {
+            for (TextPosition letter : word) {
+                String currentFont = letter.getFont().getName();
+                float currentHeight = letter.getHeightDir();
+
+                if (!(currentFont.contains(font) && currentHeight == height))
+                    lastLine = lastLine + letter;
+            }
+            lastLine = lastLine + " ";
+        }
+
+        lastLine = lastLine.trim();             //removing the last "_"
+        return lastLine + "\r\n";
+    }
+
+    /**
+     * Finds the line number of the next subsection title
+     * @param lineNumber Line number of the current subsection title
+     * @param allLines All lines in the document
+     * @param font The font of the title
+     * @param height The size of the title
+     * @return Line number of the next subsection title
+     */
+    public int findNextSubsectionTitleLine(int lineNumber, List<List<List<TextPosition>>> allLines, String font, float height) {
+        //finding the next subsection title
+
+        boolean found = false;
+        while(lineNumber < allLines.size() && !found) {
+            List<List<TextPosition>> line = allLines.get(lineNumber);
+            for(List<TextPosition> word : line)
+                for(TextPosition letter : word) {
+                    String currentFont = letter.getFont().getName();
+                    float currentHeight = letter.getHeightDir();
+
+                    //the letters have to be of the same font and size as "References" title
+                    if (currentFont.contains(font) && currentHeight == height)
+                        found = true;
+                }
+
+            lineNumber++;
+        }
+
+        return lineNumber;
     }
 }
