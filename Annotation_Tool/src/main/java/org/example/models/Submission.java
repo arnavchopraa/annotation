@@ -1,30 +1,36 @@
 package org.example.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import org.springframework.boot.autoconfigure.ssl.SslProperties;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="Submissions")
-public class Submission {
+public class Submission implements Serializable{
     @Id
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Lob
-    @Column(name = "files")
+    @OneToMany(mappedBy = "submission")
     private List<FileEntity> files;
 
     /**
@@ -36,9 +42,8 @@ public class Submission {
     public Submission(Long id, User user) {
         this.id = id;
         this.user = user;
-        this.files = new ArrayList<>();
+        this.files = new ArrayList<FileEntity>();
     }
-
     /**
      * Basic constructor for Submission
      *
@@ -84,6 +89,10 @@ public class Submission {
             }
             this.files.add(new FileEntity(fileContent));
         }
+    }
+
+    public Submission() {
+
     }
 
     /**

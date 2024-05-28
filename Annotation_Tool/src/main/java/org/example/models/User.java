@@ -1,12 +1,14 @@
 package org.example.models;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.util.Objects;
 
 @Entity
 @Table(name="Users")
@@ -21,8 +23,6 @@ public class User {
     @Column(name="password")
     private String password;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     /**
      * Basic constructor for User
      *
@@ -32,8 +32,12 @@ public class User {
 
     public User(String name, String password) {
         this.name = name;
-        this.encoder = new BCryptPasswordEncoder();
-        this.password = encoder.encode(password);
+        //this.password = encoder.encode(password);
+        this.password = password;
+    }
+
+    public User() {
+
     }
 
     /**
@@ -101,6 +105,6 @@ public class User {
      */
 
     public boolean checkPassword(String password) {
-        return encoder.matches(password, this.password);
+        return Objects.equals(this.password, password);
     }
 }

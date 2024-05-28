@@ -1,19 +1,29 @@
 package org.example.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+
+import java.io.Serializable;
 
 @Entity
-public class FileEntity {
+public class FileEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Lob
     private byte[] data;
+
+    @ManyToOne
+    private Submission submission;
+
+    public FileEntity(){
+
+    }
 
     /**
      * Basic constructor for FileEntity
