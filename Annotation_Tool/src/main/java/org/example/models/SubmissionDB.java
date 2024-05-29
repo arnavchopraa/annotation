@@ -19,11 +19,11 @@ public class SubmissionDB {
     @Column(name="email")
     private String id;
 
-    @Column(name="fileSubmission")
+    @Column(name="file_submission")
     @Lob
     private Blob fileSubmission;
 
-    @Column(name="assignedCoordinator")
+    @Column(name="assigned_coordinator")
     private String assignedCoordinator;
 
 }
