@@ -1,11 +1,13 @@
 package org.example.backend;
 
 import org.example.exceptions.PDFException;
+import org.example.services.AnnotationCodeService;
 import org.example.services.FileService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +26,12 @@ public class FrontendController {
     private final ParsingService parsingService;
     private final FileService fileService;
 
-    public FrontendController() {
+    private final AnnotationCodeService annotationCodeService;
+    @Autowired
+    public FrontendController(AnnotationCodeService annotationCodeService) {
         this.parsingService = new ParsingService();
         this.fileService = new FileService();
+        this.annotationCodeService = annotationCodeService;
     }
 
     /**
@@ -77,6 +82,6 @@ public class FrontendController {
      */
     @GetMapping("/frontend/codes")
     public ResponseEntity<List<String>> getCodes() {
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).map(x -> x.getId()).toList());
     }
 }

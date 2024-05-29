@@ -12,9 +12,8 @@ import jakarta.ws.rs.core.GenericType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
 public class ServerUtils {
-    @Value("${backend.server.url}")
+
     private static String server;
 
     /**

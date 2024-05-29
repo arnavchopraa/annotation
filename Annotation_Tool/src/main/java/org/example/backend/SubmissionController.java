@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionController {
-    private SubmissionRepository repo;
     private SubmissionService service;
 
     /**
@@ -33,7 +32,6 @@ public class SubmissionController {
      */
     @Autowired
     public SubmissionController(SubmissionRepository repo, SubmissionService service) {
-        this.repo = repo;
         this.service = service;
     }
 

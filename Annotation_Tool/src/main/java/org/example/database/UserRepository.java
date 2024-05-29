@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 import org.example.models.User;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, String> { }
+public interface UserRepository extends JpaRepository<User, String> { }

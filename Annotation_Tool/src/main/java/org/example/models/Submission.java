@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="submissions")
-public class Submission implements Serializable{
+public class Submission {
     @Id
     @Column(name="email")
     private String id;

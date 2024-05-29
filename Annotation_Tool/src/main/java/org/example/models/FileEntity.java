@@ -9,7 +9,6 @@ import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 
-@Entity
 public class FileEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

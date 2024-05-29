@@ -1,14 +1,11 @@
 package org.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 
 @Entity
@@ -16,12 +13,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
+@ToString
 @Table(name="annotations")
-public class AnnotationCode implements Serializable {
+public class AnnotationCode {
     @Id
     @Column(name="id")
     private String id;
 
-    @Column(name="codeContent")
+    @Column(name="code_content")
     private String codeContent;
 }

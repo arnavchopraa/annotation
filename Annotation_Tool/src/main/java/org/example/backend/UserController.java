@@ -58,7 +58,7 @@ public class UserController {
      * @param user the user to be added
      * @return the user that was added
      */
-    @PostMapping("/{id}")
+    @PostMapping("/")
     @ResponseBody
     public ResponseEntity<User> addUser(@RequestBody User user) {
         User user1 = service.addUser(user);
