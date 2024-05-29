@@ -1,6 +1,7 @@
 package org.example.services;
 
 import org.example.models.Submission;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.example.database.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class SubmissionService {
      * @param id the id of the submission
      * @return the submission with the given id
      */
-    public Submission getSubmission(long id) {
+    public Submission getSubmission(String id) {
         if (repo.findById(id).isEmpty()) {
             return null;
         }
@@ -40,7 +41,7 @@ public class SubmissionService {
      * @return a list of all the submissions in the database
      */
     public List<Submission> getSubmissions() {
-        return repo.findAll();
+        return Streamable.of(repo.findAll()).toList();
     }
 
     /**
@@ -67,7 +68,7 @@ public class SubmissionService {
      * @param id the id of the submission to be deleted
      * @return the submission that was deleted
      */
-    public Submission deleteSubmission(long id) {
+    public Submission deleteSubmission(String id) {
         if (repo.findById(id).isEmpty()) {
             return null;
         }

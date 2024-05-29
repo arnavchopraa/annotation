@@ -44,8 +44,8 @@ public class SubmissionController {
      */
     @GetMapping("/")
     @ResponseBody
-    public List<Submission> getSubmissions() {
-        return repo.findAll();
+    public ResponseEntity<List<Submission>> getSubmissions() {
+        return ResponseEntity.ok(service.getSubmissions());
     }
 
     /**
@@ -56,7 +56,7 @@ public class SubmissionController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> getSubmission(@PathVariable("id") long id) {
+    public ResponseEntity<Submission> getSubmission(@PathVariable("id") String id) {
         Submission sub = service.getSubmission(id);
         if (sub == null) {
             return ResponseEntity.notFound().build();
@@ -89,7 +89,7 @@ public class SubmissionController {
      */
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> updateSubmission( @PathVariable("id") long id, @RequestBody Submission submission) {
+    public ResponseEntity<Submission> updateSubmission( @PathVariable("id") String id, @RequestBody Submission submission) {
         Submission sub1 = service.updateSubmission(submission);
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
@@ -105,7 +105,7 @@ public class SubmissionController {
      */
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> deleteSubmission(@PathVariable Long id) {
+    public ResponseEntity<Submission> deleteSubmission(@PathVariable String id) {
         Submission deleted = service.deleteSubmission(id);
         if (deleted == null) {
             return ResponseEntity.notFound().build();

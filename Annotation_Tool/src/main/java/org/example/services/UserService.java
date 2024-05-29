@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.models.User;
 import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class UserService {
      * @param id the id of the user
      * @return the user with the given id
      */
-    public User getUser(long id) {
+    public User getUser(String id) {
         if ( repo.findById(id).isEmpty() ) {
             return null;
         }
@@ -41,7 +42,7 @@ public class UserService {
      * @return a list of all the users in the database
      */
     public List<User> getUsers() {
-        return repo.findAll();
+        return Streamable.of(repo.findAll()).toList();
     }
 
     /**
@@ -83,7 +84,7 @@ public class UserService {
      * @return the user that was deleted
      */
 
-    public User deleteUser(Long id) {
+    public User deleteUser(String id) {
         User deleted = repo.findById(id).orElse(null);
         if (repo.findById(id).isEmpty()) {
             return null;

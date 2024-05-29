@@ -2,10 +2,10 @@ package org.example.backend;
 
 import org.example.exceptions.PDFException;
 import org.example.services.FileService;
-import org.example.services.QueryService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,14 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class FrontendController {
 
-    private final ParsingService parsingService = new ParsingService();
-    private final FileService fileService = new FileService();
+    private final ParsingService parsingService;
+    private final FileService fileService;
+
+    public FrontendController() {
+        this.parsingService = new ParsingService();
+        this.fileService = new FileService();
+    }
 
     /**
      * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
@@ -70,8 +76,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public List<String> getCodes() {
-        String query = "SELECT code FROM annotations";
-        return QueryService.queryExecution(query);
+    public ResponseEntity<List<String>> getCodes() {
+        return ResponseEntity.ok(new ArrayList<>());
     }
 }

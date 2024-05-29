@@ -13,18 +13,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private UserRepository repo;
     private UserService service;
 
     /**
      * Constructor for the UserController
      *
-     * @param repo the repository for the user
      * @param service the service for the user
      */
     @Autowired
-    public UserController(UserRepository repo, UserService service) {
-        this.repo = repo;
+    public UserController(UserService service) {
         this.service = service;
     }
 
@@ -35,8 +32,8 @@ public class UserController {
      */
     @GetMapping("/")
     @ResponseBody
-    public List<User> getUsers() {
-        return repo.findAll();
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(service.getUsers());
     }
 
     /**
@@ -47,7 +44,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> getUser( @PathVariable("id") long id) {
+    public ResponseEntity<User> getUser( @PathVariable("id") String id) {
         User user = service.getUser(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -95,7 +92,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable String id) {
         User deleted = service.deleteUser(id);
         if (deleted == null) {
             return ResponseEntity.notFound().build();
