@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.InputStream;
 import java.sql.Blob;
 
 @Entity
@@ -26,4 +27,9 @@ public class SubmissionDB {
     @Column(name="assigned_coordinator")
     private String assignedCoordinator;
 
+    public byte[] blobToBytes(Blob blob) throws Exception {
+        try (InputStream inputStream = blob.getBinaryStream()) {
+            return inputStream.readAllBytes();
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package org.example.backend;
 
 import org.example.exceptions.PDFException;
+import org.example.models.SubmissionDB;
 import org.example.services.AnnotationCodeService;
 import org.example.services.FileService;
+import org.example.services.SubmissionService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
@@ -16,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +34,13 @@ public class FrontendController {
     private final FileService fileService;
 
     private final AnnotationCodeService annotationCodeService;
+    private final SubmissionService submissionService;
     @Autowired
-    public FrontendController(AnnotationCodeService annotationCodeService) {
+    public FrontendController(AnnotationCodeService annotationCodeService, SubmissionService submissionService) {
         this.parsingService = new ParsingService();
         this.fileService = new FileService();
         this.annotationCodeService = annotationCodeService;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -81,7 +90,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public ResponseEntity<List<String>> getCodes() {
+    public ResponseEntity<List<String>> getCodes() throws IOException {
         return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).map(x -> x.getId()).toList());
     }
 }
