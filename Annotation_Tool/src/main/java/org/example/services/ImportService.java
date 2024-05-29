@@ -1,7 +1,6 @@
 package org.example.services;
 
 import lombok.NoArgsConstructor;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -51,17 +50,6 @@ public class ImportService {
     private List<Coordinator> associateCoordinators(List<Association> associations, List<Project> projects)
         throws ImportException {
         // TODO - verifici daca toate student number sunt din aceeasi grupa
-        // daca sunt din aceeasi grupa, la fiecare association din care face parte studentul ,
-        // adaugi lista de coordonatori din proiect
-
-        for(Association i : associations)
-            System.out.println(i);
-
-        System.out.println();
-
-        for(Project i : projects)
-            System.out.println(i);
-
 
         Map<Coordinator, List<Association>> map = new HashMap<>();
         for(Project p : projects)
@@ -70,25 +58,17 @@ public class ImportService {
 
         for(Project p : projects) {
             List<String> studentNumbers = p.getStudentNos();
-            List<String> foundStudentNumbers = new ArrayList<>();
 
             for(Association a : associations) {
                 String studentNr = a.getStudent().getStudentNo();
 
                 if(studentNumbers.contains(studentNr)) {
-                    foundStudentNumbers.add(studentNr);
                     for(Coordinator c : p.getCoordinators()) {
                         List<Association> value = map.get(c);
                         value.add(a);
                         map.put(c, value);
                     }
                 }
-
-                //Collections.sort(studentNumbers);
-                //Collections.sort(foundStudentNumbers);
-
-                //if(!studentNumbers.equals(foundStudentNumbers))
-                    //throw new ImportException("Student members do not correspond");
             }
         }
 
@@ -228,7 +208,7 @@ public class ImportService {
         String assignmentNo = split[1].substring(0, split[1].length() - 1);
         String groupName = split[2].substring(1, split[2].length() - 1);
         String studentName = split[3].substring(1, split[3].length() - 1);
-        String date = split[4].substring(1); // TODO - to be parsed
+        String date = split[4].substring(1);
         return new Submission(groupNo, assignmentNo, groupName, studentName, date);
     }
 
@@ -265,6 +245,7 @@ public class ImportService {
                                 coordinators.add(new Coordinator(name, email));
                         }
                     } else if (j == 21) {
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
                         studentNos = Arrays.stream(parseCell(cell.getStringCellValue())).toList();
                     }
                     j++;
@@ -290,23 +271,22 @@ public class ImportService {
     private String[] parseCell(String cellData) {
         String[] data = cellData.split(", |and ");
 
-        String[] ans;
-        if(data.length >= 3)
-            ans = new String[data.length-1];
-        else
-            ans = new String[data.length];
+        List<String> ans = new ArrayList<>();
 
         int j=0;
         for(int i = 0; i < data.length; i++) {
             data[i] = data[i].replaceAll(" ", "");
 
             if(!data[i].isEmpty()) {
-                ans[j] = data[i].trim();
+                ans.add(data[i].trim());
                 j++;
             }
         }
 
-        return ans;
+        Object[] aux = ans.toArray();
+        String[] ret = Arrays.copyOf(aux, aux.length, String[].class);
+
+        return ret;
     }
 
 }

@@ -15,6 +15,11 @@ public class Coordinator {
 
     private List<Association> associations;
 
+    /**
+     * Constructor for the coordinator without associations
+     * @param fullName Full name of the coordinator
+     * @param email The email of the coordinator
+     */
     public Coordinator(String fullName, String email) {
         this.fullName = fullName;
         this.email = email;

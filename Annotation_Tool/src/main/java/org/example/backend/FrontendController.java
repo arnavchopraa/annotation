@@ -1,12 +1,7 @@
 package org.example.backend;
 
-import org.example.exceptions.FileException;
-import org.example.exceptions.ImportException;
-import org.example.exceptions.NoSubmissionException;
 import org.example.exceptions.PDFException;
-import org.example.importmodels.Coordinator;
 import org.example.services.FileService;
-import org.example.services.ImportService;
 import org.example.services.QueryService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
@@ -20,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
-import java.util.zip.ZipException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -77,24 +71,6 @@ public class FrontendController {
      */
     @GetMapping("/frontend/codes")
     public List<String> getCodes() {
-        File zip = new File("C:\\Users\\stefa\\Downloads\\Test_groups_3_Download_28_May_2024_1937_Group_Submission_Folder.zip");
-        File csv = new File("C:\\Users\\stefa\\Downloads\\tud-sndbx-mmigut.csv");
-        File xlsx = new File("C:\\Users\\stefa\\Downloads\\Example_Group.xlsx");
-
-        ImportService is = new ImportService();
-        try {
-            List<Coordinator> coordinators = is.importData(zip, csv, xlsx);
-            for(Coordinator c : coordinators)
-                System.out.println(c);
-        } catch (NoSubmissionException e) {
-            throw new RuntimeException(e);
-        } catch (ZipException e) {
-            throw new RuntimeException(e);
-        } catch (FileException e) {
-            throw new RuntimeException(e);
-        } catch (ImportException e) {
-            throw new RuntimeException(e);
-        }
 
         String query = "SELECT id FROM annotations";
         return QueryService.queryExecution(query);
