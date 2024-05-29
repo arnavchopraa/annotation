@@ -1,6 +1,5 @@
 package org.example.models;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +17,7 @@ public class FileEntity implements Serializable {
     private byte[] data;
 
     @ManyToOne
-    private Submission submission;
+    private SubmissionDB submissionDB;
 
     /**
      * Basic constructor for FileEntity

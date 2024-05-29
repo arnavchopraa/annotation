@@ -3,7 +3,7 @@ package models;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.example.models.User;
-import org.example.models.Submission;
+import org.example.models.SubmissionDB;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,22 +12,22 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-class SubmissionTest {
+class SubmissionDBTest {
 
     @Test
     void idGetterAndSetter() {
-        Submission submission = new Submission();
-        submission.setId(1L);
-        assertEquals(1L, submission.getId());
+        SubmissionDB submissionDB = new SubmissionDB();
+        submissionDB.setId(1L);
+        assertEquals(1L, submissionDB.getId());
     }
 
     @Test
     void userGetterAndSetter() {
-        Submission submission = new Submission();
+        SubmissionDB submissionDB = new SubmissionDB();
         User user = new User();
         user.setId(1L);
-        submission.setUser(user);
-        assertEquals(user, submission.getUser());
+        submissionDB.setUser(user);
+        assertEquals(user, submissionDB.getUser());
     }
 
     @Test
@@ -36,9 +36,9 @@ class SubmissionTest {
         File file = File.createTempFile("temp", ".txt");
         files.add(file);
         User user = new User();
-        Submission submission = new Submission(user.getId(), user);
-        submission.setFiles(files);
-        assertEquals(files.size(), submission.getFiles().size());
+        SubmissionDB submissionDB = new SubmissionDB(user.getId(), user);
+        submissionDB.setFiles(files);
+        assertEquals(files.size(), submissionDB.getFiles().size());
     }
 
     @Test
@@ -48,8 +48,8 @@ class SubmissionTest {
         Files.writeString(file.toPath(), "Hello World\n");
         files.add(file);
         User user = new User();
-        Submission submission = new Submission(user.getId(), user, files);
-        assertEquals(Files.readString(submission.getFiles().get(0).toPath()), "Hello World\n");
+        SubmissionDB submissionDB = new SubmissionDB(user.getId(), user, files);
+        assertEquals(Files.readString(submissionDB.getFiles().get(0).toPath()), "Hello World\n");
     }
 
     @Test
@@ -59,7 +59,7 @@ class SubmissionTest {
         File file = new File("nonexistent.txt");
         List<File> files = new ArrayList<>();
         files.add(file);
-        assertThrows(FileNotFoundException.class, () -> new Submission(1L, user, files));
+        assertThrows(FileNotFoundException.class, () -> new SubmissionDB(1L, user, files));
     }
 
     @Test
@@ -67,17 +67,17 @@ class SubmissionTest {
         User user = new User();
         user.setId(1L);
         File file = new File("nonexistent.txt");
-        assertThrows(IOException.class, () -> new Submission(1L, user, file));
+        assertThrows(IOException.class, () -> new SubmissionDB(1L, user, file));
     }
 
     @Test
     void shouldCreateSubmissionWithUserAndId() throws IOException {
         User user = new User();
         user.setId(1L);
-        Submission submission = new Submission(1L, user);
-        assertEquals(1L, submission.getId());
-        assertEquals(user, submission.getUser());
-        assertTrue(submission.getFiles().isEmpty());
+        SubmissionDB submissionDB = new SubmissionDB(1L, user);
+        assertEquals(1L, submissionDB.getId());
+        assertEquals(user, submissionDB.getUser());
+        assertTrue(submissionDB.getFiles().isEmpty());
     }
 
     @Test
@@ -87,10 +87,10 @@ class SubmissionTest {
         File file = File.createTempFile("temp", ".txt");
         List<File> files = new ArrayList<>();
         files.add(file);
-        Submission submission = new Submission(1L, user, files);
-        assertEquals(1L, submission.getId());
-        assertEquals(user, submission.getUser());
-        assertEquals(1, submission.getFiles().size());
+        SubmissionDB submissionDB = new SubmissionDB(1L, user, files);
+        assertEquals(1L, submissionDB.getId());
+        assertEquals(user, submissionDB.getUser());
+        assertEquals(1, submissionDB.getFiles().size());
     }
 
     @Test
@@ -98,9 +98,9 @@ class SubmissionTest {
         User user = new User();
         user.setId(1L);
         File file = File.createTempFile("temp", ".txt");
-        Submission submission = new Submission(1L, user, file);
-        assertEquals(1L, submission.getId());
-        assertEquals(user, submission.getUser());
-        assertEquals(1, submission.getFiles().size());
+        SubmissionDB submissionDB = new SubmissionDB(1L, user, file);
+        assertEquals(1L, submissionDB.getId());
+        assertEquals(user, submissionDB.getUser());
+        assertEquals(1, submissionDB.getFiles().size());
     }
 }

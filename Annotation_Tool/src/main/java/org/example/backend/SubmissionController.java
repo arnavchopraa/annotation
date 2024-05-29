@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.example.database.SubmissionRepository;
 import org.example.services.SubmissionService;
-import org.example.models.Submission;
+import org.example.models.SubmissionDB;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class SubmissionController {
      */
     @GetMapping("/")
     @ResponseBody
-    public ResponseEntity<List<Submission>> getSubmissions() {
+    public ResponseEntity<List<SubmissionDB>> getSubmissions() {
         return ResponseEntity.ok(service.getSubmissions());
     }
 
@@ -54,8 +54,8 @@ public class SubmissionController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> getSubmission(@PathVariable("id") String id) {
-        Submission sub = service.getSubmission(id);
+    public ResponseEntity<SubmissionDB> getSubmission(@PathVariable("id") String id) {
+        SubmissionDB sub = service.getSubmission(id);
         if (sub == null) {
             return ResponseEntity.notFound().build();
         }
@@ -65,13 +65,13 @@ public class SubmissionController {
     /**
      * This method adds a submission to the database
      *
-     * @param submission the submission to be added
+     * @param submissionDB the submission to be added
      * @return the submission that was added
      */
     @PostMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> addSubmission( @RequestBody Submission submission) {
-        Submission sub1 = service.addSubmission(submission);
+    public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDB submissionDB) {
+        SubmissionDB sub1 = service.addSubmission(submissionDB);
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -82,13 +82,13 @@ public class SubmissionController {
      * This method updates a submission in the database
      *
      * @param id the id of the submission
-     * @param submission the submission to be updated
+     * @param submissionDB the submission to be updated
      * @return the submission that was updated
      */
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> updateSubmission( @PathVariable("id") String id, @RequestBody Submission submission) {
-        Submission sub1 = service.updateSubmission(submission);
+    public ResponseEntity<SubmissionDB> updateSubmission(@PathVariable("id") String id, @RequestBody SubmissionDB submissionDB) {
+        SubmissionDB sub1 = service.updateSubmission(submissionDB);
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -103,8 +103,8 @@ public class SubmissionController {
      */
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Submission> deleteSubmission(@PathVariable String id) {
-        Submission deleted = service.deleteSubmission(id);
+    public ResponseEntity<SubmissionDB> deleteSubmission(@PathVariable String id) {
+        SubmissionDB deleted = service.deleteSubmission(id);
         if (deleted == null) {
             return ResponseEntity.notFound().build();
         }

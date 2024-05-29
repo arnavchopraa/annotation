@@ -6,14 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
 import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Setter
@@ -21,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="submissions")
-public class Submission {
+public class SubmissionDB {
     @Id
     @Column(name="email")
     private String id;

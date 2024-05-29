@@ -2,15 +2,13 @@ package org.example.utils;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import org.example.models.Submission;
+import org.example.models.SubmissionDB;
 import org.example.models.User;
 
 import java.util.List;
 import org.glassfish.jersey.client.ClientConfig;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.GenericType;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 public class ServerUtils {
 
@@ -60,11 +58,11 @@ public class ServerUtils {
      *
      * @return the submissions
      */
-    public List<Submission> getSubmissions() {
+    public List<SubmissionDB> getSubmissions() {
         return getWebTarget()
                 .path("submissions/")
                 .request()
-                .get(new GenericType<List<Submission>>() {});
+                .get(new GenericType<List<SubmissionDB>>() {});
     }
 
     /**
@@ -86,12 +84,12 @@ public class ServerUtils {
      * @param id the id of the submission
      * @return the submission with the given id
      */
-    public Submission getSubmission(long id) {
+    public SubmissionDB getSubmission(long id) {
         return getWebTarget()
                 .path("submissions/")
                 .path(String.valueOf(id))
                 .request()
-                .get(Submission.class);
+                .get(SubmissionDB.class);
     }
 
     /**
@@ -110,14 +108,14 @@ public class ServerUtils {
     /**
      * Method for adding a submission
      *
-     * @param submission the submission to be added
+     * @param submissionDB the submission to be added
      * @return the submission that was added
      */
-    public Submission addSubmission(Submission submission) {
+    public SubmissionDB addSubmission(SubmissionDB submissionDB) {
         return getWebTarget()
                 .path("submissions/")
                 .request()
-                .post(Entity.json(submission), Submission.class);
+                .post(Entity.json(submissionDB), SubmissionDB.class);
     }
 
     /**
@@ -137,15 +135,15 @@ public class ServerUtils {
     /**
      * Method for updating a submission
      *
-     * @param submission the submission to be updated
+     * @param submissionDB the submission to be updated
      * @return the submission that was updated
      */
-    public Submission updateSubmission(Submission submission) {
+    public SubmissionDB updateSubmission(SubmissionDB submissionDB) {
         return getWebTarget()
                 .path("submissions/")
-                .path(String.valueOf(submission.getId()))
+                .path(String.valueOf(submissionDB.getId()))
                 .request()
-                .put(Entity.json(submission), Submission.class);
+                .put(Entity.json(submissionDB), SubmissionDB.class);
     }
 
     /**
@@ -180,13 +178,13 @@ public class ServerUtils {
      * @param id the id of the user
      * @return the submissions of the user
      */
-    public List<Submission> getSubmissionsOfUser(long id) {
+    public List<SubmissionDB> getSubmissionsOfUser(long id) {
         return getWebTarget()
                 .path("users/")
                 .path(String.valueOf(id))
                 .path("submissions/")
                 .request()
-                .get(new GenericType<List<Submission>>() {
+                .get(new GenericType<List<SubmissionDB>>() {
                 });
     }
 }

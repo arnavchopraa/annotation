@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.models.Submission;
+import org.example.models.SubmissionDB;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.example.database.SubmissionRepository;
@@ -28,7 +28,7 @@ public class SubmissionService {
      * @param id the id of the submission
      * @return the submission with the given id
      */
-    public Submission getSubmission(String id) {
+    public SubmissionDB getSubmission(String id) {
         if (repo.findById(id).isEmpty()) {
             return null;
         }
@@ -40,26 +40,26 @@ public class SubmissionService {
      *
      * @return a list of all the submissions in the database
      */
-    public List<Submission> getSubmissions() {
+    public List<SubmissionDB> getSubmissions() {
         return Streamable.of(repo.findAll()).toList();
     }
 
     /**
      * This method adds a submission to the database
      *
-     * @param submission the submission to be added
+     * @param submissionDB the submission to be added
      * @return the submission that was added
      */
-    public Submission addSubmission(Submission submission) {
+    public SubmissionDB addSubmission(SubmissionDB submissionDB) {
         // check if the submission is null
-        if (submission == null) {
+        if (submissionDB == null) {
             return null;
         }
         // Check if the submission already exists
-        if (repo.findById(submission.getId()).isPresent()) {
+        if (repo.findById(submissionDB.getId()).isPresent()) {
             return null;
         }
-        return repo.save(submission);
+        return repo.save(submissionDB);
     }
 
     /**
@@ -68,26 +68,26 @@ public class SubmissionService {
      * @param id the id of the submission to be deleted
      * @return the submission that was deleted
      */
-    public Submission deleteSubmission(String id) {
+    public SubmissionDB deleteSubmission(String id) {
         if (repo.findById(id).isEmpty()) {
             return null;
         }
-        Submission submission = repo.findById(id).get();
+        SubmissionDB submissionDB = repo.findById(id).get();
         repo.deleteById(id);
-        return submission;
+        return submissionDB;
     }
 
     /**
      * This method updates a submission in the database
      *
-     * @param submission the submission to be updated
+     * @param submissionDB the submission to be updated
      * @return the submission that was updated
      */
-    public Submission updateSubmission(Submission submission) {
+    public SubmissionDB updateSubmission(SubmissionDB submissionDB) {
         // check if the submission is null
-        if (submission == null) {
+        if (submissionDB == null) {
             return null;
         }
-        return repo.save(submission);
+        return repo.save(submissionDB);
     }
 }
