@@ -44,6 +44,10 @@ public class SubmissionService {
         return Streamable.of(repo.findAll()).toList();
     }
 
+    public List<SubmissionDB> getCoordinatorsSubmissions(String id) {
+        return repo.findByAssignedCoordinator(id);
+    }
+
     /**
      * This method adds a submission to the database
      *

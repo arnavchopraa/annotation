@@ -6,10 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Entity
+@ToString
+@AllArgsConstructor
 @Table(name="coordinators")
 public class User {
     @Id

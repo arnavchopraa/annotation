@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 public class UserController {
     private UserService service;
@@ -43,6 +44,7 @@ public class UserController {
      * @return the user with the given id
      */
     @GetMapping("/{id}")
+
     public ResponseEntity<User> getUser( @PathVariable("id") String id) {
         User user = service.getUser(id);
         if (user == null) {

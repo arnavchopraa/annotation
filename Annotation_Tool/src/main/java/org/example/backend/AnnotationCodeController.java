@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/annotation-codes")
+@CrossOrigin(origins = "*")
+@RequestMapping("/annotations")
 public class AnnotationCodeController {
     private final AnnotationCodeService service;
 
