@@ -2,7 +2,7 @@ package org.example.utils;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import org.example.models.Submission;
+import org.example.models.SubmissionEntity;
 import org.example.models.User;
 
 import java.util.List;
@@ -57,15 +57,15 @@ public class ServerUtils {
                 .get(new GenericType<List<User>>() {});
     }
     /**
-     * Method for getting the submissions
+     * Method for getting the SubmissionEntitys
      *
-     * @return the submissions
+     * @return the SubmissionEntitys
      */
-    public List<Submission> getSubmissions() {
+    public List<SubmissionEntity> getSubmissionEntitys() {
         return getWebTarget()
-                .path("submissions/")
+                .path("SubmissionEntitys/")
                 .request()
-                .get(new GenericType<List<Submission>>() {});
+                .get(new GenericType<List<SubmissionEntity>>() {});
     }
 
     /**
@@ -82,17 +82,17 @@ public class ServerUtils {
                 .get(User.class);
     }
     /**
-     * Method for getting the submission with the given id
+     * Method for getting the SubmissionEntity with the given id
      *
-     * @param id the id of the submission
-     * @return the submission with the given id
+     * @param id the id of the SubmissionEntity
+     * @return the SubmissionEntity with the given id
      */
-    public Submission getSubmission(long id) {
+    public SubmissionEntity getSubmissionEntity(long id) {
         return getWebTarget()
-                .path("submissions/")
+                .path("SubmissionEntitys/")
                 .path(String.valueOf(id))
                 .request()
-                .get(Submission.class);
+                .get(SubmissionEntity.class);
     }
 
     /**
@@ -109,16 +109,16 @@ public class ServerUtils {
     }
 
     /**
-     * Method for adding a submission
+     * Method for adding a SubmissionEntity
      *
-     * @param submission the submission to be added
-     * @return the submission that was added
+     * @param SubmissionEntity the SubmissionEntity to be added
+     * @return the SubmissionEntity that was added
      */
-    public Submission addSubmission(Submission submission) {
+    public SubmissionEntity addSubmissionEntity(SubmissionEntity SubmissionEntity) {
         return getWebTarget()
-                .path("submissions/")
+                .path("SubmissionEntitys/")
                 .request()
-                .post(Entity.json(submission), Submission.class);
+                .post(Entity.json(SubmissionEntity), SubmissionEntity.class);
     }
 
     /**
@@ -136,17 +136,17 @@ public class ServerUtils {
     }
 
     /**
-     * Method for updating a submission
+     * Method for updating a SubmissionEntity
      *
-     * @param submission the submission to be updated
-     * @return the submission that was updated
+     * @param SubmissionEntity the SubmissionEntity to be updated
+     * @return the SubmissionEntity that was updated
      */
-    public Submission updateSubmission(Submission submission) {
+    public SubmissionEntity updateSubmissionEntity(SubmissionEntity SubmissionEntity) {
         return getWebTarget()
-                .path("submissions/")
-                .path(String.valueOf(submission.getId()))
+                .path("SubmissionEntitys/")
+                .path(String.valueOf(SubmissionEntity.getId()))
                 .request()
-                .put(Entity.json(submission), Submission.class);
+                .put(Entity.json(SubmissionEntity), SubmissionEntity.class);
     }
 
     /**
@@ -163,31 +163,31 @@ public class ServerUtils {
     }
 
     /**
-     * Method for deleting a submission
+     * Method for deleting a SubmissionEntity
      *
-     * @param id the id of the submission to be deleted
+     * @param id the id of the SubmissionEntity to be deleted
      */
-    public void deleteSubmission(long id) {
+    public void deleteSubmissionEntity(long id) {
         getWebTarget()
-                .path("submissions/")
+                .path("SubmissionEntitys/")
                 .path(String.valueOf(id))
                 .request()
                 .delete();
     }
 
     /**
-     * Method for getting the submissions of a user
+     * Method for getting the SubmissionEntitys of a user
      *
      * @param id the id of the user
-     * @return the submissions of the user
+     * @return the SubmissionEntitys of the user
      */
-    public List<Submission> getSubmissionsOfUser(long id) {
+    public List<SubmissionEntity> getSubmissionEntitysOfUser(long id) {
         return getWebTarget()
                 .path("users/")
                 .path(String.valueOf(id))
-                .path("submissions/")
+                .path("SubmissionEntitys/")
                 .request()
-                .get(new GenericType<List<Submission>>() {
+                .get(new GenericType<List<SubmissionEntity>>() {
                 });
     }
 }

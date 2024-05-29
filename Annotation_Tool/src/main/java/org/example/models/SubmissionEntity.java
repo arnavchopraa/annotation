@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name="Submissions")
-public class Submission implements Serializable{
+public class SubmissionEntity implements Serializable{
     @Id
     private Long id;
 
@@ -25,29 +25,29 @@ public class Submission implements Serializable{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "submission")
+    @OneToMany(mappedBy = "SubmissionEntity")
     private List<FileEntity> files;
 
     /**
-     * Basic constructor for Submission
+     * Basic constructor for SubmissionEntity
      *
-     * @param id   the id of the submission
-     * @param user the user of the submission
+     * @param id   the id of the SubmissionEntity
+     * @param user the user of the SubmissionEntity
      */
-    public Submission(Long id, User user) {
+    public SubmissionEntity(Long id, User user) {
         this.id = id;
         this.user = user;
         this.files = new ArrayList<FileEntity>();
     }
     /**
-     * Basic constructor for Submission
+     * Basic constructor for SubmissionEntity
      *
-     * @param id   the id of the submission
-     * @param user the user of the submission
-     * @param file the file of the submission
+     * @param id   the id of the SubmissionEntity
+     * @param user the user of the SubmissionEntity
+     * @param file the file of the SubmissionEntity
      * @throws IOException if the file could not be read
      */
-    public Submission(Long id, User user, File file) throws IOException {
+    public SubmissionEntity(Long id, User user, File file) throws IOException {
         this.id = id;
         this.user = user;
         this.files = new ArrayList<FileEntity>();
@@ -62,14 +62,14 @@ public class Submission implements Serializable{
     }
 
     /**
-     * Basic constructor for Submission
+     * Basic constructor for SubmissionEntity
      *
-     * @param id    the id of the submission
-     * @param user  the user of the submission
-     * @param files the files of the submission
+     * @param id    the id of the SubmissionEntity
+     * @param user  the user of the SubmissionEntity
+     * @param files the files of the SubmissionEntity
      * @throws IOException if the files could not be read
      */
-    public Submission(Long id, User user, List<File> files) throws IOException {
+    public SubmissionEntity(Long id, User user, List<File> files) throws IOException {
         this.id = id;
         this.user = user;
         this.files = new ArrayList<FileEntity>();
@@ -86,42 +86,42 @@ public class Submission implements Serializable{
     }
 
     /**
-     * Basic constructor for Submission
+     * Basic constructor for SubmissionEntity
      */
 
-    public Submission() { }
+    public SubmissionEntity() { }
 
     /**
-     * Getter for the id of the submission
+     * Getter for the id of the SubmissionEntity
      *
-     * @return the id of the submission
+     * @return the id of the SubmissionEntity
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * Setter for the id of the submission
+     * Setter for the id of the SubmissionEntity
      *
-     * @param id the id of the submission
+     * @param id the id of the SubmissionEntity
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
-     * Getter for the user of the submission
+     * Getter for the user of the SubmissionEntity
      *
-     * @return the user of the submission
+     * @return the user of the SubmissionEntity
      */
     public User getUser() {
         return user;
     }
 
     /**
-     * Setter for the user of the submission
+     * Setter for the user of the SubmissionEntity
      *
-     * @param user the user of the submission
+     * @param user the user of the SubmissionEntity
      */
 
     public void setUser(User user) {
@@ -129,16 +129,16 @@ public class Submission implements Serializable{
     }
 
     /**
-     * Getter for the files of the submission
+     * Getter for the files of the SubmissionEntity
      *
-     * @return the files of the submission
+     * @return the files of the SubmissionEntity
      * @throws IOException if the files could not be read
      */
     public List<File> getFiles() throws IOException{
         List<File> files = new ArrayList<>();
         for (FileEntity fileContent : this.files) {
             try {
-                File file = File.createTempFile("submission", ".tmp");
+                File file = File.createTempFile("SubmissionEntity", ".tmp");
                 file.deleteOnExit();
                 try (FileOutputStream fis = new FileOutputStream(file)) {
                     fis.write(fileContent.getData());
@@ -152,9 +152,9 @@ public class Submission implements Serializable{
     }
 
     /**
-     * Setter for the files of the submission
+     * Setter for the files of the SubmissionEntity
      *
-     * @param files the files of the submission
+     * @param files the files of the SubmissionEntity
      * @throws IOException if the files could not be read
      */
     public void setFiles(List<File> files) throws IOException{

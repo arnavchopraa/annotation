@@ -19,7 +19,7 @@ public class FileEntity implements Serializable {
     private byte[] data;
 
     @ManyToOne
-    private Submission submission;
+    private SubmissionEntity SubmissionEntity;
 
     /**
      * Basic constructor for FileEntity
