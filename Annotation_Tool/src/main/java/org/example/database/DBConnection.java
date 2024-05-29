@@ -13,7 +13,9 @@ public class DBConnection {
         if(connection == null) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/annotation", "root", "Universitate!1");
+                connection = DriverManager.getConnection(
+    "jdbc:mysql://avnadmin:AVNS_YcLJdqH1K2QB6aSxIsN@mysql-425b8ae-pdf-parser.i.aivencloud.com:24979/defaultdb?ssl-mode=REQUIRED"
+        , "avnadmin", "AVNS_YcLJdqH1K2QB6aSxIsN");
             } catch (Exception e) {
                 e.printStackTrace();
             }
