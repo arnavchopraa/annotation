@@ -50,6 +50,7 @@
     background-color: hsla(0, 0%, 0%, 0.10);
     color: hsla(0, 0%, 0%, 1.00);
 
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
     transition-property: background-color, color;
     transition-duration: 0.2s, 0.2s;
     transition-timing-function: ease, ease;
@@ -57,6 +58,7 @@
 
 .nav-link:hover, .nav-link.current {
     background-color: hsla(0, 0%, 0%, 1.00);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
 .nav-link:hover path, .nav-link.current .embed-icon path {
