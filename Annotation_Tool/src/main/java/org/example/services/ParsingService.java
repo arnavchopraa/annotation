@@ -38,7 +38,7 @@ public class ParsingService {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
             // this gets rid of the references
-            CaptionExtractionService.imageCoordinates(file);
+            //CaptionExtractionService.imageCoordinates(file);
             // what about abstract??
             text = removeAbstract(text);
             // still need to separate references and appendices
@@ -265,6 +265,7 @@ public class ParsingService {
         return text.substring(index + 10);
     }
 
+    /**
      * Given a list of lines, separates tables
      * @param lines list of identified lines
      * @return list of identified table coordinates
