@@ -17,7 +17,7 @@ public class QueryService {
      */
     public String queryResults(String key) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select codeContent from annotations where id = ");
+        sb.append("select code_content from annotations where id = ");
         sb.append("'");
         sb.append(key);
         sb.append("'");
