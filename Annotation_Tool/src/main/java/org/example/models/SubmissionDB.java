@@ -3,9 +3,10 @@ package org.example.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Base64;
 
 @Entity
@@ -27,32 +28,47 @@ public class SubmissionDB {
     @Column(name="assigned_coordinator")
     private String assignedCoordinator;
 
+    @Column(name="file_name")
+    private String fileName;
+
+    @Column(name="last_submitted")
+    private Date lastSubmitted;
+
     /**
-     * This method
+     * This method encrypts the submission to a supported format for JSON
      *
      * @param submissionDB the submission to convert to base64
      * @return the encrypted submission
      */
-    public static SubmissionDTO convert(SubmissionDB submissionDB) {
+    public static SubmissionDTO convertToBinary(SubmissionDB submissionDB) {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
-            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator());
+            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator()
+                    , submissionDB.getFileName(), submissionDB.getLastSubmitted());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
             base64File = Base64.getEncoder().encodeToString(fileByte);
-            try {
-                FileWriter myWriter = new FileWriter("filename.txt");
-                myWriter.write(base64File);
-                myWriter.close();
-                System.out.println("Successfully wrote to the file.");
-            } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator());
+        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator()
+                , submissionDB.getFileName(), submissionDB.getLastSubmitted());
+    }
+
+    /**
+     * This method decrypts the submission to a supported format for JSON
+     *
+     * @param submissionDTO the submission to convert to base64
+     * @return the decrypted submission
+     */
+    public static SubmissionDB convertToBlob(SubmissionDTO submissionDTO) {
+        byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
+        try {
+            return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
+                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

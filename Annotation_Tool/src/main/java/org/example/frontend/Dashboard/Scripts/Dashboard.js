@@ -36,7 +36,7 @@ function getFiles() {
 
                 line.className = 'table-line'
                 one.className = 'table-cell'
-                const node1 = document.createTextNode(sub.id);
+                const node1 = document.createTextNode(sub.fileName);
                 one.appendChild(node1);
                 two.className = 'table-cell'
                 const node2 = document.createTextNode('Today');
@@ -54,7 +54,7 @@ function getFiles() {
                 line.appendChild(four)
 
                 line.addEventListener('click', function() {
-                    localStorage.setItem('file', sub.fileSubmission)
+                    localStorage.setItem('file', sub.id)
                     window.location.href = "../Home/Home.html"
                 })
 

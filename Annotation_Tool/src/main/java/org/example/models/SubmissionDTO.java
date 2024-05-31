@@ -2,6 +2,8 @@ package org.example.models;
 
 import lombok.*;
 
+import java.sql.Date;
+
 @Setter
 @Getter
 @ToString
@@ -11,4 +13,6 @@ public class SubmissionDTO {
     private String id;
     private String fileSubmission;
     private String assignedCoordinator;
+    private String fileName;
+    private Date lastSubmitted;
 }

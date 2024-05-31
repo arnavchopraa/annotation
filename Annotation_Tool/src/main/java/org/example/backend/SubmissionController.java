@@ -37,8 +37,10 @@ public class SubmissionController {
      */
     @GetMapping("/")
     @ResponseBody
-    public ResponseEntity<List<SubmissionDB>> getSubmissions() {
-        return ResponseEntity.ok(service.getSubmissions());
+    public ResponseEntity<List<SubmissionDTO>> getSubmissions() {
+        return ResponseEntity.ok(service.getSubmissions().stream()
+                .map(x -> SubmissionDB.convertToBinary(x))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -49,12 +51,12 @@ public class SubmissionController {
      */
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<SubmissionDB> getSubmission(@PathVariable("id") String id) {
+    public ResponseEntity<SubmissionDTO> getSubmission(@PathVariable("id") String id) {
         SubmissionDB sub = service.getSubmission(id);
         if (sub == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(sub);
+        return ResponseEntity.ok(SubmissionDB.convertToBinary(sub));
     }
 
     /**
@@ -68,7 +70,7 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
         List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
         List<SubmissionDTO> resp = sub.stream()
-            .map(x -> SubmissionDB.convert(x))
+            .map(x -> SubmissionDB.convertToBinary(x))
             .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
     }
@@ -76,13 +78,13 @@ public class SubmissionController {
     /**
      * This method adds a submission to the database
      *
-     * @param submissionDB the submission to be added
+     * @param submissionDTO the submission to be added
      * @return the submission that was added
      */
     @PostMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDB submissionDB) {
-        SubmissionDB sub1 = service.addSubmission(submissionDB);
+    public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDTO submissionDTO) {
+        SubmissionDB sub1 = service.addSubmission(SubmissionDB.convertToBlob(submissionDTO));
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -93,17 +95,20 @@ public class SubmissionController {
      * This method updates a submission in the database
      *
      * @param id the id of the submission
-     * @param submissionDB the submission to be updated
+     * @param submissionDTO the submission to be updated
      * @return the submission that was updated
      */
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<SubmissionDB> updateSubmission(@PathVariable("id") String id, @RequestBody SubmissionDB submissionDB) {
-        SubmissionDB sub1 = service.updateSubmission(submissionDB);
+    public ResponseEntity<SubmissionDTO> updateSubmission(@PathVariable("id") String id, @RequestBody SubmissionDTO submissionDTO) {
+        // TODO: check if id is same in both
+
+
+        SubmissionDB sub1 = service.updateSubmission(SubmissionDB.convertToBlob(submissionDTO));
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(sub1);
+        return ResponseEntity.ok(submissionDTO);
     }
 
     /**
