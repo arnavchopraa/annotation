@@ -48,7 +48,7 @@ public class ParsingService {
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + preprocess(queryService.queryResults(a.getContents())) + "\n";
                     }
                     else if(a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))
