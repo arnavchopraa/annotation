@@ -25,10 +25,9 @@ function getFiles() {
         .then(submissions => {
             const table = document.getElementById('table-content');
 
-            console.log(table)
+            let index = 0
 
             submissions.forEach(sub => {
-                console.log(sub)
                 const line = document.createElement('div')
                 const one=  document.createElement('p')
                 const two = document.createElement('p')
@@ -53,6 +52,12 @@ function getFiles() {
                 line.appendChild(two)
                 line.appendChild(three)
                 line.appendChild(four)
+
+                line.addEventListener('click', function() {
+                    localStorage.setItem('file', sub.fileSubmission)
+                    window.location.href = "../Home/Home.html"
+                })
+
 
                 table.appendChild(line)
             })

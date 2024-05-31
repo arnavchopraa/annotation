@@ -1,7 +1,6 @@
 package org.example.backend;
 
 import org.example.models.User;
-import org.example.database.UserRepository;
 import org.example.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
 package org.example.backend;
 
+import org.example.models.SubmissionDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.example.services.SubmissionService;
 import org.example.models.SubmissionDB;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -63,9 +65,12 @@ public class SubmissionController {
      */
     @GetMapping("/coordinator/{id}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionDB>> getCoordinatorsSubmission(@PathVariable("id") String id) {
+    public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
         List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
-        return ResponseEntity.ok(sub);
+        List<SubmissionDTO> resp = sub.stream()
+            .map(x -> SubmissionDB.convert(x))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(resp);
     }
 
     /**

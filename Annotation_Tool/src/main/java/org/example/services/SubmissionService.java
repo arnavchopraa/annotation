@@ -44,6 +44,12 @@ public class SubmissionService {
         return Streamable.of(repo.findAll()).toList();
     }
 
+    /**
+     * This method returns all the submissions related to a given coordinator from the database
+     *
+     * @param id the id of the coordinator
+     * @return the submissions associated with a coordinator
+     */
     public List<SubmissionDB> getCoordinatorsSubmissions(String id) {
         return repo.findByAssignedCoordinator(id);
     }

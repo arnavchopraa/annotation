@@ -20,7 +20,6 @@ import java.util.*;
 
 public class ParsingService {
 
-    private QueryService queryService = new QueryService();
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
