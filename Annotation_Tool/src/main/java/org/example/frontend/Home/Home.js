@@ -1,35 +1,123 @@
 const fileInput = document.getElementById('fileInput');
-
-const pdfText = document.getElementById('pdfText');
-const annotationsText = document.getElementById('annotationsText');
-const errorMessage = document.getElementById('error')
+const pdfObject = document.getElementById('pdfObject');
 
 /**
-    * Detect when a file has been inputted and call the process method.
+    * Detect when a file has been inputted and render the PDF file.
+    * Also listen for changes in the file such as adding / editing / deleting annotations and saving the file
 **/
 fileInput.addEventListener('change', function(e) {
-    var file = e.target.files[0];
-    if (!file)
-        return;
+        var file = e.target.files[0];
+        if (!file)
+            return;
 
-    processFile(file)
+        //showcasing the file
+		var adobeDCView = new AdobeDC.View({clientId: "543b9355cff44d19821857d8b0ddfb96", divId: "pdfContainer"});
+		adobeDCView.previewFile({
+			content:{location: {url: URL.createObjectURL(file)}},
+			metaData:{fileName: file.name, id: file.name}
+		},
+		{
+            enableAnnotationAPIs: true,
+            includePDFAnnotations: true
+        });
+
+        //options for the saving of the document
+        const saveOptions = {
+           autoSaveFrequency: 0,
+           enableFocusPolling: false,
+           showSaveButton: true
+        }
+
+        //registering the save functionality
+        adobeDCView.registerCallback(
+           AdobeDC.View.Enum.CallbackType.SAVE_API,
+           function(metaData, content, options) {
+              console.log("Document was saved")
+              return new Promise((resolve, reject) => {
+                 resolve({
+                    code: AdobeDC.View.Enum.ApiResponseCode.SUCCESS,
+                    data: {
+                      metaData: Object.assign(metaData, {fileName: file.name})
+                    }
+                 });
+              });
+           },
+        saveOptions);
+
+
+        //promise used to listen to changes
+        const previewFilePromise = adobeDCView.previewFile({
+                                   			content:{location: {url: URL.createObjectURL(file)}},
+                                   			metaData:{fileName: file.name, id: file.name}
+                                   		},
+                                   		{
+                                               enableAnnotationAPIs: true,
+                                               includePDFAnnotations: true
+                                           });
+
+        //changes that we listen to
+        const eventOptions = {
+        	listenOn: [
+        		"ANNOTATION_ADDED", "ANNOTATION_UPDATED", "ANNOTATION_DELETED"
+        	]
+        }
+
+        //listening to changes in the pdf document
+        previewFilePromise
+        	    .then((adobeViewer) => {
+        			    adobeViewer.getAnnotationManager()
+        						.then(annotationManager => {
+        						    //getting all of the annotations
+        							annotationManager.getAnnotations()
+        								.then(result => {
+        									console.log("All annotations: ", result);
+        								})
+        								.catch(e => {
+        									console.log(e);
+        								});
+
+                                    annotationManager.registerEventListener(
+                                    		function (event) {
+                                    				console.log(event.type, event.data)
+                                    				if (event.type === 'ANNOTATION_ADDED') {
+                                    					    console.log("Annotation added\nAll annotations: ", annotationManager.getAnnotations())
+                                    				} else if (event.type === 'ANNOTATION_UPDATED') {
+                                    						console.log("Annotation updated\nAll annotations: ", annotationManager.getAnnotations())
+                                    				} else if (event.type === 'ANNOTATION_DELETED') {
+                                    						console.log("Annotation deleted\nAll annotations: ", annotationManager.getAnnotations())
+                                    				}
+                                    		},
+                                    		eventOptions
+                                    );
+
+        						})
+        						.catch(e => {
+        							console.log(e);
+        						});
+        		})
+        		.catch(e => {
+        			console.log(e);
+        		});
+
+
+
+
+	});
+
+
+/**
+    * Fetch the codes from the database when the page loads.
+**/
+document.addEventListener('DOMContentLoaded', function() {
+    fetchCodes();
 });
 
 /**
-    * Method using fetch API to communicate with backend.
-    * It parses the file and updates the text and annotations containers.
-
-    @param file: The file to be processed
+    * Add the codes from the backend to the container and display them as buttons.
 **/
-function processFile(file) {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    var endpoint = "http://localhost:8080/frontend";
-    fetch(endpoint, {
-        method: "POST",
-        body: formData
-    })
+function fetchCodes() {
+    var endpoint = "http://localhost:8080/frontend/codes";
+    fetch(endpoint)
     .then(response => {
         if(response.ok) {
             return response.json();
@@ -37,100 +125,16 @@ function processFile(file) {
             throw new Error('Failed to fetch');
         }
     })
-    .then(data => {
-        if(data.text) {
-            pdfText.innerText = data.text;
-        } else {
-            pdfText.innerText = ""; // Clear the container if no text is received
-        }
+    .then(codes => {
+        const codesContainer = document.getElementById('codes');
 
-        if(data.annotations) {
-            annotationsText.innerText = data.annotations;
-        } else {
-            annotationsText.innerText = "";
-        }
-
-        errorMessage.innerText = "";
-        fileInput.name = data.fileName;
+        codes.forEach(code => {
+            const codeButton = document.createElement('input');
+            codeButton.type = 'submit';
+            codeButton.className = 'code';
+            codeButton.value = code;
+            codesContainer.appendChild(codeButton);
+        });
     })
-    .catch(error => {
-        errorMessage.innerText = "An error occurred: " + error.message;
-    });
-}
-
-
-const pdfConvert = document.getElementById('convertToPDFButton');
-const txtConvert = document.getElementById('convertToTxtButton');
-
-/**
-    * Detect when the convert to .txt button is clicked.
-    * Initiate the download process for the file containing the text and annotations.
-**/
-txtConvert.addEventListener('click', function() {
-    const text = pdfText.innerText;
-    const annotations = annotationsText.innerText;
-
-    var pdfContent = "Text: \n" + text + "\n\n" + "Annotations: \n" + annotations;
-
-    var blob = new Blob([pdfContent], { type: 'text/plain' , endings: 'transparent'});
-    var anchor = document.createElement('a');
-
-    anchor.download = fileInput.name;
-    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-    anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
-    anchor.click();
-    anchor.remove();
-});
-
-/**
-    * Detect when the convert to .pdf button is clicked.
-    * Initiate the download process for the generated PDF file.
-**/
-pdfConvert.addEventListener('click', function () {
-    const text = pdfText.innerText;
-    const annotations = annotationsText.innerText;
-
-    exportPDF(text, annotations);
-});
-
-/**
-     * Method using fetch API to communicate with backend.
-     * It sends the text and annotations to the backend to generate a PDF file.
-
-     * @param text: The text to be included in the PDF
-     * @param annotations: The annotations to be included in the PDF
- **/
-function exportPDF(text, annotations) {
-    const formData = new FormData();
-    formData.append("text", text);
-    formData.append("annotations", annotations);
-
-    var endpoint = "http://localhost:8080/frontend/export";
-
-    fetch(endpoint, {
-        method: "POST",
-        body: formData
-    })
-    .then(response => {
-        if(response.ok) {
-            return response.blob();
-        } else {
-            throw new Error('Failed to fetch');
-        }
-    })
-    .then(response => {
-        var url = window.URL.createObjectURL(response);
-        var anchor = document.createElement('a');
-
-        anchor.href = url;
-        anchor.download = fileInput.name + ".pdf";
-
-        document.body.appendChild(anchor);
-        anchor.click();
-
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => {
-        errorMessage.innerText = "An error occurred: " + error.message;
-    });
+    .catch(error => console.error('Error fetching codes: ', error));
 }

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="../Dashboard/Styles/Navbar.css">
-    <link rel="stylesheet" type="text/css" href="Home.css">
+    <link rel="stylesheet" type="text/css" href="Parsing.css">
 </head>
 
 <body>
@@ -71,26 +71,34 @@
             <div class="controls">
                 <input class="control-button" type="submit" id="prevFile" value="Previous">
 
-                <!--            delete after integration-->
-                <input type="file" id="fileInput" accept="application/pdf">
+                <!--        delete after passing the modified document from Home.html to here or at least hide input-->
+                <input type="file" id="fileInput" accept="application/pdf" placeholder="No file chosen...">
 
-                <form action="../Parsing/Parsing.html" method="get">
-                    <input class="control-button" type="submit" id="submitFile" value="Submit">
-                </form>
+                <div class="dropdown">
+                    <input class="control-button" type="submit" id="exportButton" value="Export">
+                    <div class="dropdown-content">
+                        <input class="control-button" type="submit" id="convertToPDFButton" value=".pdf">
+                        <input class="control-button" type="submit" id="convertToTxtButton" value=".txt">
+                    </div>
+                </div>
 
-                <input class="control-button last" type="submit" id="nextFile" value="Next">
+                <span id="error"></span>
+
+                <input class="control-button last" type="submit" value="Next">
             </div>
 
-            <div class="container" id="pdfContainer"></div>
-            <script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
+            <div class="container" id="pdfContainer">
+                <div class="text" id="pdfText" contenteditable="false"></div>
+            </div>
 
-            <div class="container" id="codesContainer">
-                <div id="codes"></div>
+            <div class="container" id="annotationsContainer">
+                <div class="text" id="annotationsText" contenteditable="false"></div>
             </div>
         </div>
+
     </section>
 
-    <script src="Home.js"></script>
+    <script src="Parsing.js"></script>
 </body>
 
 </html>

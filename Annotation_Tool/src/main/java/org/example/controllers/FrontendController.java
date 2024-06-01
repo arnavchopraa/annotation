@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import org.example.exceptions.PDFException;
 import org.example.services.FileService;
+import org.example.services.QueryService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -30,19 +32,14 @@ public class FrontendController {
      */
     @PostMapping("/frontend")
     public ResponseEntity<PairUtils> retrieveFile(@RequestParam("file") MultipartFile file) {
-        File pdfFile;
         try {
-            pdfFile = FileUtils.convertToFile(file);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);
-        }
-
-        PairUtils result;
-        try {
-            result = parsingService.parsePDF(pdfFile);
+            File aPDFFile = FileUtils.convertToFile(file);
+            PairUtils result = parsingService.parsePDF(aPDFFile);
             return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (PDFException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -66,5 +63,15 @@ public class FrontendController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * GET - Endpoint for retrieving the list of codes from the database
+     * @return 200 OK - List of codes
+     */
+    @GetMapping("/frontend/codes")
+    public List<String> getCodes() {
+        String query = "SELECT id FROM annotations";
+        return QueryService.queryExecution(query);
     }
 }
