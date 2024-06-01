@@ -40,15 +40,21 @@ public class TestUtils {
      * @throws IOException if there are problems with creating the document
      */
     public PDDocument generatePDF(String text) throws IOException {
+        float yCur = yOffset;
         PDDocument document = new PDDocument();
         PDPage firstPage = new PDPage();
         document.addPage(firstPage);
+        String[] lines = text.split("\n");
 
         PDPageContentStream pageContentStream = new PDPageContentStream(document, firstPage);
         pageContentStream.beginText();
         pageContentStream.setFont(font, fontSize);
-        pageContentStream.newLineAtOffset(xOffset, yOffset);
-        pageContentStream.showText(text);
+        pageContentStream.newLineAtOffset(xOffset, yCur);
+        for(String line : lines) {
+            yCur -= fontSize;
+            pageContentStream.showText(line);
+            pageContentStream.newLineAtOffset(xOffset, yCur);
+        }
         pageContentStream.endText();
         pageContentStream.close();
 

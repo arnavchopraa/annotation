@@ -171,4 +171,22 @@ public class ParsingServiceTest {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
     }
+
+    @Test
+    public void testRemoveAbstract() {
+        String text = "Abstract\nThis is a PDF file";
+        try {
+            File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
+            PairUtils pair = ps.parsePDF(pdf);
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals("This is a PDF file", res);
+            assertEquals("", pair.getAnnotations());
+            assertEquals(pair.removeFileExtension(pdf.getName()), pair.getFileName());
+            pdf.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }
 }
