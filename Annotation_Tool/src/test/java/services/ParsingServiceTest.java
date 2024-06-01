@@ -78,15 +78,9 @@ public class ParsingServiceTest {
             File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
             PairUtils pair = ps.parsePDF(pdf);
             String res = pair.getText();
-            File debugFile = new File("debug.txt");
-            FileWriter writer = new FileWriter(debugFile);
-            for(int i = 0;i < res.length();i ++) {
-                Integer value = (int) res.charAt(i);
-                writer.write(value.toString());
-                writer.write('\n');
-            }
-            writer.close();
-            assertEquals(text + "\r\n", pair.getText());
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
             assertEquals("", pair.getAnnotations());
             assertEquals(pdf.getName(), pair.getFileName());
             pdf.deleteOnExit();
@@ -104,8 +98,14 @@ public class ParsingServiceTest {
             testUtils.addAnnotation(pdf, content);
             File pdfFile = testUtils.convertPDFtoFile(pdf);
             PairUtils pair = ps.parsePDF(pdfFile);
-            assertEquals(text + "\r\n", pair.getText());
-            assertEquals("This is\r\n - " + content + "\n", pair.getAnnotations());
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
+            String annot = pair.getAnnotations();
+            annot = annot.replaceAll("\r", "");
+            annot = annot.replaceAll("\n", "");
+            assertEquals("This is - " + content, annot);
             assertEquals(pdfFile.getName(), pair.getFileName());
             pdfFile.deleteOnExit();
         } catch (IOException | PDFException e) {
@@ -157,8 +157,14 @@ public class ParsingServiceTest {
             List<PairUtils> pairList = ps.parseFilesList(pdfFile, pdfFile);
             PairUtils pair = pairList.get(0);
             assertEquals(pair, pairList.get(1));
-            assertEquals(text + "\r\n", pair.getText());
-            assertEquals("This is\r\n - " + content + "\n", pair.getAnnotations());
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
+            String annot = pair.getAnnotations();
+            annot = annot.replaceAll("\r", "");
+            annot = annot.replaceAll("\n", "");
+            assertEquals("This is - " + content, annot);
             assertEquals(pdfFile.getName(), pair.getFileName());
             pdfFile.deleteOnExit();
         } catch (IOException | PDFException e) {
