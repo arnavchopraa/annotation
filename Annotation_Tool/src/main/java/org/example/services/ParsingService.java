@@ -263,7 +263,9 @@ public class ParsingService {
     public String removeAbstract(String text) {
         int index = text.indexOf("Abstract\r\n");
         // skip over the Abstract\r\n characters (Abstract\r\n is 10 characters)
-        return text.substring(index + 10);
+        if(index != -1)
+            return text.substring(index + 10);
+        return text;
     }
 
     /**

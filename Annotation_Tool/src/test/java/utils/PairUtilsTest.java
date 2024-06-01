@@ -9,6 +9,6 @@ public class PairUtilsTest {
     @Test
     public void testRemoveExtension() {
         PairUtils pair = new PairUtils("This is a PDF file", "", "test.pdf");
-        assertEquals("test", pair.removeFileExtension(pair.getFileName()));
+        assertEquals("test", pair.getFileName());
     }
 }

@@ -82,7 +82,7 @@ public class ParsingServiceTest {
             res = res.replaceAll("\n", "");
             assertEquals(text, res);
             assertEquals("", pair.getAnnotations());
-            assertEquals(pdf.getName(), pair.getFileName());
+            assertEquals(pair.removeFileExtension(pdf.getName()), pair.getFileName());
             pdf.deleteOnExit();
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
@@ -106,7 +106,7 @@ public class ParsingServiceTest {
             annot = annot.replaceAll("\r", "");
             annot = annot.replaceAll("\n", "");
             assertEquals("This is - " + content, annot);
-            assertEquals(pdfFile.getName(), pair.getFileName());
+            assertEquals(pair.removeFileExtension(pdfFile.getName()), pair.getFileName());
             pdfFile.deleteOnExit();
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
@@ -165,7 +165,7 @@ public class ParsingServiceTest {
             annot = annot.replaceAll("\r", "");
             annot = annot.replaceAll("\n", "");
             assertEquals("This is - " + content, annot);
-            assertEquals(pdfFile.getName(), pair.getFileName());
+            assertEquals(pair.removeFileExtension(pdfFile.getName()), pair.getFileName());
             pdfFile.deleteOnExit();
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
