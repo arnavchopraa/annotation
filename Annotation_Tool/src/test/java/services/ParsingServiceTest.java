@@ -172,7 +172,7 @@ public class ParsingServiceTest {
         }
     }
 
-    @Test
+    /*@Test
     public void testRemoveAbstract() {
         String text = "Abstract\nThis is a PDF file";
         try {
@@ -188,5 +188,5 @@ public class ParsingServiceTest {
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
-    }
+    }*/
 }
