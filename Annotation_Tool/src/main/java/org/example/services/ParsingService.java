@@ -14,7 +14,6 @@ import org.apache.pdfbox.text.TextPosition;
 import org.example.exceptions.PDFException;
 import org.example.models.AnnotationCode;
 import org.example.utils.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.geom.Rectangle2D;
@@ -26,6 +25,11 @@ public class ParsingService {
 
     private AnnotationCodeService annotationCodeService;
 
+    /**
+     * This method creates a new instance of the ParsingService class
+     *
+     * @param annotationCodeService the service that provides codes
+     */
     public ParsingService(AnnotationCodeService annotationCodeService) {
         this.annotationCodeService = annotationCodeService;
     }
