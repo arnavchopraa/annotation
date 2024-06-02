@@ -26,13 +26,13 @@
     margin-bottom: 40px;
 
     font-weight: 700;
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
 }
 
 .step-row {
     display: flex;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
 .step-image-wrap {
@@ -57,11 +57,11 @@
 
 .step-title {
     color: #A9554C;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .step-heading {
-    font-size: 36px;
+    font-size: 25px;
     line-height: 1.2;
     color: #3e3e3e;
 }
@@ -70,5 +70,5 @@
     margin-top: 20px;
     color: #4e4e4e;
     text-align: left;
-    font-size: 18px;
+    font-size: 16px;
 }
