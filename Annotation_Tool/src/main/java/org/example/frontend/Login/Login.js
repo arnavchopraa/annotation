@@ -27,6 +27,7 @@ function handleFormSubmission(event) {
             // checking password HAHA
             if(userData.password === password) {
                 localStorage.setItem('username', login);
+                localStorage.setItem('role', userData.role);
                 window.location.href = "../Dashboard/Dashboard.html";
             } else {
                 throw new Error('Failed to fetch user');

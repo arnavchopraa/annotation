@@ -33,7 +33,7 @@ function getFiles() {
 
                 const one = document.createElement('p')
                 one.className = 'table-cell'
-                const node1 = document.createTextNode(sub.fileName);
+                const node1 = document.createTextNode(sub.id);
                 one.appendChild(node1);
                 line.appendChild(one)
 

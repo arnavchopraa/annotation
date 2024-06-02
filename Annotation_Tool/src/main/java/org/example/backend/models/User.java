@@ -32,6 +32,7 @@ public class User {
      *
      * @param name the name of the user
      * @param password the password of the user
+     * @param role the role of the user
      */
 
     public User(String name, String password, String role) {

@@ -44,7 +44,7 @@ public class UserController {
      */
     @GetMapping("/{id}")
 
-    public ResponseEntity<User> getUser( @PathVariable("id") String id) {
+    public ResponseEntity<User> getUser(@PathVariable("id") String id) {
         User user = service.getUser(id);
         if (user == null) {
             return ResponseEntity.notFound().build();

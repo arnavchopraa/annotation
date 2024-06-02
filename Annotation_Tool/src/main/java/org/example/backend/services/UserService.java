@@ -30,7 +30,7 @@ public class UserService {
      * @return the user with the given id
      */
     public User getUser(String id) {
-        if ( repo.findById(id).isEmpty() ) {
+        if (repo.findById(id).isEmpty() ) {
             return null;
         }
         return repo.findById(id).get();
