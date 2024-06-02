@@ -23,13 +23,20 @@ class UserTest {
 
     @Test
     void correctPassword() {
-        User user = new User("username", "password123");
+        User user = new User("username", "password123", "supervisor");
         assertTrue(user.checkPassword("password123"));
     }
 
     @Test
     void incorrectPassword() {
-        User user = new User("username", "password123");
+        User user = new User("username", "password123", "supervisor");
         assertFalse(user.checkPassword("password1234"));
+    }
+
+    @Test
+    void roleGetterAndSetter() {
+        User user = new User();
+        user.setRole("supervisor");
+        assertEquals("supervisor", user.getRole());
     }
 }

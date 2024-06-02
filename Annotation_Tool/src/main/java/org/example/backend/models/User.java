@@ -24,6 +24,9 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @Column(name="role")
+    private String role;
+
     /**
      * Basic constructor for User
      *
@@ -31,10 +34,11 @@ public class User {
      * @param password the password of the user
      */
 
-    public User(String name, String password) {
+    public User(String name, String password, String role) {
         this.name = name;
         //this.password = encoder.encode(password);
         this.password = password;
+        this.role = role;
     }
 
     /**
@@ -97,6 +101,24 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Getter for the role of the user
+     *
+     * @return the role of the user
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for the role of the user
+     *
+     * @param role the role of the user
+     */
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**

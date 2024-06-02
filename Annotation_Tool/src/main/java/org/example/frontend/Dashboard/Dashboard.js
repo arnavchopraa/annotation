@@ -25,43 +25,44 @@ function getFiles() {
         .then(submissions => {
             const table = document.getElementById('table-content');
 
-            let index = 0
+            let index = 0;
 
             submissions.forEach(sub => {
                 const line = document.createElement('div')
-                const one=  document.createElement('p')
-                const two = document.createElement('p')
-                const three =document.createElement('p')
-                const four = document.createElement('p')
-
                 line.className = 'table-line'
+
+                const one = document.createElement('p')
                 one.className = 'table-cell'
                 const node1 = document.createTextNode(sub.fileName);
                 one.appendChild(node1);
+                line.appendChild(one)
+
+                const two = document.createElement('p')
                 two.className = 'table-cell'
                 let node2;
-                console.log(sub.lastEdited)
                 if(sub.lastEdited == null)
                     node2 = document.createTextNode('Never')
                 else
                     node2 = document.createTextNode(sub.lastEdited)
                 two.appendChild(node2);
+                line.appendChild(two);
+
+                const three = document.createElement('p')
                 three.className = 'table-cell'
                 const node3 = document.createTextNode('No');
                 three.appendChild(node3);
+                line.appendChild(three);
+
+                const four = document.createElement('p')
                 four.className = 'table-cell'
                 const node4 = document.createTextNode('No');
                 four.appendChild(node4);
-
-                line.appendChild(one)
-                line.appendChild(two)
-                line.appendChild(three)
-                line.appendChild(four)
+                line.appendChild(four);
 
                 line.addEventListener('click', function() {
                     localStorage.setItem('file', sub.id)
                     window.location.href = "../Annotation/Annotation.html"
-                })
+                });
 
 
                 table.appendChild(line)
