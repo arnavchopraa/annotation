@@ -12,13 +12,23 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
 import org.example.exceptions.PDFException;
+import org.example.models.AnnotationCode;
 import org.example.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 
+@Service
 public class ParsingService {
+
+    private AnnotationCodeService annotationCodeService;
+
+    public ParsingService(AnnotationCodeService annotationCodeService) {
+        this.annotationCodeService = annotationCodeService;
+    }
 
     /**
      * Parses a pdf file including text and annotations
@@ -47,8 +57,14 @@ public class ParsingService {
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
-                                + preprocess(queryService.queryResults(a.getContents())) + "\n";
+                        AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
+                        if(ac != null) {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(annotationCodeService.getAnnotationCode(a.getContents()).getCodeContent()) + "\n";
+                        } else {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(a.getContents()) + "\n";
+                        }
                     }
                     else if(a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))

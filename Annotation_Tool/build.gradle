@@ -25,6 +25,7 @@ jacoco {
 test{
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
 
 jacocoTestReport {

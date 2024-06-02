@@ -38,7 +38,7 @@ public class FrontendController {
      */
     @Autowired
     public FrontendController(AnnotationCodeService annotationCodeService, SubmissionService submissionService) {
-        this.parsingService = new ParsingService();
+        this.parsingService = new ParsingService(annotationCodeService);
         this.fileService = new FileService();
         this.annotationCodeService = annotationCodeService;
         this.submissionService = submissionService;
