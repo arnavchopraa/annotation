@@ -2,7 +2,7 @@ package models;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.example.models.User;
+import org.example.backend.models.User;
 
 
 class UserTest {
