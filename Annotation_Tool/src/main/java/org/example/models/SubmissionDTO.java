@@ -15,4 +15,5 @@ public class SubmissionDTO {
     private String assignedCoordinator;
     private String fileName;
     private Date lastSubmitted;
+    private Date lastEdited;
 }

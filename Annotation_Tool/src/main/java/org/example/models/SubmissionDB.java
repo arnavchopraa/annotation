@@ -34,6 +34,9 @@ public class SubmissionDB {
     @Column(name="last_submitted")
     private Date lastSubmitted;
 
+    @Column(name="last_edited")
+    private Date lastEdited;
+
     /**
      * This method encrypts the submission to a supported format for JSON
      *
@@ -44,7 +47,7 @@ public class SubmissionDB {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
             return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator()
-                    , submissionDB.getFileName(), submissionDB.getLastSubmitted());
+                    , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
             base64File = Base64.getEncoder().encodeToString(fileByte);
@@ -52,7 +55,7 @@ public class SubmissionDB {
             e.printStackTrace();
         }
         return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator()
-                , submissionDB.getFileName(), submissionDB.getLastSubmitted());
+                , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited());
     }
 
     /**
@@ -65,7 +68,7 @@ public class SubmissionDB {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
-                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted());
+                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

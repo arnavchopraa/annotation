@@ -39,7 +39,12 @@ function getFiles() {
                 const node1 = document.createTextNode(sub.fileName);
                 one.appendChild(node1);
                 two.className = 'table-cell'
-                const node2 = document.createTextNode('Today');
+                let node2;
+                console.log(sub.lastEdited)
+                if(sub.lastEdited == null)
+                    node2 = document.createTextNode('Never')
+                else
+                    node2 = document.createTextNode(sub.lastEdited)
                 two.appendChild(node2);
                 three.className = 'table-cell'
                 const node3 = document.createTextNode('No');
