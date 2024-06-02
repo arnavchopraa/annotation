@@ -1,9 +1,13 @@
 package services;
 
+import org.example.database.AnnotationCodeRepository;
+import org.example.services.AnnotationCodeService;
 import org.example.services.ParsingService;
 import org.example.utils.Line;
 import org.example.utils.Table;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ParsingServiceTest {
 
+
+    private AnnotationCodeService annotationCodeService;
+    private ParsingService ps;
+
+    @BeforeEach
+    public void setUp() {
+        annotationCodeService = Mockito.mock(AnnotationCodeService.class);
+        ps = new ParsingService(annotationCodeService);
+    }
     @Test
     void mergeLinesTest() {
-        ParsingService ps = new ParsingService();
 
         Line l1 = new Line(0, 1, 2, 1);
         Line l2 = new Line(2.3f, 1, 5, 1);
@@ -35,7 +47,6 @@ public class ParsingServiceTest {
 
     @Test
     void processLinesTest() {
-        ParsingService ps = new ParsingService();
 
         Line l1 = new Line(0, 1, 4, 1);
         Line l2 = new Line(0, 1, 0, 5);

@@ -20,12 +20,11 @@ public class FileService {
      * Method for generating a PDF file from existing text and annotations
      * @param text the text modified by the user
      * @param annotations the annotations modified by the user
-     * @throws IOException if the file cannot be created
      * @return the PDF file as a byte array
+     * @throws IOException if the file cannot be created
      */
     public byte[] generatePDF(String text, String annotations) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); PDDocument document = new PDDocument()) {
-
             // PDFBox cannot parse newlines and carriage returns
             // Replace after data pre-processing is finished
             text = text.replaceAll("\\r", "");
