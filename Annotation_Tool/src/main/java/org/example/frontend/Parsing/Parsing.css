@@ -57,11 +57,11 @@ input[type="submit"] {
   transition-timing-function: ease;
  }
 
-input[type="submit"]:focus, input[type="submit"]:hover {
+input[type="submit"]:hover {
   background-color: var(--buttonHoverBackgroundColor);
   cursor: pointer;
 
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
 input[type="file"] {

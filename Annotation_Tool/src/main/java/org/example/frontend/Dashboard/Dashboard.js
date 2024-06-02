@@ -33,30 +33,25 @@ function getFiles() {
 
                 const one = document.createElement('p')
                 one.className = 'table-cell'
-                const node1 = document.createTextNode(sub.id);
-                one.appendChild(node1);
+                one.innerText = sub.id;
                 line.appendChild(one)
 
                 const two = document.createElement('p')
                 two.className = 'table-cell'
-                let node2;
                 if(sub.lastEdited == null)
-                    node2 = document.createTextNode('Never')
+                    two.innerText = 'Never';
                 else
-                    node2 = document.createTextNode(sub.lastEdited)
-                two.appendChild(node2);
+                    two.innerText = sub.lastEdited;
                 line.appendChild(two);
 
                 const three = document.createElement('p')
                 three.className = 'table-cell'
-                const node3 = document.createTextNode('No');
-                three.appendChild(node3);
+                three.innerText = 'No';
                 line.appendChild(three);
 
                 const four = document.createElement('p')
                 four.className = 'table-cell'
-                const node4 = document.createTextNode('No');
-                four.appendChild(node4);
+                four.innerText = 'No';
                 line.appendChild(four);
 
                 line.addEventListener('click', function() {
