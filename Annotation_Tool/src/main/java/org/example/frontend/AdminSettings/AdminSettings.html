@@ -83,42 +83,34 @@
 
                     <div class="admin-tools">
                         <h2 class="upload-header">1. All Submissions for an Assignment</h2>
+                            <input class="upload-input" type="file" id="zipInput" accept=".zip" required>
 
-                        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-                            <label class="upload-label" for="zipFile">Select a ZIP file:</label>
-
-                            <div class="upload">
-                                <input class="upload-input" type="file" id="zipFile" name="zipFile" accept=".zip" required>
-                                <button class="upload-button" type="submit">Upload</button>
-                            </div>
-                        </form>
+                            <label for="zipInput" class="upload-label">
+                                <span class="upload-button">Choose File</span>
+                                <span id="zipName" class="upload-name">No file chosen</span>
+                            </label>
                     </div>
 
                     <div class="admin-tools">
                         <h2 class="upload-header">2. List of Students and their Groups</h2>
 
-                        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-                            <label class="upload-label" for="csvFile">Select a CSV file:</label>
+                        <input class="upload-input" type="file" id="csvInput" accept=".csv" required>
 
-                            <div class="upload">
-                                <input class="upload-input" type="file" id="csvFile" name="csvFile" accept=".csv" required>
-                                <button class="upload-button" type="submit">Upload</button>
-                            </div>
-                        </form>
+                        <label for="csvInput" class="upload-label">
+                            <span class="upload-button">Choose File</span>
+                            <span id="csvName" class="upload-name">No file chosen</span>
+                        </label>
                     </div>
 
                     <div class="admin-tools">
                         <h2 class="upload-header">3. List of Coordinators Assigned to Each Group</h2>
 
-                        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-                            <label class="upload-label" for="excelFile">Select an Excel file:</label>
+                        <input class="upload-input" type="file" id="xlsxInput" accept=".xlsx, .xls" required>
 
-                            <div class="upload">
-                                <input class="upload-input" type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" required>
-                                <button class="upload-button" type="submit">Upload</button>
-                            </div>
-
-                        </form>
+                        <label for="xlsxInput" class="upload-label">
+                            <span class="upload-button">Choose File</span>
+                            <span id="xlsxName" class="upload-name">No file chosen</span>
+                        </label>
                     </div>
                 </div>
 
@@ -136,14 +128,14 @@
 
                                 <div class="step-description right">
                                     <p class="step-title">Step 1</p>
-                                    <h2 class="step-heading">Navigate to the assignment on your Brightspace page.</h2>
+                                    <h2 class="step-heading">Navigate to the assignment on your Brightspace page</h2>
                                 </div>
                             </div>
 
                             <div class="step-row">
                                 <div class="step-description left">
                                     <p class="step-title">Step 2</p>
-                                    <h2 class="step-heading">Go from "Users" to "Submissions".</h2>
+                                    <h2 class="step-heading">Go from "Users" to "Submissions"</h2>
                                 </div>
 
                                 <div class="step-image">
@@ -158,7 +150,7 @@
 
                                 <div class="step-description right">
                                     <p class="step-title">Step 3</p>
-                                    <h2 class="step-heading">Select all submissions and press the download button.</h2>
+                                    <h2 class="step-heading">Select all submissions and press the download button</h2>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +162,7 @@
                         <div class="step-row">
                             <div class="step-description left">
                                 <p class="step-title">Step 1</p>
-                                <h2 class="step-heading">Go to "Collaboration".</h2>
+                                <h2 class="step-heading">Go to "Collaboration"</h2>
                             </div>
 
                             <div class="step-image">
@@ -185,14 +177,14 @@
 
                             <div class="step-description right">
                                 <p class="step-title">Step 2</p>
-                                <h2 class="step-heading">Go to "Group Import / Export Tool".</h2>
+                                <h2 class="step-heading">Select "Group Import / Export Tool"</h2>
                             </div>
                         </div>
 
                         <div class="step-row">
                             <div class="step-description left">
                                 <p class="step-title">Step 3</p>
-                                <h2 class="step-heading">Go to "Export", select categories, peer groups, and then press export.</h2>
+                                <h2 class="step-heading">Select "Export", select Categories, peer groups, and then press Export</h2>
                             </div>
 
                             <div class="step-image">
@@ -202,7 +194,7 @@
                     </div>
 
                     <div class="instruction-row">
-                        <h2 class="header">3. List of Coordinators Assigned to Each Group.</h2>
+                        <h2 class="header">3. List of Coordinators Assigned to Each Group</h2>
 
                         <div class="step-row">
                             <div class="step-image">
@@ -211,14 +203,14 @@
 
                             <div class="step-description right">
                                 <p class="step-title">Step 1</p>
-                                <h2 class="step-heading">Go to Project Forum.</h2>
+                                <h2 class="step-heading">Go to Project Forum</h2>
                             </div>
                         </div>
 
                         <div class="step-row">
                             <div class="step-description left">
                                 <p class="step-title">Step 2</p>
-                                <h2 class="step-heading">Do something else.</h2>
+                                <h2 class="step-heading">Do something else</h2>
                             </div>
 
                             <div class="step-image">
@@ -233,7 +225,7 @@
 
                             <div class="step-description right">
                                 <p class="step-title">Step 3</p>
-                                <h2 class="step-heading">Do something else.</h2>
+                                <h2 class="step-heading">Do something else</h2>
                             </div>
                         </div>
                     </div>
