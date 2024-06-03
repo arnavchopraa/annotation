@@ -3,15 +3,16 @@ package services;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.example.TestUtils;
 import org.example.exceptions.PDFException;
+import org.example.services.AnnotationCodeService;
 import org.example.services.ParsingService;
 import org.example.utils.Line;
 import org.example.utils.PairUtils;
 import org.example.utils.Table;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ParsingServiceTest {
 
     private final TestUtils testUtils = new TestUtils();
-    private final ParsingService ps = new ParsingService();
+    private ParsingService ps;
+    private AnnotationCodeService annotationCodeService;
+
+    @BeforeEach
+    public void setUp() {
+        annotationCodeService = Mockito.mock(AnnotationCodeService.class);
+        ps = new ParsingService(annotationCodeService);
+    }
 
     @Test
     void mergeLinesTest() {

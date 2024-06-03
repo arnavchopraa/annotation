@@ -12,15 +12,28 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
 import org.example.exceptions.PDFException;
+import org.example.models.AnnotationCode;
 import org.example.utils.*;
+import org.springframework.stereotype.Service;
 
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 
+@Service
 public class ParsingService {
 
-    private QueryService queryService = new QueryService();
+    private AnnotationCodeService annotationCodeService;
+
+    /**
+     * This method creates a new instance of the ParsingService class
+     *
+     * @param annotationCodeService the service that provides codes
+     */
+    public ParsingService(AnnotationCodeService annotationCodeService) {
+        this.annotationCodeService = annotationCodeService;
+    }
+
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
@@ -48,8 +61,14 @@ public class ParsingService {
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                        annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
-                                + preprocess(queryService.queryResults(a.getContents())) + "\n";
+                        AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
+                        if(ac != null) {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(annotationCodeService.getAnnotationCode(a.getContents()).getCodeContent()) + "\n";
+                        } else {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(a.getContents()) + "\n";
+                        }
                     }
                     else if(a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))
@@ -75,11 +94,13 @@ public class ParsingService {
     }
 
     /**
-     * Parses a pdf file including text and annotations using NER
+     * Parses a pdf file including text and annotations and applyes the NER model
+     *
      * @param file the file that needs to be parsed
      * @return the parsed text
      * @throws PDFException if the file is not of type pdf
      */
+
     public PairUtils parsePDFwithNer(File file) throws PDFException {
         try {
             PDDocument document = Loader.loadPDF(file);
