@@ -49,11 +49,6 @@ function getFiles() {
                 three.innerText = 'No';
                 line.appendChild(three);
 
-                const four = document.createElement('p')
-                four.className = 'table-cell'
-                four.innerText = 'No';
-                line.appendChild(four);
-
                 line.addEventListener('click', function() {
                     localStorage.setItem('file', sub.id)
                     window.location.href = "../Annotation/Annotation.html"

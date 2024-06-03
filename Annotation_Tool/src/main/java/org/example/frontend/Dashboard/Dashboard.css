@@ -1,6 +1,7 @@
 .content {
     width: 100%;
     padding: 40px;
+    overflow: auto;
 }
 
 .content-wrap {
@@ -84,13 +85,14 @@
     grid-column-gap: 40px;
     grid-row-gap: 30px;
 
-    grid-template-columns: minmax(160px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr) minmax(50px, 1fr);
+    grid-template-columns: minmax(210px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr);
     grid-template-rows: auto;
 
     color: hsla(0, 0%, 70.59%, 1.00);
     background-color: #f0f0f0;
 
     padding-bottom: 10px;
+    text-align: center;
 }
 
 .table-cell {
@@ -113,6 +115,7 @@
     color: hsla(0, 0%, 0%, 1.00);
     background-color: transparent;
     font-weight: bold;
+    width: calc(100% + 20px);
 }
 
 .table-cell .check {

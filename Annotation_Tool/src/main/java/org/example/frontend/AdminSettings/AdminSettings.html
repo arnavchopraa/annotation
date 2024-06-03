@@ -77,7 +77,7 @@
                 <h1 class="content-header">Course Configuration and Settings</h1>
 
                 <div class="upload-section">
-                    <p class="upload-text">Welcome to the Course Configuration and Settings page. Here, you can configure a new course or modify existing course settings. Below you will find three key functionalities to manage your course effectively.</p>
+                    <p class="upload-text">Welcome to the Course Configuration and Settings page. Here, you can configure a new course or modify existing course settings. Below you will find three key functionalities to manage your course effectively. Be sure to check out the instructions before uploading!</p>
 
                     <h2 class="header">Admin Tools</h2>
 
@@ -85,29 +85,39 @@
                         <h2 class="upload-header">1. All Submissions for an Assignment</h2>
 
                         <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-                            <label class="upload-label" for="zipFile">Select a zip file:</label>
-                            <input class="upload-input" type="file" id="zipFile" name="zipFile" accept=".zip" required>
-                            <button class="upload-button" type="submit">Upload</button>
+                            <label class="upload-label" for="zipFile">Select a ZIP file:</label>
+
+                            <div class="upload">
+                                <input class="upload-input" type="file" id="zipFile" name="zipFile" accept=".zip" required>
+                                <button class="upload-button" type="submit">Upload</button>
+                            </div>
                         </form>
                     </div>
 
                     <div class="admin-tools">
                         <h2 class="upload-header">2. List of Students and their Groups</h2>
 
-                        <form class="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
                             <label class="upload-label" for="csvFile">Select a CSV file:</label>
-                            <input class="upload-input" type="file" id="csvFile" name="csvFile" accept=".csv" required>
-                            <button class="upload-button" type="submit">Upload</button>
+
+                            <div class="upload">
+                                <input class="upload-input" type="file" id="csvFile" name="csvFile" accept=".csv" required>
+                                <button class="upload-button" type="submit">Upload</button>
+                            </div>
                         </form>
                     </div>
 
                     <div class="admin-tools">
                         <h2 class="upload-header">3. List of Coordinators Assigned to Each Group</h2>
 
-                        <form class="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
                             <label class="upload-label" for="excelFile">Select an Excel file:</label>
-                            <input class="upload-input" type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" required>
-                            <button class="upload-button" type="submit">Upload</button>
+
+                            <div class="upload">
+                                <input class="upload-input" type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" required>
+                                <button class="upload-button" type="submit">Upload</button>
+                            </div>
+
                         </form>
                     </div>
                 </div>

@@ -106,6 +106,9 @@ input[type="file"] {
     height: calc(100% - 30px);
 
     overflow-x: auto;
+
+    font-size: 20px;
+    font-weight: 500;
 }
 
 /* Dropdown Menu for Export Button */
