@@ -31,16 +31,4 @@ public class FileUtils {
             throw new IllegalArgumentException("Not a file");
         }
     }
-
-    /**
-     * Method for getting the extension of a file
-     *
-     * @param file File for which to retrieve extension
-     * @return File extension
-     */
-    public static String getFileExtension(File file) {
-        String fileName = file.getName();
-        int pos = fileName.lastIndexOf('.');
-        return fileName.substring(pos);
-    }
 }

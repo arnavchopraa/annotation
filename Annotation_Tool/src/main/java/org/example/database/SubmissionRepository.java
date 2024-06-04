@@ -1,8 +1,8 @@
 package org.example.database;
 
+import org.example.models.SubmissionDB;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.example.models.SubmissionDB;
 
 import java.util.List;
 
