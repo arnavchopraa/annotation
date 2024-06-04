@@ -12,15 +12,28 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
 import org.example.exceptions.PDFException;
+import org.example.models.AnnotationCode;
 import org.example.utils.*;
+import org.springframework.stereotype.Service;
 
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 
+@Service
 public class ParsingService {
 
-    private QueryService queryService = new QueryService();
+    private AnnotationCodeService annotationCodeService;
+
+    /**
+     * This method creates a new instance of the ParsingService class
+     *
+     * @param annotationCodeService the service that provides codes
+     */
+    public ParsingService(AnnotationCodeService annotationCodeService) {
+        this.annotationCodeService = annotationCodeService;
+    }
+
     /**
      * Parses a pdf file including text and annotations
      * @param file the file that needs to be parsed
@@ -32,7 +45,13 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-
+            // this gets rid of the references
+            //CaptionExtractionService.imageCoordinates(file);
+            // what about abstract??
+            text = removeAbstract(text);
+            // still need to separate references and appendices
+            // remove bad hyphenation of the text (EOL)
+            text = preprocess(text);
             String annotations = "";
             for(PDPage page : document.getPages()) {
                 List<PDAnnotation> annotationList = page.getAnnotations();
@@ -41,7 +60,15 @@ public class ParsingService {
                         //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
-                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
+                        if(ac != null) {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(annotationCodeService.getAnnotationCode(a.getContents()).getCodeContent()) + "\n";
+                        } else {
+                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                                    + preprocess(a.getContents()) + "\n";
+                        }
                     }
                     else if(a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))
@@ -197,6 +224,64 @@ public class ParsingService {
         //annot = annot.replace("\n", "");
 
         return annot;
+    }
+
+    /**
+     * This method removes hyphenation from end of lines.
+     *
+     * @param text the string we want to remove unnecessary hyphenation from
+     * @return the processed text
+     */
+    public String preprocess(String text) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        while(i < text.length()) {
+            try {
+                if(text.charAt(i) == '-' && text.charAt(i - 1) != ' ') {
+                    if(text.charAt(i + 1) == '\r' && text.charAt(i + 2) == '\n') {
+                        // skip over the indices containing EOL characters
+                        i += 3;
+                        while(text.charAt(i) != ' ') {
+                            // check if the next characters are EOL such that to not search next space
+                            if(text.charAt(i) == '\r') {
+                                i ++;
+                                break;
+                            }
+                            sb.append(text.charAt(i));
+                            i ++;
+                        }
+                        // after the word is finished add EOL
+                        sb.append("\r\n");
+                    }
+                    // hyphen is in the middle of the line
+                    else {
+                        sb.append(text.charAt(i));
+                    }
+                }
+                // there is no hyphen
+                else {
+                    sb.append(text.charAt(i));
+                }
+                i ++;
+            }
+            // if the hyphen goes past the last character of the file
+            catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * This method removes all content presented before the abstract
+     *
+     * @param text the text we want to remove the lines before the abstract from
+     * @return processed text
+     */
+    public String removeAbstract(String text) {
+        int index = text.indexOf("Abstract\r\n");
+        // skip over the Abstract\r\n characters (Abstract\r\n is 10 characters)
+        return text.substring(index + 10);
     }
 
     /**

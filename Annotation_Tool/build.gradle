@@ -25,6 +25,7 @@ jacoco {
 test{
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
 
 jacocoTestReport {
@@ -51,8 +52,10 @@ dependencies {
     implementation 'org.glassfish.jersey.inject:jersey-hk2:3.0.0'
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.0.0'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    runtimeOnly 'com.h2database:h2'
+
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    //runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
