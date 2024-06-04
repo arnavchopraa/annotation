@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.exceptions.PDFException;
+import org.example.models.AnnotationCode;
 import org.example.services.AnnotationCodeService;
 import org.example.services.FileService;
 import org.example.services.SubmissionService;
@@ -91,7 +92,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public ResponseEntity<List<String>> getCodes() throws IOException {
-        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).map(x -> x.getId()).toList());
+    public ResponseEntity<List<AnnotationCode>> getCodes() throws IOException {
+        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
     }
 }
