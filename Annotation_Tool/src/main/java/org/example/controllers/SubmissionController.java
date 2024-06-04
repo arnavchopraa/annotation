@@ -1,4 +1,4 @@
-package org.example.backend;
+package org.example.controllers;
 
 import org.example.models.SubmissionDTO;
 import org.springframework.http.ResponseEntity;

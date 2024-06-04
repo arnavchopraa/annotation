@@ -1,4 +1,4 @@
-package org.example.backend;
+package org.example.controllers;
 
 import org.example.models.AnnotationCode;
 import org.example.services.AnnotationCodeService;
