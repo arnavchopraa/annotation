@@ -1,11 +1,15 @@
 package org.example.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Objects;
 
@@ -24,6 +28,11 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @Column(name="role")
+    private String role;
+
+    //private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     /**
      * Basic constructor for User
      *
@@ -37,6 +46,22 @@ public class User {
         this.password = password;
     }
 
+
+    /**
+        * Json Constructor for User with all arguments
+        *
+        * @param id the id of the user
+        * @param name the name of the user
+        * @param password the password of the user
+        * @param role the role of the user
+        * @return the user with all the arguments
+        */
+    @JsonCreator
+    public static User create(@JsonProperty("email") String id, @JsonProperty("username") String name,
+        @JsonProperty("password") String password, @JsonProperty("role") String role) {
+        return new User(id, name, password, role);
+    }
+
     /**
      * Basic constructor for User
      */
@@ -47,6 +72,7 @@ public class User {
      *
      * @return the id of the user
      */
+    @JsonProperty("email")
     public String getId() {
         return id;
     }
@@ -65,6 +91,7 @@ public class User {
      *
      * @return the name of the user
      */
+    @JsonProperty("username")
     public String getName() {
         return name;
     }
@@ -84,7 +111,7 @@ public class User {
      *
      * @return the password of the user
      */
-
+    @JsonProperty("password")
     public String getPassword() {
         return password;
     }
@@ -97,6 +124,25 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Getter for the role of the user
+     *
+     * @return the role of the user
+     */
+    @JsonProperty("role")
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for the role of the user
+     *
+     * @param role the role of the user
+     */
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
