@@ -1,6 +1,7 @@
-package org.example.models;
+package org.example.importmodels;
 
 import lombok.*;
+
 
 @Getter
 @Setter
@@ -9,8 +10,6 @@ import lombok.*;
 public class Association {
     private Student student;
     private Submission submission;
-
-    //private User coordinator; TODO - to be added when database setup is finished
 
     /**
      * Override of toString method from Object class
@@ -21,6 +20,6 @@ public class Association {
     public String toString() {
         return "Association@" + Integer.toHexString(hashCode()) +
                 ":[student=" + student.toString() +
-                ",submission=" + submission.toString() + "]";
+                ",submission=" + submission.toString();
     }
 }

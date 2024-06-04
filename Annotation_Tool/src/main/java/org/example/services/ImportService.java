@@ -1,11 +1,15 @@
 package org.example.services;
 
 import lombok.NoArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.exceptions.FileException;
+import org.example.exceptions.ImportException;
 import org.example.exceptions.NoSubmissionException;
-import org.example.models.Association;
-import org.example.models.Student;
-import org.example.models.Submission;
+import org.example.importmodels.*;
 
 import java.io.*;
 import java.util.*;
@@ -17,19 +21,66 @@ import java.util.zip.ZipFile;
 public class ImportService {
 
     /**
-     * Import data as downloaded from Brightspace to the application
+     * Import data as downloaded from Brightspace and ProjectForum to the application
      *
      * @param zipFile .zip file containing student submissions
      * @param csvFile .csv file containing a list of all students
+     * @param xlsxFile .xlsx file containing a list of all projects, from ProjectForum
      * @return List of association pairs < Student, Submission >. They should be further used for
      * saving in the database.
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
      */
-    public List<Association> importData(File zipFile, File csvFile) throws NoSubmissionException, ZipException, FileException {
+    public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
+        throws NoSubmissionException, ZipException, FileException, ImportException {
         List<Student> studentList = processCsv(csvFile);
         List<Submission> submissionList = extractZip(zipFile);
-        return associate(studentList, submissionList);
+        List<Project> projectList = processXlsx(xlsxFile);
+        List<Association> associations = associate(studentList, submissionList);
+        List<Coordinator> coordinators = associateCoordinators(associations, projectList);
+        return coordinators;
+    }
+
+    /**
+     * Associates submissions to coordinators.
+     *
+     * @param associations student-submission pairs
+     * @param projects List of projects from ProjectForum
+     */
+    private List<Coordinator> associateCoordinators(List<Association> associations, List<Project> projects)
+        throws ImportException {
+        // TODO - verifici daca toate student number sunt din aceeasi grupa
+
+        Map<Coordinator, List<Association>> map = new HashMap<>();
+        for(Project p : projects)
+            for(Coordinator c : p.getCoordinators())
+                map.put(c, new ArrayList<>());
+
+        for(Project p : projects) {
+            List<String> studentNumbers = p.getStudentNos();
+
+            for(Association a : associations) {
+                String studentNr = a.getStudent().getStudentNo();
+
+                if(studentNumbers.contains(studentNr)) {
+                    for(Coordinator c : p.getCoordinators()) {
+                        List<Association> value = map.get(c);
+                        value.add(a);
+                        map.put(c, value);
+                    }
+                }
+            }
+        }
+
+        List<Coordinator> coordinators = new ArrayList<>();
+
+        for(Map.Entry entry : map.entrySet()) {
+            Coordinator coordinator = (Coordinator) entry.getKey();
+            coordinator.setAssociations((List<Association>) entry.getValue());
+            coordinators.add(coordinator);
+        }
+
+        return coordinators;
     }
 
     /**
@@ -160,4 +211,82 @@ public class ImportService {
         String date = split[4].substring(1);
         return new Submission(groupNo, assignmentNo, groupName, studentName, date);
     }
+
+    /**
+     * Processes a .xlsx file, parsing all data according to the format defined by the
+     * ProjectForum export tool.
+     *
+     * @param xlsxFile File exported from ProjectForum
+     * @throws FileException if the file behaves unexpectedly.
+     */
+    private List<Project> processXlsx(File xlsxFile) throws FileException {
+        List<Project> projects = new ArrayList<>();
+        try(InputStream inputStream = new FileInputStream(xlsxFile)) {
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            int i = 0;
+            for(Row row : sheet) {
+
+                i++;
+                if(i == 1)
+                    continue;
+
+                int j = 0;
+                String name = null, email;
+                List<Coordinator> coordinators = new ArrayList<>();
+                List<String> studentNos = new ArrayList<>();
+                for(Cell cell : row) {
+                    if(j >= 8 && j <= 17) {
+                        if (j % 2 == 0) {
+                            name = cell.getStringCellValue();
+                        } else {
+                            email = cell.getStringCellValue();
+                            if(!name.isEmpty())
+                                coordinators.add(new Coordinator(name, email));
+                        }
+                    } else if (j == 21) {
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        studentNos = Arrays.stream(parseCell(cell.getStringCellValue())).toList();
+                    }
+                    j++;
+                }
+                projects.add(new Project(studentNos, coordinators));
+            }
+        } catch (FileNotFoundException e) {
+            throw new FileException("Excel file containing supervisor data was not found");
+        } catch (IOException e) {
+            throw new FileException("Excel file containing supervisor data could not be closed");
+        }
+        return projects;
+    }
+
+    /**
+     * Method to parse data containing students in a cell, from a .xlsx file generated
+     * automatically by ProjectForum. The format is:
+     * data1, data2, data3, data4 and data5
+     *
+     * @param cellData Data from the cell in string format.
+     * @return Strings containing data for each student.
+     */
+    private String[] parseCell(String cellData) {
+        String[] data = cellData.split(", |and ");
+
+        List<String> ans = new ArrayList<>();
+
+        int j=0;
+        for(int i = 0; i < data.length; i++) {
+            data[i] = data[i].replaceAll(" ", "");
+
+            if(!data[i].isEmpty()) {
+                ans.add(data[i].trim());
+                j++;
+            }
+        }
+
+        Object[] aux = ans.toArray();
+        String[] ret = Arrays.copyOf(aux, aux.length, String[].class);
+
+        return ret;
+    }
+
 }
