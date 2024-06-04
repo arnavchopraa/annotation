@@ -12,6 +12,7 @@ public class Submission {
     private String groupName;
     private String studentName;
     private String date;
+    private String fileName;
     private byte[] submittedFile;
 
     /**
@@ -30,6 +31,7 @@ public class Submission {
         this.groupName = groupName;
         this.studentName = studentName;
         this.date = date;
+        this.fileName = null;
         this.submittedFile = null;
     }
 

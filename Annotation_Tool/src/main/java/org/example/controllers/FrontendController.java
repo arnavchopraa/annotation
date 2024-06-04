@@ -1,11 +1,8 @@
 package org.example.controllers;
 
 import org.example.exceptions.PDFException;
-import org.example.services.AnnotationCodeService;
-import org.example.services.FileService;
-import org.example.services.SubmissionService;
+import org.example.services.*;
 import org.example.utils.FileUtils;
-import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;

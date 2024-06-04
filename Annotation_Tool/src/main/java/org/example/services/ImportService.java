@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.example.exceptions.EmailException;
 import org.example.exceptions.FileException;
 import org.example.exceptions.ImportException;
 import org.example.exceptions.NoSubmissionException;
@@ -19,6 +20,7 @@ import java.util.zip.ZipFile;
 
 @NoArgsConstructor
 public class ImportService {
+    private final AccountService accountService = new AccountService();
 
     /**
      * Import data as downloaded from Brightspace and ProjectForum to the application
@@ -32,12 +34,13 @@ public class ImportService {
      * @throws ZipException if the zip file behaves unexpectedly
      */
     public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
-        throws NoSubmissionException, ZipException, FileException, ImportException {
+        throws NoSubmissionException, ZipException, FileException, ImportException, EmailException {
         List<Student> studentList = processCsv(csvFile);
         List<Submission> submissionList = extractZip(zipFile);
         List<Project> projectList = processXlsx(xlsxFile);
         List<Association> associations = associate(studentList, submissionList);
         List<Coordinator> coordinators = associateCoordinators(associations, projectList);
+        accountService.createCoordinatorsAccounts(coordinators);
         return coordinators;
     }
 
@@ -134,6 +137,7 @@ public class ImportService {
                     outputStream.close();
 
                     Submission submission = processFileName(name);
+                    submission.setFileName(entry.getName());
                     File submittedFile = Objects.requireNonNull(currentEntry.listFiles())[0];
                     InputStream submittedStream = new FileInputStream(submittedFile);
                     submission.setSubmittedFile(submittedStream.readAllBytes());
