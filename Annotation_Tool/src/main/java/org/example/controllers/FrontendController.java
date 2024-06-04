@@ -1,11 +1,14 @@
-package org.example.backend;
+package org.example.controllers;
 
 import org.example.exceptions.PDFException;
+import org.example.services.AnnotationCodeService;
 import org.example.services.FileService;
-import org.example.services.QueryService;
+import org.example.services.SubmissionService;
 import org.example.utils.FileUtils;
 import org.example.services.ParsingService;
 import org.example.utils.PairUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,14 +17,32 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class FrontendController {
 
-    private final ParsingService parsingService = new ParsingService();
-    private final FileService fileService = new FileService();
+    private final ParsingService parsingService;
+    private final FileService fileService;
+
+    private final AnnotationCodeService annotationCodeService;
+    private final SubmissionService submissionService;
+
+    /**
+     * This method creates a new instance of the FrontendController class
+     *
+     * @param annotationCodeService the annotation service
+     * @param submissionService the submission service
+     */
+    @Autowired
+    public FrontendController(AnnotationCodeService annotationCodeService, SubmissionService submissionService) {
+        this.parsingService = new ParsingService(annotationCodeService);
+        this.fileService = new FileService();
+        this.annotationCodeService = annotationCodeService;
+        this.submissionService = submissionService;
+    }
 
     /**
      * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
@@ -70,9 +91,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public List<String> getCodes() {
-
-        String query = "SELECT id FROM annotations";
-        return QueryService.queryExecution(query);
+    public ResponseEntity<List<String>> getCodes() throws IOException {
+        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).map(x -> x.getId()).toList());
     }
 }

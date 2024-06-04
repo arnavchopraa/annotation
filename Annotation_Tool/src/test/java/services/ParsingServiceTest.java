@@ -1,10 +1,19 @@
 package services;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.example.TestUtils;
+import org.example.exceptions.PDFException;
+import org.example.services.AnnotationCodeService;
 import org.example.services.ParsingService;
 import org.example.utils.Line;
+import org.example.utils.PairUtils;
 import org.example.utils.Table;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ParsingServiceTest {
 
+    private final TestUtils testUtils = new TestUtils();
+    private ParsingService ps;
+    private AnnotationCodeService annotationCodeService;
+
+    @BeforeEach
+    public void setUp() {
+        annotationCodeService = Mockito.mock(AnnotationCodeService.class);
+        ps = new ParsingService(annotationCodeService);
+    }
+
     @Test
     void mergeLinesTest() {
-        ParsingService ps = new ParsingService();
 
         Line l1 = new Line(0, 1, 2, 1);
         Line l2 = new Line(2.3f, 1, 5, 1);
@@ -35,7 +53,6 @@ public class ParsingServiceTest {
 
     @Test
     void processLinesTest() {
-        ParsingService ps = new ParsingService();
 
         Line l1 = new Line(0, 1, 4, 1);
         Line l2 = new Line(0, 1, 0, 5);
@@ -61,4 +78,123 @@ public class ParsingServiceTest {
 
         assertEquals(ans, ps.processLines(lines));
     }
+
+    @Test
+    public void testParsePdfNoAnnotations() {
+        String text = "This is a PDF file";
+        try {
+            File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
+            PairUtils pair = ps.parsePDF(pdf);
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
+            assertEquals("", pair.getAnnotations());
+            assertEquals(pair.removeFileExtension(pdf.getName()), pair.getFileName());
+            pdf.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }
+
+    @Test
+    public void testParsePdfAnnotations() {
+        String text = "This is a PDF file";
+        String content = "This is an annotation";
+        try {
+            PDDocument pdf = testUtils.generatePDF(text);
+            testUtils.addAnnotation(pdf, content);
+            File pdfFile = testUtils.convertPDFtoFile(pdf);
+            PairUtils pair = ps.parsePDF(pdfFile);
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
+            String annot = pair.getAnnotations();
+            annot = annot.replaceAll("\r", "");
+            annot = annot.replaceAll("\n", "");
+            assertEquals("This is - " + content, annot);
+            assertEquals(pair.removeFileExtension(pdfFile.getName()), pair.getFileName());
+            pdfFile.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }
+
+    /*@Test
+    public void testParsePdfNer() {
+        String text = "This is a PDF file";
+        String content = "This is an annotation";
+        try {
+            PDDocument pdf = testUtils.generatePDF(text);
+            testUtils.addAnnotation(pdf, content);
+            File pdfFile = testUtils.convertPDFtoFile(pdf);
+            PairUtils pair = ps.parsePDFwithNer(pdfFile);
+            assertEquals("", pair.getText());
+            assertEquals("This is\r\n - " + content + "\n", pair.getAnnotations());
+            assertEquals(pdfFile.getName(), pair.getFileName());
+            pdfFile.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }*/
+
+    @Test
+    public void testParseFolderFile() {
+        String text = "This is a PDF file";
+        String content = "This is an annotation";
+        try {
+            PDDocument pdf = testUtils.generatePDF(text);
+            testUtils.addAnnotation(pdf, content);
+            File pdfFile = testUtils.convertPDFtoFile(pdf);
+            assertThrows(IOException.class, () -> ps.parseFilesFromFolder(pdfFile));
+            pdfFile.deleteOnExit();
+        } catch (IOException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }
+
+    @Test
+    public void testParseMultipleFiles() {
+        String text = "This is a PDF file";
+        String content = "This is an annotation";
+        try {
+            PDDocument pdf = testUtils.generatePDF(text);
+            testUtils.addAnnotation(pdf, content);
+            File pdfFile = testUtils.convertPDFtoFile(pdf);
+            List<PairUtils> pairList = ps.parseFilesList(pdfFile, pdfFile);
+            PairUtils pair = pairList.get(0);
+            assertEquals(pair, pairList.get(1));
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals(text, res);
+            String annot = pair.getAnnotations();
+            annot = annot.replaceAll("\r", "");
+            annot = annot.replaceAll("\n", "");
+            assertEquals("This is - " + content, annot);
+            assertEquals(pair.removeFileExtension(pdfFile.getName()), pair.getFileName());
+            pdfFile.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }
+
+    /*@Test
+    public void testRemoveAbstract() {
+        String text = "Abstract\nThis is a PDF file";
+        try {
+            File pdf = testUtils.convertPDFtoFile(testUtils.generatePDF(text));
+            PairUtils pair = ps.parsePDF(pdf);
+            String res = pair.getText();
+            res = res.replaceAll("\r", "");
+            res = res.replaceAll("\n", "");
+            assertEquals("This is a PDF file", res);
+            assertEquals("", pair.getAnnotations());
+            assertEquals(pair.removeFileExtension(pdf.getName()), pair.getFileName());
+            pdf.deleteOnExit();
+        } catch (IOException | PDFException e) {
+            throw new RuntimeException("Test failed - Could not generate PDF");
+        }
+    }*/
 }

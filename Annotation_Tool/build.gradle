@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'checkstyle'
@@ -17,6 +18,24 @@ checkstyle {
     configFile = '../checkstyle.xml' as File
 }
 
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+test{
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -24,13 +43,18 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-
+    implementation 'javax.persistence:javax.persistence-api:2.2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'com.h2database:h2'
+    testImplementation 'org.springframework:spring-test'
+    implementation 'commons-io:commons-io:2.7'
+
+    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+    implementation 'org.glassfish.jersey.core:jersey-client:3.0.0'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:3.0.0'
+    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.0.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
