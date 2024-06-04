@@ -148,14 +148,17 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException {
+    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
-
-        for(File f : Objects.requireNonNull(file.listFiles())) {
-            if(f.isDirectory())
-                parseFilesFromFolder(f);
-            else if(f.isFile())
-                parsed.add(parsePDF(f));
+        if(file.isDirectory()) {
+            for (File f : Objects.requireNonNull(file.listFiles())) {
+                if (f.isDirectory())
+                    parsed.addAll(parseFilesFromFolder(f));
+                else if (f.isFile())
+                    parsed.add(parsePDF(f));
+            }
+        } else {
+            throw new IOException("Uploaded file is not a folder");
         }
 
         return parsed;
@@ -167,12 +170,12 @@ public class ParsingService {
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
-    public List<PairUtils> parseFilesList(File... files) throws PDFException {
+    public List<PairUtils> parseFilesList(File... files) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
 
         for(File f : files) {
             if(f.isDirectory())
-                parseFilesFromFolder(f);
+                parsed.addAll(parseFilesFromFolder(f));
             else if(f.isFile())
                 parsed.add(parsePDF(f));
         }
@@ -281,7 +284,9 @@ public class ParsingService {
     public String removeAbstract(String text) {
         int index = text.indexOf("Abstract\r\n");
         // skip over the Abstract\r\n characters (Abstract\r\n is 10 characters)
-        return text.substring(index + 10);
+        if(index != -1)
+            return text.substring(index + 10);
+        return text;
     }
 
     /**
