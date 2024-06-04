@@ -71,6 +71,7 @@ public class FrontendController {
      */
     @GetMapping("/frontend/codes")
     public List<String> getCodes() {
+
         String query = "SELECT id FROM annotations";
         return QueryService.queryExecution(query);
     }

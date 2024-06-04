@@ -1,12 +1,13 @@
 package org.example.services;
 
 import lombok.NoArgsConstructor;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.exceptions.FileException;
+import org.example.exceptions.ImportException;
 import org.example.exceptions.NoSubmissionException;
 import org.example.importmodels.*;
 
@@ -30,13 +31,14 @@ public class ImportService {
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
      */
-    public List<Association> importData(File zipFile, File csvFile, File xlsxFile) throws NoSubmissionException, ZipException, FileException {
+    public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
+        throws NoSubmissionException, ZipException, FileException, ImportException {
         List<Student> studentList = processCsv(csvFile);
-        List<Submission> submissionList = filterSubmissions(extractZip(zipFile));
+        List<Submission> submissionList = extractZip(zipFile);
         List<Project> projectList = processXlsx(xlsxFile);
         List<Association> associations = associate(studentList, submissionList);
-        associateCoordinators(associations, projectList);
-        return associations;
+        List<Coordinator> coordinators = associateCoordinators(associations, projectList);
+        return coordinators;
     }
 
     /**
@@ -45,10 +47,40 @@ public class ImportService {
      * @param associations student-submission pairs
      * @param projects List of projects from ProjectForum
      */
-    private void associateCoordinators(List<Association> associations, List<Project> projects) {
+    private List<Coordinator> associateCoordinators(List<Association> associations, List<Project> projects)
+        throws ImportException {
         // TODO - verifici daca toate student number sunt din aceeasi grupa
-        // daca sunt din aceeasi grupa, la fiecare association din care face parte studentul ,
-        // adaugi lista de coordonatori din proiect
+
+        Map<Coordinator, List<Association>> map = new HashMap<>();
+        for(Project p : projects)
+            for(Coordinator c : p.getCoordinators())
+                map.put(c, new ArrayList<>());
+
+        for(Project p : projects) {
+            List<String> studentNumbers = p.getStudentNos();
+
+            for(Association a : associations) {
+                String studentNr = a.getStudent().getStudentNo();
+
+                if(studentNumbers.contains(studentNr)) {
+                    for(Coordinator c : p.getCoordinators()) {
+                        List<Association> value = map.get(c);
+                        value.add(a);
+                        map.put(c, value);
+                    }
+                }
+            }
+        }
+
+        List<Coordinator> coordinators = new ArrayList<>();
+
+        for(Map.Entry entry : map.entrySet()) {
+            Coordinator coordinator = (Coordinator) entry.getKey();
+            coordinator.setAssociations((List<Association>) entry.getValue());
+            coordinators.add(coordinator);
+        }
+
+        return coordinators;
     }
 
     /**
@@ -176,7 +208,7 @@ public class ImportService {
         String assignmentNo = split[1].substring(0, split[1].length() - 1);
         String groupName = split[2].substring(1, split[2].length() - 1);
         String studentName = split[3].substring(1, split[3].length() - 1);
-        String date = split[4].substring(1); // TODO - to be parsed
+        String date = split[4].substring(1);
         return new Submission(groupNo, assignmentNo, groupName, studentName, date);
     }
 
@@ -190,10 +222,15 @@ public class ImportService {
     private List<Project> processXlsx(File xlsxFile) throws FileException {
         List<Project> projects = new ArrayList<>();
         try(InputStream inputStream = new FileInputStream(xlsxFile)) {
-            Workbook workbook = new HSSFWorkbook(inputStream);
+            Workbook workbook = new XSSFWorkbook(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             int i = 0;
             for(Row row : sheet) {
+
+                i++;
+                if(i == 1)
+                    continue;
+
                 int j = 0;
                 String name = null, email;
                 List<Coordinator> coordinators = new ArrayList<>();
@@ -204,9 +241,11 @@ public class ImportService {
                             name = cell.getStringCellValue();
                         } else {
                             email = cell.getStringCellValue();
-                            coordinators.add(new Coordinator(name, email));
+                            if(!name.isEmpty())
+                                coordinators.add(new Coordinator(name, email));
                         }
                     } else if (j == 21) {
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
                         studentNos = Arrays.stream(parseCell(cell.getStringCellValue())).toList();
                     }
                     j++;
@@ -230,20 +269,24 @@ public class ImportService {
      * @return Strings containing data for each student.
      */
     private String[] parseCell(String cellData) {
-        String[] data = cellData.split(", |, and ");
+        String[] data = cellData.split(", |and ");
+
+        List<String> ans = new ArrayList<>();
+
+        int j=0;
         for(int i = 0; i < data.length; i++) {
             data[i] = data[i].replaceAll(" ", "");
+
+            if(!data[i].isEmpty()) {
+                ans.add(data[i].trim());
+                j++;
+            }
         }
-        return data;
+
+        Object[] aux = ans.toArray();
+        String[] ret = Arrays.copyOf(aux, aux.length, String[].class);
+
+        return ret;
     }
 
-    /**
-     * Filters submissions such that each student only has one submission attributed to him
-     *
-     * @param originalSubmissions List of submissions as parsed from the zip file
-     * @return new list of submissions
-     */
-    private List<Submission> filterSubmissions(List<Submission> originalSubmissions) {
-        return originalSubmissions; // TODO - filter
-    }
 }
