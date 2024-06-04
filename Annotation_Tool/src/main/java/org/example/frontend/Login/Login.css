@@ -5,34 +5,31 @@
 }
 
 :root {
-  --baseColor: #606468;
+  --baseColor: #fff;
   --iconFill: var(--baseColor);
 
   --htmlFontSize: 100%;
 
-  --bodyBackgroundColor: #2c3338;
+  --bodyBackgroundColor: #fff;
   --bodyColor: var(--baseColor);
-  --bodyFontFamily: "Open Sans";
+  --bodyFontFamily: "Inter-Tight";
   --bodyFontFamilyFallback: sans-serif;
   --bodyFontSize: 0.875rem;
-  --bodyFontWeight: 400;
+  --bodyFontWeight: 500;
   --bodyLineHeight: 1.5;
 
-  --anchorColor: #eee;
+  --headerColor: #000;
 
   --formGap: 0.875rem;
 
   --loginBorderRadius: 0.25rem;
-  --loginColor: #eee;
+  --placeholderColor: #717171;
 
-  --loginInputBackgroundColor: #3b4148;
-  --loginInputHoverBackgroundColor: #434a52;
+  --loginInputBackgroundColor: #3e3e3e;
+  --loginInputHoverBackgroundColor: #4e4e4e;
 
-  --loginLabelBackgroundColor: #363b41;
-
-  --loginSubmitBackgroundColor: #18293A;
-  --loginSubmitColor: #eee;
-  --loginSubmitHoverBackgroundColor: #1E3348;
+  --loginLabelBackgroundColor: #000;
+  --loginSubmitHoverBackgroundColor: #2c2c2c;
 }
 
 html {
@@ -49,6 +46,14 @@ body {
   line-height: var(--bodyLineHeight);
   margin: 0;
   min-block-size: 100vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 60px;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--headerColor);
 }
 
 .align {
@@ -100,6 +105,10 @@ input {
   transition: background-color 0.3s;
 }
 
+input::placeholder {
+    color: var(--placeholderColor);
+}
+
 input[type="submit"] {
   cursor: pointer;
 }
@@ -124,10 +133,14 @@ input[type="submit"] {
 }
 
 .login {
-  color: var(--loginColor);
+  color: var(--baseColor);
 }
 
-.login label,
+.signin {
+    margin-top: 40px;
+}
+
+.form-label,
 .login input[type="text"],
 .login input[type="password"],
 .login input[type="submit"] {
@@ -135,7 +148,7 @@ input[type="submit"] {
   padding: 1rem;
 }
 
-.login label {
+.form-label {
   background-color: var(--loginLabelBackgroundColor);
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -145,6 +158,7 @@ input[type="submit"] {
 .login input[type="password"],
 .login input[type="text"] {
   background-color: var(--loginInputBackgroundColor);
+  color: var(--loginInputColor);
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
@@ -157,13 +171,93 @@ input[type="submit"] {
 }
 
 .login input[type="submit"] {
-  background-color: var(--loginSubmitBackgroundColor);
-  color: var(--loginSubmitColor);
+  background-color: var(--loginLabelBackgroundColor);
+  color: var(--baseColor);
   font-weight: 700;
   text-transform: uppercase;
+
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  transition-property: box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 .login input[type="submit"]:focus,
 .login input[type="submit"]:hover {
   background-color: var(--loginSubmitHoverBackgroundColor);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.or-wrap {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.grey-line {
+    height: 1px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
+    background-color: hsla(232, 0%, 82.67%, 1.00);
+}
+
+.or-label {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+    color: hsla(210, 12.50%, 6.27%, 1.00);
+    text-align: center;
+}
+
+.SSO-button {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+
+    padding: 0.5rem;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: hsla(0, 0%, 0%, 0.10);
+    border-radius: 6px;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    transition-property: box-shadow;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+
+    color: var(--headerColor);
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.SSO-button:hover, .SSO-button:focus {
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.SSO-text:hover, .SSO-text:focus {
+    cursor: pointer;
+}
+
+.SSO-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column-gap: 5px;
+}
+
+.SSO-image {
+    width: 65.04px;
+    height: 40px;
+}
+
+.SSO-text {
+    font-weight: 500;
 }
