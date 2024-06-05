@@ -55,8 +55,121 @@
     align-self: center;
 }
 
-.content-add {
+.dropdown-add {
     margin-left: auto;
+
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+
+    top: -50%;
+    right: 100%;
+
+    background-color: #000;
+    z-index: 1;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;
+    border-radius: 10px;
+}
+
+.dropdown-add:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-header {
+    margin-top: 10px;
+    padding-top: 10px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+    color: #fff;
+    text-align: center;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.code-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-radius: 10px;
+}
+
+.code-header {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+
+    color: #fff;
+}
+
+.code-input {
+    padding: 10px;
+    margin: 10px;
+
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+
+    background-color: #fff;
+}
+
+.code-input::placeholder {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a6a6a6;
+}
+
+.add-code-button {
+    font-size: 14px;
+    font-weight: 700;
+
+    width: 90%;
+    background-color: #636363;
+    color: #a6a6a6;
+
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    align-self: center;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    transition-property: background-color, color;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: ease, ease;
+}
+
+.add-code-button:hover {
+    background-color: #e6e6e6;
+    color: #000;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+
+    cursor: pointer;
 }
 
 .code-controls {
