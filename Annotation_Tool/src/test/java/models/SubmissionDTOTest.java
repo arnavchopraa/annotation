@@ -1,6 +1,6 @@
 package models;
 
-import org.example.models.SubmissionDTO;
+import org.example.backend.models.SubmissionDTO;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;

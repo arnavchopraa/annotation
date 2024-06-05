@@ -1,9 +1,9 @@
 package controllers;
 
-import org.example.controllers.SubmissionController;
-import org.example.models.SubmissionDB;
-import org.example.models.SubmissionDTO;
-import org.example.services.SubmissionService;
+import org.example.backend.controllers.SubmissionController;
+import org.example.backend.models.SubmissionDB;
+import org.example.backend.models.SubmissionDTO;
+import org.example.backend.services.SubmissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

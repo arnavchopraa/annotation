@@ -1,7 +1,7 @@
 package utils;
 
-import org.example.utils.Line;
-import org.example.utils.Table;
+import org.example.backend.utils.Line;
+import org.example.backend.utils.Table;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

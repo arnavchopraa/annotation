@@ -2,9 +2,8 @@ package utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.example.TestUtils;
-import org.example.utils.FileUtils;
+import org.example.backend.utils.FileUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 public class FileUtilsTest {
     private final TestUtils testUtils = new TestUtils();

@@ -1,6 +1,6 @@
 package utils;
 
-import org.example.utils.PairUtils;
+import org.example.backend.utils.PairUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

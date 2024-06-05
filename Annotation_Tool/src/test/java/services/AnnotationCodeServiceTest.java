@@ -1,8 +1,8 @@
 package services;
 
 import org.example.database.AnnotationCodeRepository;
-import org.example.models.AnnotationCode;
-import org.example.services.AnnotationCodeService;
+import org.example.backend.models.AnnotationCode;
+import org.example.backend.services.AnnotationCodeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,8 +1,8 @@
 package services;
 
 import org.example.database.SubmissionRepository;
-import org.example.models.SubmissionDB;
-import org.example.services.SubmissionService;
+import org.example.backend.models.SubmissionDB;
+import org.example.backend.services.SubmissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

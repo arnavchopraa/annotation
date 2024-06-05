@@ -1,7 +1,7 @@
 package models;
 
-import org.example.models.SubmissionDB;
-import org.example.models.SubmissionDTO;
+import org.example.backend.models.SubmissionDB;
+import org.example.backend.models.SubmissionDTO;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.rowset.serial.SerialBlob;

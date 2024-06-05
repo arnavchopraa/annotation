@@ -1,8 +1,8 @@
 package services;
 
 import org.example.database.UserRepository;
-import org.example.models.User;
-import org.example.services.UserService;
+import org.example.backend.models.User;
+import org.example.backend.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

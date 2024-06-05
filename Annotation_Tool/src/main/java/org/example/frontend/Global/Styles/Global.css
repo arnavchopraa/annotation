@@ -1,0 +1,47 @@
+:root {
+    --buttonBackgroundColor: #000;
+    --buttonColor: #eee;
+    --buttonHoverBackgroundColor: #2c2c2c;
+    --buttonBorderRadius: 0.25rem;
+
+    --scrollbarColor: #717171;
+    --scrollbarBackgroundColor: #000;
+    --containerBackgroundColor: #f0f0f0;
+}
+
+* {
+    scrollbar-color: #717171 #000;
+    scrollbar-width: none;
+}
+
+body {
+    font-family: 'Inter-Tight', sans-serif;
+    color: hsla(0, 0%, 0%, 1.00);
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 500;
+    overflow: hidden;
+}
+
+h2 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 25px;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: 0px;
+}
+
+section {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    max-width: 1920px;
+}
+
+.admin {
+    display: none;
+}
