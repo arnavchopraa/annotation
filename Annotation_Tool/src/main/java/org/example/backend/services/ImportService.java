@@ -10,6 +10,9 @@ import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.ImportException;
 import org.example.backend.exceptions.NoSubmissionException;
 import org.example.backend.importmodels.*;
+import org.example.database.SubmissionRepository;
+import org.example.database.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -18,10 +21,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-@NoArgsConstructor
 public class ImportService {
 
-    private final AccountService accountService = new AccountService();
+    private final AccountService accountService;
+    private final UserRepository userRepository;
+    private final SubmissionRepository submissionRepository;
+
+    @Autowired
+    public ImportService(UserRepository userRepository, SubmissionRepository submissionRepository) {
+        this.userRepository = userRepository;
+        this.submissionRepository = submissionRepository;
+        this.accountService = new AccountService(userRepository, submissionRepository);
+    }
     /**
      * Import data as downloaded from Brightspace and ProjectForum to the application
      *
@@ -36,7 +47,7 @@ public class ImportService {
      * @throws ImportException if the association process fails
      * @throws SQLException if accounts could not be created
      */
-    public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
+    public void importData(File zipFile, File csvFile, File xlsxFile)
         throws NoSubmissionException, ZipException, FileException, ImportException, SQLException {
 
         List<Student> studentList = processCsv(csvFile);
@@ -46,7 +57,6 @@ public class ImportService {
         List<Coordinator> coordinators = associateCoordinators(associations, projectList);
         accountService.createCoordinatorsAccounts(coordinators);
         accountService.createStudentAccounts(studentList);
-        return coordinators;
     }
 
     /**

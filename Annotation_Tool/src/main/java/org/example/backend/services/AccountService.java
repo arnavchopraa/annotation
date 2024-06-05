@@ -9,17 +9,33 @@ import org.example.backend.models.SubmissionDB;
 import org.example.backend.models.User;
 import org.example.backend.utils.ServerUtils;
 import org.example.backend.importmodels.Coordinator;
+import org.example.database.SubmissionRepository;
+import org.example.database.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class AccountService {
     private final EmailService emailService = new EmailService();
+    private final UserRepository userRepository;
+    private final SubmissionRepository submissionRepository;
+    private final UserService userService;
+    private final SubmissionService submissionService;
+
+    @Autowired
+    public AccountService(UserRepository userRepository, SubmissionRepository submissionRepository) {
+        this.userRepository = userRepository;
+        this.submissionRepository = submissionRepository;
+        this.userService = new UserService(userRepository);
+        this.submissionService = new SubmissionService(submissionRepository);
+    }
 
     /**
      * Automatically creates accounts for coordinators, once files have been uploaded
@@ -30,8 +46,8 @@ public class AccountService {
     public void createCoordinatorsAccounts(List<Coordinator> coordinators) throws RuntimeException, SQLException {
         for(Coordinator coordinator : coordinators) {
             String password = emailService.generateRandomCode();
-            Response response = ServerUtils.getUser(coordinator.getEmail());
-            if(response.getStatus() == 404) { //Account does not exist
+            User optionalUser = userService.getUser(coordinator.getEmail());
+            if(optionalUser == null) {
                 User user = new User(coordinator.getEmail(), coordinator.getFullName(), password, "supervisor");
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(coordinator.getEmail(), password);
@@ -40,9 +56,9 @@ public class AccountService {
                 } catch (EmailException e) {
                     throw new RuntimeException(e);
                 }
-                createSubmissions(coordinator);
-                ServerUtils.addUser(user);
+                userService.addUser(user);
             }
+            createSubmissions(coordinator);
         }
     }
 
@@ -55,8 +71,8 @@ public class AccountService {
     public void createStudentAccounts(List<Student> students) throws RuntimeException {
         for(Student student : students) {
             String password = emailService.generateRandomCode();
-            Response response = ServerUtils.getUser(student.getEmail());
-            if(response.getStatus() == 404) {
+            User optionalUser = userService.getUser(student.getEmail());
+            if(optionalUser == null) {
                 User user = new User(student.getEmail(), student.getStudentName(), password, "student");
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(student.getEmail(), password);
@@ -65,7 +81,7 @@ public class AccountService {
                 } catch (EmailException e) {
                     throw new RuntimeException(e);
                 }
-                ServerUtils.addUser(user);
+                userService.addUser(user);
             }
         }
     }
@@ -86,7 +102,7 @@ public class AccountService {
             SubmissionDB submissionDB = new SubmissionDB(
                 student.getEmail(), file, coordinator.getEmail(), submission.getFileName(), null, null);
 
-            ServerUtils.addSubmissionDB(submissionDB);
+            submissionService.addSubmission(submissionDB);
         }
     }
 
@@ -99,9 +115,9 @@ public class AccountService {
      */
     public String generateContent(String username, String password) {
         return "An administrator has uploaded theses on our annotation tool! We have" +
-                "created an account for you. Here are the credentials that you can use to access your" +
-                "account: \n Username: <b>" + username + "</b> \n Password: <b>" +
-                password + "</b> \n You can reset your password later on the platform!";
+                " created an account for you. Here are the credentials that you can use to access your" +
+                "account: <br> Username: <b>" + username + "</b> <br> Password: <b>" +
+                password + "</b> <br> You can reset your password later on the platform!";
     }
 
     /**

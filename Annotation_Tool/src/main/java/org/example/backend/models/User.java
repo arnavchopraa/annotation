@@ -8,14 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
+import org.example.backend.services.PasswordHashingService;
 
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 @Entity
 @ToString
-@AllArgsConstructor
 @Table(name="coordinators")
 public class User {
     @Id
@@ -42,8 +43,22 @@ public class User {
 
     public User(String name, String password, String role) {
         this.name = name;
-        //this.password = encoder.encode(password);
-        this.password = password;
+        try {
+            this.password = PasswordHashingService.hashPassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        this.role = role;
+    }
+
+    public User(String email, String name, String password, String role) {
+        this.id = email;
+        this.name = name;
+        try {
+            this.password = PasswordHashingService.hashPassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         this.role = role;
     }
 
