@@ -42,6 +42,6 @@ section {
     max-width: 1920px;
 }
 
-.admin {
+.admin, .hidden {
     display: none;
 }
