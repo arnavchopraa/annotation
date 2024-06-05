@@ -124,6 +124,21 @@ public class UserService {
         if (user == null) {
             return false;
         }
+        String password = user.getPassword();
+        for(int i = 0;i < password.length();i++) {
+            System.out.print((int) password.charAt(i));
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.println(password);
+        System.out.println(loginRequest.getPassword());
+        String hashed = hashPassword(loginRequest.getPassword());
+        for(int i = 0;i < hashed.length();i++) {
+            System.out.print((int) hashed.charAt(i));
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.println(hashed);
         return user.getPassword().equals(hashPassword(loginRequest.getPassword()));
     }
 

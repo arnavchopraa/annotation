@@ -28,10 +28,13 @@ public class ImportService {
      * @param zipFile .zip file containing student submissions
      * @param csvFile .csv file containing a list of all students
      * @param xlsxFile .xlsx file containing a list of all projects, from ProjectForum
-     * @return List of association pairs < Student, Submission >. They should be further used for
-     * saving in the database.
+     * @return List of Coordinators, with associated submissions. They should be further
+     * used for saving in the database.
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
+     * @throws FileException if the files could not be parsed
+     * @throws ImportException if the association process fails
+     * @throws SQLException if accounts could not be created
      */
     public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
         throws NoSubmissionException, ZipException, FileException, ImportException, SQLException {
@@ -52,8 +55,7 @@ public class ImportService {
      * @param associations student-submission pairs
      * @param projects List of projects from ProjectForum
      */
-    private List<Coordinator> associateCoordinators(List<Association> associations, List<Project> projects)
-        throws ImportException {
+    private List<Coordinator> associateCoordinators(List<Association> associations, List<Project> projects) {
         // TODO - verifici daca toate student number sunt din aceeasi grupa
 
         Map<Coordinator, List<Association>> map = new HashMap<>();
