@@ -13,6 +13,7 @@ import org.example.exceptions.NoSubmissionException;
 import org.example.importmodels.*;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -34,7 +35,7 @@ public class ImportService {
      * @throws ZipException if the zip file behaves unexpectedly
      */
     public List<Coordinator> importData(File zipFile, File csvFile, File xlsxFile)
-        throws NoSubmissionException, ZipException, FileException, ImportException, EmailException {
+            throws NoSubmissionException, ZipException, FileException, ImportException, RuntimeException, SQLException {
         List<Student> studentList = processCsv(csvFile);
         List<Submission> submissionList = extractZip(zipFile);
         List<Project> projectList = processXlsx(xlsxFile);
