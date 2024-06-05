@@ -142,6 +142,7 @@ public class ImportService {
                     Submission submission = processFileName(name);
                     File submittedFile = Objects.requireNonNull(currentEntry.listFiles())[0];
                     InputStream submittedStream = new FileInputStream(submittedFile);
+                    submission.setFileName(entry.getName());
                     submission.setSubmittedFile(submittedStream.readAllBytes());
                     submissionList.add(submission);
                 } else {
@@ -155,6 +156,7 @@ public class ImportService {
                         InputStream inputStream = file.getInputStream(entry);
 
                         Submission submission = processFileName(dirName);
+                        submission.setFileName(name.substring(lastIndex + 1));
                         submission.setSubmittedFile(inputStream.readAllBytes());
                         submissionList.add(submission);
                         inputStream.close();

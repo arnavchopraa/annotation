@@ -1,7 +1,7 @@
 package services;
 
-import org.example.exceptions.EmailException;
-import org.example.services.EmailService;
+import org.example.backend.exceptions.EmailException;
+import org.example.backend.services.EmailService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
