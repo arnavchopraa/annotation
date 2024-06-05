@@ -1,6 +1,5 @@
 package org.example.backend.services;
 
-import jakarta.ws.rs.core.Response;
 import org.example.backend.exceptions.EmailException;
 import org.example.backend.importmodels.Association;
 import org.example.backend.importmodels.Student;
@@ -18,7 +17,6 @@ import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,6 +27,12 @@ public class AccountService {
     private final UserService userService;
     private final SubmissionService submissionService;
 
+    /**
+     * Constructor for Account service, autowired by Spring.
+     *
+     * @param userRepository Repository used to save users.
+     * @param submissionRepository Repository used to save submissions.
+     */
     @Autowired
     public AccountService(UserRepository userRepository, SubmissionRepository submissionRepository) {
         this.userRepository = userRepository;

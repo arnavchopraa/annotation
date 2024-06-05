@@ -1,6 +1,5 @@
 package org.example.backend.services;
 
-import lombok.NoArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -27,6 +26,12 @@ public class ImportService {
     private final UserRepository userRepository;
     private final SubmissionRepository submissionRepository;
 
+    /**
+     * Constructor for ImportService, Autowired by Spring
+     *
+     * @param userRepository Repository used to save users
+     * @param submissionRepository Repository used to save submissions
+     */
     @Autowired
     public ImportService(UserRepository userRepository, SubmissionRepository submissionRepository) {
         this.userRepository = userRepository;
@@ -39,8 +44,6 @@ public class ImportService {
      * @param zipFile .zip file containing student submissions
      * @param csvFile .csv file containing a list of all students
      * @param xlsxFile .xlsx file containing a list of all projects, from ProjectForum
-     * @return List of Coordinators, with associated submissions. They should be further
-     * used for saving in the database.
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
      * @throws FileException if the files could not be parsed

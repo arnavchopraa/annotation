@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 import org.example.backend.services.PasswordHashingService;
 
@@ -51,6 +50,15 @@ public class User {
         this.role = role;
     }
 
+    /**
+     * AllArgsConstructor for User - Did not use lombok to specify that the password must
+     * be hashed upon user creation.
+     *
+     * @param email User's email
+     * @param name User's full name
+     * @param password User's password, hashed using PasswordHashingService
+     * @param role User's role in the application
+     */
     public User(String email, String name, String password, String role) {
         this.id = email;
         this.name = name;
