@@ -2,12 +2,12 @@ package services;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.example.TestUtils;
-import org.example.exceptions.PDFException;
-import org.example.services.AnnotationCodeService;
-import org.example.services.ParsingService;
-import org.example.utils.Line;
-import org.example.utils.PairUtils;
-import org.example.utils.Table;
+import org.example.backend.exceptions.PDFException;
+import org.example.backend.services.AnnotationCodeService;
+import org.example.backend.services.ParsingService;
+import org.example.backend.utils.Line;
+import org.example.backend.utils.PairUtils;
+import org.example.backend.utils.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
