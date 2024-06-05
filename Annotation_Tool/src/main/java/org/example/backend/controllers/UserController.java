@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -60,8 +61,10 @@ public class UserController {
      */
     @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@RequestBody User user) throws NoSuchAlgorithmException {
+        user.setPassword(service.hashPassword(user.getPassword()));
         User user1 = service.addUser(user);
+
         if (user1 == null) {
             return ResponseEntity.badRequest().build();
         }

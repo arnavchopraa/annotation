@@ -91,7 +91,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public ResponseEntity<List<String>> getCodes() throws IOException {
-        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).map(x -> x.getId()).toList());
+    public ResponseEntity<List<AnnotationCode>> getCodes() throws IOException {
+        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
     }
 }

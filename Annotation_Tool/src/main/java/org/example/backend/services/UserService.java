@@ -1,11 +1,15 @@
 package org.example.backend.services;
 
 import org.example.backend.models.User;
+import org.example.models.LoginRequest;
+import org.example.models.User;
 import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -91,5 +95,53 @@ public class UserService {
         }
         repo.deleteById(id);
         return deleted;
+    }
+
+    /**
+     * Method for registering a new user
+     *
+     * @param loginRequest a login request entity, that contains the username and the password
+     */
+    public void registerUser(LoginRequest loginRequest) {
+        if (loginRequest == null) {
+            return;
+        }
+        if (repo.findById(loginRequest.getUsername()).isPresent()) {
+            return;
+        }
+        repo.save(new User(loginRequest.getUsername(), loginRequest.getPassword()));
+    }
+
+    /**
+     * Method for authenticating a user
+     *
+     * @param loginRequest a login request entity, that contains the username and the password
+     * @return true if the user is authenticated, false otherwise
+     */
+    public boolean authenticateUser(LoginRequest loginRequest) throws NoSuchAlgorithmException {
+        System.out.println(loginRequest.getUsername());
+        User user = repo.findById(loginRequest.getUsername()).orElse(null);
+        if (user == null) {
+            return false;
+        }
+        return user.getPassword().equals(hashPassword(loginRequest.getPassword()));
+    }
+
+    /**
+     * Method for hashing a password
+     *
+     * @param password the password to be hashed
+     * @return the hashed password
+     * @throws NoSuchAlgorithmException if the hashing algorithm is not found
+     */
+    public String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new NoSuchAlgorithmException("No such algorithm found");
+        }
+        md.update(password.getBytes());
+        return new String(md.digest());
     }
 }

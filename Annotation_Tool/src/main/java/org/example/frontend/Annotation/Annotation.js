@@ -29,7 +29,9 @@ function fetchCodes() {
             const codeButton = document.createElement('input');
             codeButton.type = 'submit';
             codeButton.className = 'code';
-            codeButton.value = code;
+            codeButton.value = code.id;
+            codeButton.title = code.codeContent
+
             codesContainer.appendChild(codeButton);
         });
     })
