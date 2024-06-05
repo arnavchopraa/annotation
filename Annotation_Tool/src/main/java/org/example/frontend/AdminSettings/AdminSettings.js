@@ -94,6 +94,6 @@ function communicate(formData) {
         }
     })
     .catch(error => {
-        alert("kazakhstan ugrasaj nambambierovke")
+        alert("Error encountered!")
     })
 }
