@@ -1,4 +1,4 @@
-package org.example.backend.models;
+package org.example.backend.importmodels;
 
 import lombok.*;
 
@@ -36,7 +36,7 @@ public class Submission {
     /**
      * Override of toString method from Object class
      *
-     * @return A string representation of a Submission object.
+     * @return A string representation of a org.example.backend.importmodels.Submission object.
      */
     @Override
     public String toString() {

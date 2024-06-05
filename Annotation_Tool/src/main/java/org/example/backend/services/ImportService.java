@@ -3,9 +3,9 @@ package org.example.backend.services;
 import lombok.NoArgsConstructor;
 import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.NoSubmissionException;
-import org.example.backend.models.Association;
-import org.example.backend.models.Student;
-import org.example.backend.models.Submission;
+import org.example.backend.importmodels.Association;
+import org.example.backend.importmodels.Student;
+import org.example.backend.importmodels.Submission;
 
 import java.io.*;
 import java.util.*;
@@ -21,7 +21,7 @@ public class ImportService {
      *
      * @param zipFile .zip file containing student submissions
      * @param csvFile .csv file containing a list of all students
-     * @return List of association pairs < Student, Submission >. They should be further used for
+     * @return List of association pairs < org.example.backend.importmodels.Student, org.example.backend.importmodels.Submission >. They should be further used for
      * saving in the database.
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
@@ -56,7 +56,7 @@ public class ImportService {
      * Extracts data from the zip file containing student submissions, retrieved from Brightspace.
      *
      * @param zipFile .zip file containing student submissions
-     * @return List of Submission objects, containing submission data
+     * @return List of org.example.backend.importmodels.Submission objects, containing submission data
      * @throws NoSubmissionException if a directory does not contain any submissions
      * @throws ZipException if the zip file behaves unexpectedly
      */
@@ -118,7 +118,7 @@ public class ImportService {
      * Extracts data from a csv file containing a list of all students, retrieved from Brightspace
      *
      * @param csvFile .csv file containing a list of all students
-     * @return List of Student objects, containing student data
+     * @return List of org.example.backend.importmodels.Student objects, containing student data
      */
     private List<Student> processCsv(File csvFile) throws FileException {
         if(!csvFile.exists())
@@ -149,7 +149,7 @@ public class ImportService {
      * defined by the Brightspace export tool.
      *
      * @param name The name of a directory containing student submissions
-     * @return a Submission object, containing all data
+     * @return a org.example.backend.importmodels.Submission object, containing all data
      */
     private Submission processFileName(String name) {
         String[] split = name.split("-");

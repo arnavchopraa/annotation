@@ -1,4 +1,4 @@
-package org.example.backend.models;
+package org.example.backend.importmodels;
 
 import lombok.*;
 
@@ -17,7 +17,7 @@ public class Student {
     /**
      * Override of toString method from Object class
      *
-     * @return A string representation of a Student object.
+     * @return A string representation of a org.example.backend.importmodels.Student object.
      */
     @Override
     public String toString() {
