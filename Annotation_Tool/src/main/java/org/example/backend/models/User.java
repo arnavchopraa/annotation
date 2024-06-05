@@ -177,10 +177,6 @@ public class User {
      */
 
     public boolean checkPassword(String password) {
-        try {
-            return Objects.equals(this.password, PasswordHashingService.hashPassword(password));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        return Objects.equals(this.password, password);
     }
 }
