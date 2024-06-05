@@ -4,6 +4,8 @@ function handleFormSubmission(event) {
     const login = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
+    console.log(password)
+
     var endpoint = 'http://localhost:8080/auth/login';
 
     fetch(endpoint, {
