@@ -1,7 +1,7 @@
-package org.example.controllers;
+package org.example.backend.controllers;
 
-import org.example.models.LoginRequest;
-import org.example.models.User;
+import org.example.backend.models.LoginRequest;
+import org.example.backend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.example.services.UserService;
+import org.example.backend.services.UserService;
 
 import java.security.NoSuchAlgorithmException;
 

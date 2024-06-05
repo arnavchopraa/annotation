@@ -1,6 +1,7 @@
 package org.example.backend.controllers;
 
 import org.example.backend.exceptions.PDFException;
+import org.example.backend.models.AnnotationCode;
 import org.example.backend.services.AnnotationCodeService;
 import org.example.backend.services.FileService;
 import org.example.backend.services.SubmissionService;

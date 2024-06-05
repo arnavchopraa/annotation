@@ -1,8 +1,7 @@
 package org.example.backend.services;
 
 import org.example.backend.models.User;
-import org.example.models.LoginRequest;
-import org.example.models.User;
+import org.example.backend.models.LoginRequest;
 import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -109,7 +108,8 @@ public class UserService {
         if (repo.findById(loginRequest.getUsername()).isPresent()) {
             return;
         }
-        repo.save(new User(loginRequest.getUsername(), loginRequest.getPassword()));
+        // TODO - must change role
+        repo.save(new User(loginRequest.getUsername(), loginRequest.getPassword(), "supervisor"));
     }
 
     /**
