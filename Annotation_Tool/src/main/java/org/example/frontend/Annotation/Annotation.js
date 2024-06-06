@@ -29,10 +29,10 @@ function fetchCodes() {
         const codesContainer = document.getElementById('codes');
 
         codes.forEach(code => {
-            const codeButton = document.createElement('input');
-            codeButton.type = 'submit';
+            const codeButton = document.createElement('div');
             codeButton.className = 'code';
-            codeButton.value = code.id;
+
+            codeButton.textContent = code.id;
             codeButton.title = code.codeContent
 
             codesContainer.appendChild(codeButton);

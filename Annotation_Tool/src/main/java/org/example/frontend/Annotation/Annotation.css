@@ -5,6 +5,8 @@
 
     margin-left: 20px;
     margin-right: 20px;
+
+    overflow-y: auto;
 }
 
 .controls {
@@ -54,13 +56,39 @@ iframe {
 
 /* Codes */
 
+.codes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+
+    font-size: 24px;
+    font-weight: 700;
+    color: #363636;
+
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #d9d9d9;
+}
+
 #codesContainer {
     float: right;
     width: 26%;
+    padding: 10px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    background-color: #f0f0f0;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d9d9d9;
+    border-radius: 10px;
 
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbarColor) var(--scrollbarBackgroundColor);
@@ -92,18 +120,11 @@ iframe {
 
 /* Buttons */
 
-input {
-  background-image: none;
-  border: 0;
-  color: inherit;
-  font: inherit;
+.code, .control-button {
   margin-right: 10px;
   outline: 0;
   padding: 0;
-  transition: background-color 0.3s;
-}
 
-input[type="submit"] {
   background-color: var(--buttonBackgroundColor);
   color: var(--buttonColor);
 
@@ -112,6 +133,7 @@ input[type="submit"] {
   cursor: hover;
 
   border-radius: var(--buttonBorderRadius);
+  border: 0;
   padding-left: 1rem;
   padding-right: 1rem;
 
@@ -121,14 +143,9 @@ input[type="submit"] {
   transition-timing-function: ease;
 }
 
-input[type="submit"]:hover {
+.code:hover, .control-button:hover {
   background-color: var(--buttonHoverBackgroundColor);
-  cursor: default;
+  cursor: pointer;
 
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
-}
-
-input[type="file"] {
-    color: var(--buttonColor);
-    font-size: 14px;
 }
