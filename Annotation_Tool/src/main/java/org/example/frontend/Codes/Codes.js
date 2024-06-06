@@ -116,6 +116,10 @@ function createIcons(svgId) {
     button.className = 'icon';
     button.appendChild(createSvgIcon(svgId));
 
+    if (svgId === 'delete-icon') {
+        button.href = 'Codes.html';
+    }
+
     wrapper.appendChild(button);
 
     return wrapper;
