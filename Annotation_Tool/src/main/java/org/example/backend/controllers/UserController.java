@@ -1,9 +1,11 @@
 package org.example.backend.controllers;
 
 import org.example.backend.models.User;
+import org.example.backend.services.PasswordHashingService;
 import org.example.backend.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -61,8 +63,12 @@ public class UserController {
      */
     @PostMapping("/")
     @ResponseBody
-    public ResponseEntity<User> addUser(@RequestBody User user) throws NoSuchAlgorithmException {
-        user.setPassword(service.hashPassword(user.getPassword()));
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        try {
+            user.setPassword(PasswordHashingService.hashPassword(user.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         User user1 = service.addUser(user);
 
         if (user1 == null) {

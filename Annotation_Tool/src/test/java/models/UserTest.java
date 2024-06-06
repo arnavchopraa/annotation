@@ -1,8 +1,11 @@
 package models;
 
+import org.example.backend.services.PasswordHashingService;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.example.backend.models.User;
+
+import java.security.NoSuchAlgorithmException;
 
 
 class UserTest {
@@ -24,7 +27,13 @@ class UserTest {
     @Test
     void correctPassword() {
         User user = new User("username", "password123", "supervisor");
-        assertTrue(user.checkPassword("password123"));
+        String hashed = null;
+        try {
+            hashed = PasswordHashingService.hashPassword("password123");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(user.checkPassword(hashed));
     }
 
     @Test
