@@ -2,6 +2,11 @@ const role = localStorage.getItem('role');
 
 window.onload = displayAdminContent();
 
+// Call the function to load the SVGs when the page loads
+document.addEventListener('DOMContentLoaded', function () {
+    loadSVGs();
+});
+
 function displayAdminContent() {
     const adminContent = document.getElementsByClassName("admin");
     if(role === "admin") {
@@ -15,5 +20,21 @@ function displayAdminContent() {
             // Set the display style to 'none' to hide the element
             adminContent[i].style.display = 'none';
         }
+    }
+}
+
+/*
+    * Function to load and insert SVG content into the hidden div
+*/
+async function loadSVGs() {
+    try {
+        // Fetch the content of the SVG.html file
+        const response = await fetch('../Global/HTML/SVG.html');
+        const svgContent = await response.text();
+
+        // Insert the SVG content into the div with class 'hidden'
+        document.querySelector('.hidden').innerHTML = svgContent;
+    } catch (error) {
+        console.error('Error loading SVG content:', error);
     }
 }
