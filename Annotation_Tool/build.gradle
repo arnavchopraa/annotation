@@ -74,6 +74,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.poi/poi
     implementation group: 'org.apache.poi', name: 'poi', version: '3.9'
     implementation 'org.apache.poi:poi-ooxml:3.9'
+
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'javax.activation:activation:1.1.1'
 }
 
 test {

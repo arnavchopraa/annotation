@@ -4,7 +4,9 @@ function handleFormSubmission(event) {
     const login = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
-    var endpoint =`http://localhost:8080/auth/login`;
+    console.log(password)
+
+    var endpoint = 'http://localhost:8080/auth/login';
 
     fetch(endpoint, {
         method: "POST",
@@ -31,26 +33,4 @@ function handleFormSubmission(event) {
         // If there is an error with the request, display an error message
         alert(error.message);
     });
-            return response.json();
-        } else {
-            // If the response is not successful, throw an error
-            throw new Error('Failed to fetch user');
-        }
-    })
-        .then(userData => {
-
-            // checking password HAHA
-            if(userData.password === password) {
-                localStorage.setItem('username', login);
-                localStorage.setItem('role', userData.role);
-                window.location.href = "../Dashboard/Dashboard.html";
-            } else {
-                throw new Error('Failed to fetch user');
-            }
-        })
-        .catch(error => {
-            // Handle any errors that occur during the fetch
-            document.getElementById('errorMessage').textContent = 'User not found';
-            document.getElementById("loginForm").reset();
-        });
 }
