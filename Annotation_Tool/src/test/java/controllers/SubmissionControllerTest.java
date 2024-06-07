@@ -163,4 +163,18 @@ class SubmissionControllerTest {
         assertNull(response.getBody());
         verify(service, times(1)).deleteSubmission("test@example.com");
     }
+
+    @Test
+    void testSearchSubmission() {
+        List<SubmissionDB> submissionDBList = new ArrayList<>();
+        submissionDBList.add(submissionDB);
+        when(service.searchSubmissions("test", "coordinator@example.com")).thenReturn(submissionDBList);
+
+        ResponseEntity<List<SubmissionDTO>> response = controller.searchSubmission("test", "coordinator@example.com");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().size());
+        verify(service, times(1)).searchSubmissions("test", "coordinator@example.com");
+    }
 }

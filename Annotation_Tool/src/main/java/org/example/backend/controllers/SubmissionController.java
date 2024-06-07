@@ -9,7 +9,6 @@ import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -128,13 +127,20 @@ public class SubmissionController {
         return ResponseEntity.ok(deleted);
     }
 
+    /**
+     * This method searches for submissions containing some text in their email
+     * which also have the given coordinator
+     * @param text The text that must be in the submission email
+     * @param coordinator The coordinator which the submissions must have
+     * @return A list of submission which match this
+     */
     @GetMapping("/search/{text}/{coordinator}")
     @ResponseBody
     public ResponseEntity<List<SubmissionDTO>> searchSubmission(@PathVariable String text, @PathVariable String coordinator) {
         List<SubmissionDB> results = service.searchSubmissions(text, coordinator);
         List<SubmissionDTO> resp = results.stream()
-                .map(x -> SubmissionDB.convertToBinary(x))
-                .collect(Collectors.toList());
+            .map(x -> SubmissionDB.convertToBinary(x))
+            .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
     }
 }
