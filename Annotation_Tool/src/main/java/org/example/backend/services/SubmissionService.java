@@ -100,4 +100,10 @@ public class SubmissionService {
         }
         return repo.save(submissionDB);
     }
+
+    public List<SubmissionDB> searchSubmissions(String text, String coordinator) {
+        if(text == null)
+            return null;
+        return repo.findByIdIgnoreCaseContainingAndAssignedCoordinator(text, coordinator);
+    }
 }

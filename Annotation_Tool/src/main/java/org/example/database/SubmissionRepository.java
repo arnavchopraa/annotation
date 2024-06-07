@@ -1,6 +1,8 @@
 package org.example.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.example.backend.models.SubmissionDB;
 
@@ -15,4 +17,6 @@ public interface SubmissionRepository extends JpaRepository<SubmissionDB, String
      * @return the list of files associated with this coordinator
      */
     List<SubmissionDB> findByAssignedCoordinator(String assignedCoordinator);
+
+    List<SubmissionDB> findByIdIgnoreCaseContainingAndAssignedCoordinator(String id, String assignedCoordinator);
 }
