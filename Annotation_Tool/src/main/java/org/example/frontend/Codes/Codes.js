@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
     fetchCodes();
 });
 
@@ -55,8 +55,8 @@ function fetchCodes() {
             const codeControls = document.createElement('div');
             codeControls.className = 'code-controls';
 
-            const editWrapper = createIcons('edit-icon');
-            const deleteWrapper = createIcons('delete-icon');
+            const editWrapper = createIcons('edit-icon', code.id);
+            const deleteWrapper = createIcons('delete-icon', code.id);
 
             codeControls.appendChild(editWrapper);
             codeControls.appendChild(deleteWrapper);
@@ -108,19 +108,158 @@ function createSvgIcon(svgId) {
 /*
     * Method to create the edit and delete icons
 */
-function createIcons(svgId) {
+function createIcons(svgId, codeId) {
     const wrapper = document.createElement('div');
     wrapper.className = 'icon-wrapper';
 
     const button = document.createElement('a');
     button.className = 'icon';
+    button.setAttribute('code', codeId)
     button.appendChild(createSvgIcon(svgId));
 
-    if (svgId === 'delete-icon') {
-        button.href = 'Codes.html';
+    if(svgId === 'delete-icon')
+        button.addEventListener('click', function() {
+                    deleteCode(codeId);
+                });
+    else if(svgId === 'edit-icon') {
+        button.setAttribute('formVisible', false)
+        button.addEventListener('click', function() {
+                    showEditForm(codeId, button);
+                });
     }
 
     wrapper.appendChild(button);
 
     return wrapper;
+}
+
+/*
+    Method that removes a code from the database ( and page )
+*/
+function deleteCode(codeId) {
+    var endpoint = `http://localhost:8080/annotations/${codeId}`;
+        fetch(endpoint, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                // removing code directly from DOM
+                const codeWrapper = document.querySelector(`.code-button[value='${codeId}']`).closest('.code-wrapper');
+                codeWrapper.remove();
+            } else {
+                throw new Error('Failed to delete');
+            }
+        })
+        .catch(error => console.error('Error deleting code: ', error));
+}
+
+/*
+    Event listener for adding a code
+*/
+document.getElementById("add-code-button").addEventListener('click', function() {addCode(document.getElementById("code-id").value, document.getElementById("code-text").value)})
+
+
+
+/*
+    Method to add a code to the database
+*/
+function addCode(id, text) {
+    var endpoint = "http://localhost:8080/annotations/";
+
+    var newCode = {
+        id: id,
+        codeContent: text
+    };
+
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify(newCode)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to add code');
+        }
+    })
+    .then(addedCode => {
+        console.log('Code added successfully:', addedCode);
+
+//        const wrapper = document.getElementById('codes-wrapper');
+//        while(wrapper.firstChild) {
+//            wrapper.removeChild(wrapper.lastChild);
+//        }
+//        fetchCodes()
+
+        location.reload();
+
+        //we could either rewrite all the codes or directly refresh the page
+        //i've chosen to keep the refresh for now
+    })
+}
+
+/*
+    Method that shows the form where the user can edit a code
+*/
+function showEditForm(codeId, button) {
+    if(button.getAttribute("formVisible") === 'false') {    //checking if we do not have another form open for this code
+        button.setAttribute('formVisible', true)
+        const codeWrapper = document.querySelector(`.code-button[value='${codeId}']`).closest('.code-wrapper');
+        const codeDescription = codeWrapper.querySelector('.code-description');
+
+        const editForm = document.createElement('div');
+        editForm.className = 'edit-form';
+
+        const textArea = document.createElement('textarea');
+        textArea.value = codeDescription.textContent;
+        textArea.className = 'edit-text'
+        editForm.appendChild(textArea);
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.className = 'icon'
+        saveButton.addEventListener('click', function() {
+            editCode(codeId, textArea.value);
+            codeDescription.textContent = textArea.value; //update visualization
+            codeWrapper.removeChild(editForm); //remove the form after saving
+            button.setAttribute('formVisible', false) //make it possible to edit again
+        });
+        editForm.appendChild(saveButton);
+
+        codeWrapper.appendChild(editForm);
+    }
+}
+
+/*
+    Method that edits the code's description in the database
+*/
+function editCode(id, text) {
+    var endpoint = `http://localhost:8080/annotations/${id}`;
+
+    var updatedCode = {
+        id: id,
+        codeContent: text
+    };
+
+    fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedCode)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to update code');
+        }
+    })
+    .then(updatedCode => {
+        console.log('Code updated successfully:', updatedCode);
+    })
+    .catch(error => console.error('Error updating code:', error));
 }
