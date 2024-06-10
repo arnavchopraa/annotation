@@ -1,5 +1,6 @@
 const pdfObject = document.getElementById('pdfObject');
 let getName = localStorage.getItem('file')
+var allCodes
 
 /**
     * Fetch the codes from the database when the page loads.
@@ -23,6 +24,8 @@ function fetchCodes() {
         }
     })
     .then(codes => {
+        allCodes = codes
+
         const codesContainer = document.getElementById('codes');
 
         codes.forEach(code => {
@@ -167,8 +170,10 @@ function adobePreview(passedFile) {
                             console.log(event.type, event.data)
                             if (event.type === 'ANNOTATION_ADDED') {
                                 console.log("Annotation added\nAll annotations: ", annotationManager.getAnnotations())
+                                replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_UPDATED') {
                                 console.log("Annotation updated\nAll annotations: ", annotationManager.getAnnotations())
+                                replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_DELETED') {
                                 console.log("Annotation deleted\nAll annotations: ", annotationManager.getAnnotations())
                             }
@@ -185,3 +190,20 @@ function adobePreview(passedFile) {
             console.log(e);
         });
 }
+
+/*
+    Method that adds the description to codes added / deleted in anottations
+*/
+function replaceCodes(annotationManager, data) {
+    let text = data.bodyValue.trim()
+
+    allCodes.forEach((code) => {
+        if(code.id === text) {
+            data.bodyValue = data.bodyValue.trim() + " - " + code.codeContent
+            annotationManager.updateAnnotation(data)
+                .then (()=> console.log("Success"))
+            .catch(error => console.log("Error when updating annotations: ", error));
+        }
+    });
+}
+

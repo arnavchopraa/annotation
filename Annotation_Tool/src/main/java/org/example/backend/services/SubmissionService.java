@@ -5,6 +5,8 @@ import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.example.database.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -99,5 +101,18 @@ public class SubmissionService {
             return null;
         }
         return repo.save(submissionDB);
+    }
+
+    /**
+     * This method searches for submissions in the database based on their coordinator
+     * and part of text in its email
+     * @param text The text which must be present in the email
+     * @param coordinator The coordinator which must be associated with the submission
+     * @return The list of submissions based on the given data
+     */
+    public List<SubmissionDB> searchSubmissions(String text, String coordinator) {
+        if(text == null)
+            return new ArrayList<>();
+        return repo.findByIdIgnoreCaseContainingAndAssignedCoordinator(text, coordinator);
     }
 }

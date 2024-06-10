@@ -133,4 +133,20 @@ public class SubmissionServiceTest {
         SubmissionDB result = service.updateSubmission(null);
         assertNull(result);
     }
+
+    @Test
+    public void testSearchSubmissionsNullText() {
+        List<SubmissionDB> res = service.searchSubmissions(null, "2");
+        assertEquals(0, res.size());
+    }
+
+    @Test
+    public void testSearchSubmissions() {
+        SubmissionDB submission1 = new SubmissionDB();
+        SubmissionDB submission2 = new SubmissionDB();
+        when(repo.findByIdIgnoreCaseContainingAndAssignedCoordinator("12", "coordinator1")).thenReturn(Arrays.asList(submission1, submission2));
+
+        List<SubmissionDB> results = service.searchSubmissions("12", "coordinator1");
+        assertEquals(2, results.size());
+    }
 }
