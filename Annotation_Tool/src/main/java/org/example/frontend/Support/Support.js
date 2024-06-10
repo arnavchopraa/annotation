@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 slide.classList.remove('active');
             }
+
+            if (index === 0) {
+                backButton.style.display = 'none';
+            } else {
+                backButton.style.display = 'flex';
+            }
         });
     }
 
