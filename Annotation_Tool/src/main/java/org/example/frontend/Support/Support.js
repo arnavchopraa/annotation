@@ -29,6 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
         showSlide(0);
     });
 
-    // Initially show the first slide
-    showSlide(0);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('slide') === 'contact') {
+        showSlide(1);
+    } else if (urlParams.get('slide') === 'faq') {
+        showSlide(2);
+    } else if (urlParams.get('slide') === 'feedback') {
+        showSlide(3);
+    } else {
+        showSlide(0);
+    }
 });
