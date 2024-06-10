@@ -1,0 +1,108 @@
+.content {
+    display: flex;
+    position: relative;
+    margin: auto;
+
+    overflow-y: auto;
+    scrollbar-color: #717171 #000;
+}
+
+.content-wrap {
+    position: relative;
+    display: flex;
+    margin: auto;
+
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    padding: 30px;
+}
+
+.slider-wrapper {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.5s ease;
+}
+
+.slide {
+    display: none;
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    text-align: center;
+}
+
+.slide.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: auto;
+    margin-bottom: 50px;
+}
+
+.content-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 0px;
+    padding: 10px;
+
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.5;
+
+    color: #3e3e3e;
+}
+
+.content-subheader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+
+    color: #717171;
+}
+
+
+.back-button {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+
+    color: #c9c9c9;
+
+    cursor: pointer;
+}
+
+.back-arrow {
+    margin: 0px;
+    margin-right: 10px;
+}
+
+.back-text {
+    margin: 0px;
+    font-size: 16px;
+}
+
+.back-button:hover .back-arrow, .back-button:hover .back-text {
+    color: #ababab;
+}
