@@ -48,7 +48,8 @@
 
     border-style: solid;
     border-width: 1px;
-    border-color: #717171;
+    border-color: transparent;
+    background-color: #f5f5f5;
 
     border-radius: 5px;
     transition-property: border-color, opacity;
@@ -65,7 +66,7 @@
     color: #a3a3a3;
 }
 
-.field-input.text-field {
+.text-field {
     display: block;
     height: 125px;
     min-height: 125px;
