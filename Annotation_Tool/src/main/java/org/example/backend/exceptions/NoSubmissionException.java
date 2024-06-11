@@ -16,4 +16,13 @@ public class NoSubmissionException extends Exception {
     public NoSubmissionException (String message) {
         super(message);
     }
+
+    /**
+     * Constructor for NoSubmissionException with another exception
+     *
+     * @param e other exception
+     */
+    public NoSubmissionException(Exception e) {
+        super(e);
+    }
 }
