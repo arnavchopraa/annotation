@@ -17,4 +17,13 @@ public class PDFException extends Exception {
         super(text);
     }
 
+    /**
+     * Constructor for PDFException with another exception
+     *
+     * @param e other exception
+     */
+    public PDFException(Exception e) {
+        super(e);
+    }
+
 }
