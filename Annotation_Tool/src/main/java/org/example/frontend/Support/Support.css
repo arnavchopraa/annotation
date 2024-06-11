@@ -18,7 +18,6 @@
     align-items: stretch;
 
     width: 100%;
-    margin: auto;
 }
 
 .slider {
@@ -27,6 +26,8 @@
     max-width: 1000px;
 
     padding: 40px;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 .slides-wrap {
@@ -187,133 +188,6 @@
     text-transform: uppercase;
 }
 
-.form-content-wrap {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-
-    margin-top: 0px;
-}
-
-.form-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    width: 100%;
-    height: 100%;
-    max-width: 500px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 10px;
-}
-
-.field-title {
-    margin-bottom: 5px;
-    padding-left: 5px;
-
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    color: #848484;
-}
-
-.field-input {
-    width: calc(100% - 22px);
-    min-height: 65px;
-
-    padding-left: 20px;
-    padding-right: 20px;
-
-    border-style: solid;
-    border-width: 1px;
-    border-color: #717171;
-
-    border-radius: 5px;
-    transition-property: border-color, opacity;
-    transition-duration: 0.2s, 0.2s;
-    transition-timing-function: ease, ease;
-
-    font-size: 16px;
-    font-weight: 500;
-    text-align: left;
-    color: #3e3e3e;
-}
-
-.field-input::placeholder {
-    color: #a3a3a3;
-}
-
-.field-input.text-field {
-    display: block;
-    height: 125px;
-    min-height: 125px;
-
-    flex-wrap: wrap;
-    white-space: pre-wrap;
-
-    padding-top: 15px;
-    padding-bottom: 5px;
-    overflow-y: auto;
-}
-
-.text-field::before {
-    content: attr(placeholder);
-    position: absolute;
-    color: #a3a3a3;
-    pointer-events: none;
-}
-
-.text-field[data-empty="false"]::before{
-    display: none;
-}
-
-.submit-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 45px;
-
-    margin-top: 30px;
-    margin-left: auto;
-    outline: 0;
-    padding: 0;
-
-    background-color: #000;
-    color: #fff;
-
-    font-weight: 700;
-    font-size: 14px;
-    text-transform: uppercase;
-    cursor: hover;
-
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #000;
-
-    padding-left: 1rem;
-    padding-right: 1rem;
-
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-    transition-property: box-shadow;
-    transition-duration: 0.2s;
-    transition-timing-function: ease;
-}
-
-.submit-button:hover {
-  background-color: #f0f0f0;
-  cursor: pointer;
-  color: #000;
-
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
-}
-
 .back-button {
     display: flex;
     justify-content: left;
@@ -323,7 +197,8 @@
     color: #c9c9c9;
 
     cursor: pointer;
-    margin-left: 50px;
+    margin-top: 0px;
+    margin-right: auto;
 }
 
 .back-arrow {

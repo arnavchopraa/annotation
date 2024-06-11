@@ -1,7 +1,9 @@
 const slides = document.querySelectorAll('.slide');
 const options = document.querySelectorAll('.option');
-const backButton = document.querySelector('.back-button');
+const backButtons = document.querySelectorAll('.back-button');
 const textFields = document.querySelectorAll('.text-field');
+
+const faqQuestions = document.querySelectorAll('.faq-question');
 
 /**
     * @returns {void} adds an event listener to each option and associates them with the corresponding slide
@@ -15,13 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     openSlide();
     removePlaceholder();
+    faqOpenAndClose();
 });
 
 /**
     * @returns {void} shows the first slide when the back button is clicked
 */
-backButton.addEventListener('click', () => {
-    showSlide(0);
+backButtons.forEach(backButton => {
+    backButton.addEventListener('click', () => {
+        showSlide(0);
+    });
 });
 
 /**
@@ -34,12 +39,6 @@ function showSlide(index) {
             slide.classList.add('active');
         } else {
             slide.classList.remove('active');
-        }
-
-        if (index === 0) {
-            backButton.style.display = 'none';
-        } else {
-            backButton.style.display = 'flex';
         }
 
         updateURL(slideName(index));
@@ -94,6 +93,9 @@ function indexSlide(name) {
     }
 }
 
+/**
+    * @returns {void} removes the placeholder when the user starts typing
+*/
 function removePlaceholder() {
     textFields.forEach(function(textField) {
         textField.addEventListener('input', function() {
@@ -101,6 +103,31 @@ function removePlaceholder() {
                 this.setAttribute('data-empty', 'false');
             } else {
                 this.setAttribute('data-empty', 'true');
+            }
+        });
+    });
+}
+
+/**
+    * @returns {void} opens and closes the answer to the faq question
+*/
+function faqOpenAndClose() {
+    faqQuestions.forEach((question, index) => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const plusWrap = question.querySelector('.faq-plus-wrap');
+            const plusI = question.querySelector('.faq-plus-i');
+
+            if (answer.classList.contains('expanded')) {
+                answer.classList.remove('expanded');
+                plusWrap.classList.remove('rotated');
+                plusI.classList.remove('hidden');
+                answer.style.height = '0';
+            } else {
+                answer.classList.add('expanded');
+                plusWrap.classList.add('rotated');
+                plusI.classList.add('hidden');
+                answer.style.height = 'auto';
             }
         });
     });
