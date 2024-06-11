@@ -3,7 +3,6 @@ const fileInput = document.getElementById('fileInput');
 const pdfText = document.getElementById('pdfText');
 const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
-
 var fileName; // Global variable to store the name of the input file
 
 /**
@@ -13,9 +12,26 @@ fileInput.addEventListener('change', function(e) {
     var file = e.target.files[0];
     if (!file)
         return;
-
     processFile(file)
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    let getName = localStorage.getItem('file')
+    fetch( `http://localhost:8080/submissions/${getName}`)
+        .then(response => {
+            if(response.ok) {
+                //sessionFile = response.json()
+                return response.json()
+            } else {
+                throw new Error('Failed to fetch');
+            }
+        }).then(sub => {
+            processFile(sub.fileSubmission)
+        }
+
+    )
+        .catch(error => console.error('Error fetching codes: ', error));
+})
 
 /**
     * Method using fetch API to communicate with backend.
@@ -24,8 +40,15 @@ fileInput.addEventListener('change', function(e) {
     @param file: The file to be processed
 **/
 function processFile(file) {
+    let binaryString = atob(file);
+    let len = binaryString.length;
+    let bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    let blob = new Blob([bytes], { type: 'application/pdf' })
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", blob);
 
     var endpoint = "http://localhost:8080/frontend";
     fetch(endpoint, {

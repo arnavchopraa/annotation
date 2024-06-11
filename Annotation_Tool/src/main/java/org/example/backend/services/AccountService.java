@@ -104,7 +104,7 @@ public class AccountService {
             Student student = association.getStudent();
             Blob file = new SerialBlob(submission.getSubmittedFile());
             SubmissionDB submissionDB = new SubmissionDB(
-                student.getEmail(), file, coordinator.getEmail(), submission.getFileName(), null, null);
+                student.getEmail(), file, coordinator.getEmail(), submission.getFileName(), null, null, false);
 
             submissionService.addSubmission(submissionDB);
         }

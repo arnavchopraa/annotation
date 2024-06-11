@@ -37,6 +37,9 @@ public class SubmissionDB {
     @Column(name="last_edited")
     private Date lastEdited;
 
+    @Column(name="is_submitted")
+    private boolean isSubmitted;
+
     /**
      * This method encrypts the submission to a supported format for JSON
      *
@@ -47,7 +50,7 @@ public class SubmissionDB {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
             return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator()
-                    , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited());
+                    , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
             base64File = Base64.getEncoder().encodeToString(fileByte);
@@ -55,7 +58,7 @@ public class SubmissionDB {
             e.printStackTrace();
         }
         return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator()
-                , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited());
+                , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
     }
 
     /**
@@ -68,7 +71,7 @@ public class SubmissionDB {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
-                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited());
+                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

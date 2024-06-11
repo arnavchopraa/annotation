@@ -1,4 +1,4 @@
-const role = localStorage.getItem('role');
+
 
 window.onload = displayAdminContent();
 
@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function displayAdminContent() {
+    const role = localStorage.getItem('role');
+    console.log(`The role is ${role}`)
     const adminContent = document.getElementsByClassName("admin");
     if(role === "admin") {
         // Loop through each element with the class "admin"
