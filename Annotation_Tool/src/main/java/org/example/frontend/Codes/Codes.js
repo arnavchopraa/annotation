@@ -220,7 +220,7 @@ function showEditForm(codeId, button) {
 
         const saveButton = document.createElement('button');
         saveButton.textContent = 'Save';
-        saveButton.className = 'icon'
+        saveButton.className = 'save-button icon'
         saveButton.addEventListener('click', function() {
             editCode(codeId, textArea.value);
             codeDescription.textContent = textArea.value; //update visualization
