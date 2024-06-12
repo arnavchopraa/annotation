@@ -41,7 +41,7 @@ public class SubmissionDTOTest {
         String fileName = "test.txt";
         Date now = new Date(System.currentTimeMillis());
 
-        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, assignedCoordinator, fileName, now, now);
+        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, assignedCoordinator, fileName, now, now, false);
 
         assertEquals(id, submissionDTO.getId());
         assertEquals(fileSubmission, submissionDTO.getFileSubmission());

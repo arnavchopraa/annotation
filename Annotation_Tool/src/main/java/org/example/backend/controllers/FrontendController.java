@@ -16,9 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -92,7 +90,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public ResponseEntity<List<AnnotationCode>> getCodes() throws IOException {
+    public ResponseEntity<List<AnnotationCode>> getCodes() {
         return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
     }
 }

@@ -1,132 +1,14 @@
-const role = localStorage.getItem('role')
-let getName = localStorage.getItem('file')
-var allCodes
-const subBtn = document.querySelector('#submitFile')
-const parseBtn = document.querySelector('#parseFile')
-const arr = document.querySelectorAll('.admin')
-let newFile;
-const prevButton = document.getElementById('prevFile')
-const nextButton = document.getElementById('nextFile')
+const email = localStorage.getItem('username')
+const state = document.getElementById('state')
 
-prevButton.addEventListener('click', function() {
-    let length = localStorage.getItem("sublength")
-    let index = localStorage.getItem("curidx")
-    if(index != 0) {
-        index = Number(index) - 1
-        localStorage.setItem('curidx', index)
-        const prevDoc = localStorage.getItem('submission'+index)
-        localStorage.setItem('file', prevDoc)
-        fetchSub(prevDoc)
-    }
-})
-
-nextButton.addEventListener('click', function() {
-    let length = localStorage.getItem('sublength')
-    let index = localStorage.getItem('curidx')
-    if(index != length - 1) {
-        index = Number(index) + 1
-        localStorage.setItem('curidx', index)
-        const nextDoc = localStorage.getItem('submission'+index)
-        localStorage.setItem('file', nextDoc)
-        fetchSub(nextDoc)
-    }
-})
-
-function fetchSub(name) {
-    var endpoint = `http://localhost:8080/submissions/${name}`
-    fetch(endpoint, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if(response.ok)
-            return response.json()
-        else
-            throw new Error("Failed to retrieve current submission")
-    })
-    .then(submission => {
-        adobePreview(submission)
-    })
-    .catch(error => console.error(error))
-}
-
-/**
-    * Fetch the codes from the database when the page loads.
-**/
-document.addEventListener('DOMContentLoaded', function() {
-    if(role === 'student') {
-        arr.forEach(elem => {
-            elem.style.display = 'none'
-        })
-    }
-    fetchCodes();
-    loadPassedFile();
-});
-
-subBtn.addEventListener('click', () => {
-    if(newFile === undefined) {
-
-    }
-    newFile.submitted = true;
-    console.log(newFile)
-    fetch(`http://localhost:8080/submissions/${getName}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newFile)
-    }).then(
-        function (response) {
-            if(response.status == 200) console.log('ESTI CEL MAI TARE PAUL')
-        }
-    ).catch(e => {
-        console.log(e)
-    })
-})
-
-parseBtn.addEventListener('click', () => {
-    window.location.href = "../Parsing/Parsing.html";
-})
+document.addEventListener('DOMContentLoaded', loadFile);
 
 
-
-/**
-    * Add the codes from the backend to the container and display them as buttons.
-**/
-function fetchCodes() {
-    var endpoint = "http://localhost:8080/frontend/codes";
-    fetch(endpoint)
-    .then(response => {
-        if(response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Failed to fetch');
-        }
-    })
-    .then(codes => {
-        allCodes = codes
-
-        const codesContainer = document.getElementById('codes');
-
-        codes.forEach(code => {
-            const codeButton = document.createElement('div');
-            codeButton.className = 'code';
-
-            codeButton.textContent = code.id;
-            codeButton.title = code.codeContent
-
-            codesContainer.appendChild(codeButton);
-        });
-    })
-    .catch(error => console.error('Error fetching codes: ', error));
-}
-
-function loadPassedFile() {
+function loadFile() {
     // getting the file from database
-    let sessionFile
-    fetch( `http://localhost:8080/submissions/${getName}`)
+    console.log(email)
+    let sessionFile;
+    fetch( `http://localhost:8080/submissions/${email}`)
         .then(response => {
             if(response.ok) {
                 //sessionFile = response.json()
@@ -135,9 +17,14 @@ function loadPassedFile() {
                 throw new Error('Failed to fetch');
             }
         }).then(sub => {
-            newFile = sub;
-            newFile.submitted = false
-            adobePreview(sub)
+            sessionFile = sub;
+
+            if(sub.submitted === true) {
+                state.innerText = 'The file has been reviewed.'
+                adobePreview(sub)
+            } else {
+                state.innerText = 'The file has not been reviewed.'
+            }
         }
 
     )
@@ -156,13 +43,14 @@ function adobePreview(passedFile) {
         bytes[i] = binaryString.charCodeAt(i);
     }
     let blob = new Blob([bytes], { type: 'application/pdf' })
+
     var adobeDCView = new AdobeDC.View({clientId: "543b9355cff44d19821857d8b0ddfb96", divId: "pdfContainer"});
     adobeDCView.previewFile({
             content:{location: {url: URL.createObjectURL(blob)}},
-            metaData:{fileName: fileName, id: fileName}
+            metaData:{fileName: fileName, id: fileName, hasReadOnlyAccess: true}
         },
         {
-            enableAnnotationAPIs: true,
+            enableAnnotationAPIs: false,
             includePDFAnnotations: true
         });
 
@@ -219,10 +107,10 @@ function adobePreview(passedFile) {
     //promise used to listen to changes
     const previewFilePromise = adobeDCView.previewFile({
             content:{location: {url: URL.createObjectURL(blob)}},
-            metaData:{fileName: fileName, id: fileName}
+            metaData:{fileName: fileName, id: fileName, hasReadOnlyAccess: true}
         },
         {
-            enableAnnotationAPIs: true,
+            enableAnnotationAPIs: false,
             includePDFAnnotations: true
         });
 
@@ -272,20 +160,3 @@ function adobePreview(passedFile) {
             console.log(e);
         });
 }
-
-/*
-    Method that adds the description to codes added / deleted in anottations
-*/
-function replaceCodes(annotationManager, data) {
-    let text = data.bodyValue.trim()
-
-    allCodes.forEach((code) => {
-        if(code.id === text) {
-            data.bodyValue = data.bodyValue.trim() + " - " + code.codeContent
-            annotationManager.updateAnnotation(data)
-                .then (()=> console.log("Success"))
-            .catch(error => console.log("Error when updating annotations: ", error));
-        }
-    });
-}
-

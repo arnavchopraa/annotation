@@ -38,10 +38,10 @@ class SubmissionControllerTest {
         MockitoAnnotations.initMocks(this);
 
         Blob blob = new SerialBlob("dummy content".getBytes());
-        submissionDB = new SubmissionDB("test@example.com", blob, "coordinator@example.com", "file.pdf", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        submissionDB = new SubmissionDB("test@example.com", blob, "coordinator@example.com", "file.pdf", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false);
 
         String base64File = Base64.getEncoder().encodeToString("dummy content".getBytes());
-        submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator@example.com", "file.pdf", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator@example.com", "file.pdf", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false);
     }
 
     @Test

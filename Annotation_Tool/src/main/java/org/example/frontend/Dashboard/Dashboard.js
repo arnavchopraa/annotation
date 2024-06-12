@@ -59,7 +59,10 @@ function displaySubmissions(submissions) {
 
                     const three = document.createElement('p')
                     three.className = 'table-cell'
-                    three.innerText = 'No';
+                    if(sub.submitted === true)
+                        three.innerText = 'Yes';
+                    else
+                        three.innerText = 'No';
                     line.appendChild(three);
 
                     line.addEventListener('click', function() {

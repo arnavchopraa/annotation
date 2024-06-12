@@ -118,11 +118,23 @@ public class UserService {
      * @return true if the user is authenticated, false otherwise
      */
     public boolean authenticateUser(LoginRequest loginRequest) throws NoSuchAlgorithmException {
-        System.out.println(loginRequest.getUsername());
+        // System.out.println(loginRequest.getUsername());
         User user = repo.findById(loginRequest.getUsername()).orElse(null);
+        System.out.println(user.getPassword());
+        System.out.println(PasswordHashingService.hashPassword(loginRequest.getPassword()));
         if (user == null) {
             return false;
         }
+        // debug pass strings
+        /*
+        for(int i = 0;i < user.getPassword().length();i++)
+            System.out.print((int) user.getPassword().charAt(i) + " ");
+        System.out.println();
+        String hashedpass = PasswordHashingService.hashPassword(loginRequest.getPassword());
+        for(int i = 0;i < hashedpass.length();i++)
+            System.out.print((int) hashedpass.charAt(i) + " ");
+        System.out.println();*/
+
         return user.getPassword().equals(PasswordHashingService.hashPassword(loginRequest.getPassword()));
     }
 }

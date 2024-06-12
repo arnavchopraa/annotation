@@ -28,6 +28,8 @@ public class PairUtils {
      * @return the name of the file without the extension
      */
     public String removeFileExtension(String fileName) {
+        if(fileName.lastIndexOf('.') == -1)
+            return fileName;
         return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 

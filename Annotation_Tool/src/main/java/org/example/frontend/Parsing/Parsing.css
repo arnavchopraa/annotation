@@ -145,6 +145,9 @@ input[type="file"] {
   display: block;
 }
 
+#fileInput {
+    display: none;
+}
 #error {
     font-size: 15px;
     color: #A9554C;
