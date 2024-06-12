@@ -6,24 +6,35 @@
 
 .content-wrap {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
     height: 100%;
-    grid-column-gap: 40px;
-    grid-row-gap: 40px;
+    width: 100%;
+}
+
+.content-bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    width: 100%;
+    height: 60%;
 }
 
 .content-left {
     display: flex;
     flex-direction: column;
-    width: 75%;
+
+    width: 80%;
+    margin-right: 40px;
 }
 
-/* Search Bar and Upload Button */
-
-.content-top {
+.content-search {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .search-bar {
@@ -66,7 +77,17 @@
 
 .content-all-pdfs {
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+
+    border-radius: 10px;
+    background-color: #f5f5f5;
+
+    height: 100%;
+}
+
+.content-table {
+    height: 100%;
+    width: 100%;
 }
 
 .table-content {
@@ -74,7 +95,7 @@
     flex-grow: 1;
     padding-bottom: 15px;
 
-    width: calc(100% + 20px);
+    width: 100%;
     height: 158px;
 }
 
@@ -85,11 +106,15 @@
     grid-column-gap: 40px;
     grid-row-gap: 30px;
 
-    grid-template-columns: minmax(210px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr);
+    grid-template-columns: minmax(210px, 1fr) minmax(100px, 1fr) minmax(30px, 1fr);
     grid-template-rows: auto;
 
     color: hsla(0, 0%, 70.59%, 1.00);
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
+
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #e6e6e6;
 
     padding-bottom: 10px;
     text-align: center;
@@ -112,10 +137,13 @@
     border-bottom-width: 1px;
     border-bottom-color: hsla(0, 0%, 0%, 0.10);
 
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
     color: hsla(0, 0%, 0%, 1.00);
-    background-color: transparent;
+    background-color: #e6e6e6;
     font-weight: bold;
-    width: calc(100% + 20px);
+    width: 100%;
 }
 
 .table-cell .check {
@@ -124,13 +152,15 @@
     display: none;
 }
 
-/* Content Bottom */
-
-.content-bottom {
+.content-top {
     display: flex;
-    flex-shrink: 0;
-    grid-column-gap: 80px;
-    grid-row-gap: 80px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+
+    width: 100%;
+    height: 40%;
+    margin-bottom: 20px;
 }
 
 /* Recently Accessed PDFs Display */
@@ -200,11 +230,12 @@
 
 .content-support {
     display: flex;
-    width: 100%;
-    max-width: 360px;
     flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: auto;
+    justify-content: center;
+
+    width: 20%;
+
+    margin-left: auto;
 }
 
 .support-wrap {
@@ -220,6 +251,11 @@
     padding: 15px;
     border-radius: 20px;
     background-color: black;
+}
+
+.support-header {
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .support-link {
@@ -282,33 +318,34 @@
 }
 
 .ml-10 {
-    text-align: center;
-    margin-bottom: 40px;
+    text-align: left;
+    margin-bottom: 20px;
 }
 
-.right-wrap {
-    flex-grow: 1;
-    overflow-y: auto;
+.top-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 
-    width: calc(100% + 20px);
+    overflow: auto;
+
+    width: 100%;
     margin-right: -10px;
     margin-left: -10px;
     padding-right: 10px;
     padding-left: 10px;
 
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 }
 
-.right-line {
+.top-line {
     display: flex;
     align-items: center;
+    justify-content: center;
 
-    margin-bottom: 10px;
-    margin-top: 1px;
+    margin: 10px;
     padding: 20px;
     border-radius: 10px;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
 
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
     transition-property: box-shadow;
@@ -319,41 +356,14 @@
     text-decoration: none;
 }
 
-.right-line:hover {
+.top-line:hover {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
-.right-line:hover .big-p {
+.top-line:hover .big-p {
     color: hsla(0, 0%, 0%, 1.00);
 }
 
-.right-line:hover .grey-p {
+.top-line:hover .grey-p {
     color: #636363;
-}
-
-.right-button {
-    display: flex;
-    width: calc(100% + 20px);
-    height: 45px;
-    justify-content: center;
-    align-items: center;
-    margin-top: auto;
-
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
-
-    background-color: hsla(0, 0%, 0%, 1.00);
-    color: hsla(0, 0%, 100%, 1.00);
-    text-decoration: none;
-
-    transition-property: color, background-color;
-    transition-duration: 0.2s, 0.2s;
-    transition-timing-function: ease, ease;
-}
-
-.right-button:hover {
-    background-color: #f0f0f0;
-    color: hsla(0, 0%, 0%, 1.00);
 }
