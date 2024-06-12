@@ -16,4 +16,5 @@ public class SubmissionDTO {
     private String fileName;
     private Date lastSubmitted;
     private Date lastEdited;
+    private boolean isSubmitted;
 }

@@ -1,3 +1,4 @@
+
 window.onload = displayAdminContent();
 
 // Call the function to load the SVGs when the page loads

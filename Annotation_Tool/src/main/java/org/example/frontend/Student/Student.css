@@ -1,0 +1,55 @@
+.content-right {
+    width: 100%;
+    height: 100vh;
+    max-width: 1920px;
+
+    margin-left: 20px;
+    margin-right: 20px;
+
+    overflow-y: auto;
+}
+
+.controls {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    height: 5vh;
+
+    display: flex;
+    justify-content: center;
+}
+
+.control-button {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.control-buttons .last {
+    margin-left: auto;
+}
+
+/* Containers */
+
+.container {
+    position: relative;
+    height: 88vh; /* 88% of the viewport height */
+
+    background-color: none;
+}
+
+/* PDF */
+
+#pdfContainer {
+    width: 100%;
+    margin-right: 20px;
+    float: left;
+}
+
+iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}

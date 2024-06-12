@@ -1,5 +1,6 @@
 package org.example.backend.services;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -20,6 +21,11 @@ public class PasswordHashingService {
             throw new NoSuchAlgorithmException("No such algorithm found");
         }
         md.update(password.getBytes());
-        return new String(md.digest());
+        byte[] digest = md.digest();
+        for(byte b : digest)
+            System.out.print((int) b + " ");
+        System.out.println();
+        System.out.println(Charset.defaultCharset());
+        return new String(digest, Charset.forName("windows-1252"));
     }
 }
