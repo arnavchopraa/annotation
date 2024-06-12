@@ -21,14 +21,16 @@ function handleFormSubmission(event) {
         console.log(response)
         // Check if the response is successful (status code 200)
         if (response.ok) {
-            // Parse the JSON response
-            localStorage.setItem('username', login);
-            window.location.href = "../Dashboard/Dashboard.html";
+            return response.text()
         } else {
             // If the response is not successful, throw an error
             throw new Error('Invalid login credentials. Please try again.');
         }
-    })
+    }).then(x => {
+          localStorage.setItem('role', x)
+          localStorage.setItem('username', login)
+          window.location.href = "../Dashboard/Dashboard.html";
+      })
     .catch(error => {
         // If there is an error with the request, display an error message
         alert(error.message);
