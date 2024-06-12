@@ -222,6 +222,11 @@
     background-color: black;
 }
 
+.support-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 .support-line {
     display: flex;
     align-items: center;
@@ -261,6 +266,7 @@
 
 .support-text {
     margin: 0px;
+    text-decoration: none;
 }
 
 /* Recently Submitted PDFs Display */
