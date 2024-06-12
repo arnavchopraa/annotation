@@ -16,4 +16,13 @@ public class FileException extends Exception {
     public FileException(String message) {
         super(message);
     }
+
+    /**
+     * Constructor for FileException with another exception
+     *
+     * @param e other exception
+     */
+    public FileException(Exception e) {
+        super(e);
+    }
 }

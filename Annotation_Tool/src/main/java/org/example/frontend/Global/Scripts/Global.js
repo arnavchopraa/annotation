@@ -1,15 +1,16 @@
 
-
 window.onload = displayAdminContent();
 
 // Call the function to load the SVGs when the page loads
 document.addEventListener('DOMContentLoaded', function () {
     loadSVGs();
+    displayAdminContent();
 });
 
 function displayAdminContent() {
     const role = localStorage.getItem('role');
     console.log(`The role is ${role}`)
+
     const adminContent = document.getElementsByClassName("admin");
     if(role === "admin") {
         // Loop through each element with the class "admin"

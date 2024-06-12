@@ -5,6 +5,53 @@ const subBtn = document.querySelector('#submitFile')
 const parseBtn = document.querySelector('#parseFile')
 const arr = document.querySelectorAll('.admin')
 let newFile;
+const prevButton = document.getElementById('prevFile')
+const nextButton = document.getElementById('nextFile')
+
+prevButton.addEventListener('click', function() {
+    let length = localStorage.getItem("sublength")
+    let index = localStorage.getItem("curidx")
+    if(index != 0) {
+        index = Number(index) - 1
+        localStorage.setItem('curidx', index)
+        const prevDoc = localStorage.getItem('submission'+index)
+        localStorage.setItem('file', prevDoc)
+        fetchSub(prevDoc)
+    }
+})
+
+nextButton.addEventListener('click', function() {
+    let length = localStorage.getItem('sublength')
+    let index = localStorage.getItem('curidx')
+    if(index != length - 1) {
+        index = Number(index) + 1
+        localStorage.setItem('curidx', index)
+        const nextDoc = localStorage.getItem('submission'+index)
+        localStorage.setItem('file', nextDoc)
+        fetchSub(nextDoc)
+    }
+})
+
+function fetchSub(name) {
+    var endpoint = `http://localhost:8080/submissions/${name}`
+    fetch(endpoint, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if(response.ok)
+            return response.json()
+        else
+            throw new Error("Failed to retrieve current submission")
+    })
+    .then(submission => {
+        adobePreview(submission)
+    })
+    .catch(error => console.error(error))
+}
+
 /**
     * Fetch the codes from the database when the page loads.
 **/

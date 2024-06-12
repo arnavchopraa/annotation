@@ -35,9 +35,12 @@ function displaySubmissions(submissions) {
     clearSearchResults();
     const table = document.getElementById('table-content');
 
-                let index = 0;
+                localStorage.setItem('sublength', submissions.length)
+                for(let index = 0; index < submissions.length; index++) {
+                    let sub = submissions[index]
+                    let name = "submission"+index
+                    localStorage.setItem(name, sub.id)
 
-                submissions.forEach(sub => {
                     const line = document.createElement('div')
                     line.className = 'table-line'
 
@@ -64,12 +67,12 @@ function displaySubmissions(submissions) {
 
                     line.addEventListener('click', function() {
                         localStorage.setItem('file', sub.id)
+                        localStorage.setItem('curidx', index)
                         window.location.href = "../Annotation/Annotation.html"
                     });
 
-
                     table.appendChild(line)
-                })
+                }
 }
 
 /*
