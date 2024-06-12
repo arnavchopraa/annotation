@@ -97,15 +97,6 @@ function boldTitle (text) {
 }
 
 /*
-    * Method to create an SVG
-*/
-function createSvgIcon(svgId) {
-    const svgElement = document.getElementById(svgId).cloneNode(true);
-    svgElement.removeAttribute('id'); // Remove the id to prevent duplicates in the DOM
-    return svgElement;
-}
-
-/*
     * Method to create the edit and delete icons
 */
 function createIcons(svgId, codeId) {

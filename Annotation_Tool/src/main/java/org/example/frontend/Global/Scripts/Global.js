@@ -1,12 +1,13 @@
-
-window.onload = displayAdminContent();
-
 // Call the function to load the SVGs when the page loads
 document.addEventListener('DOMContentLoaded', function () {
     loadSVGs();
     displayAdminContent();
 });
 
+
+/**
+    * Function to display the admin content based on the user's role
+*/
 function displayAdminContent() {
     const role = localStorage.getItem('role');
     console.log(`The role is ${role}`)
@@ -40,4 +41,13 @@ async function loadSVGs() {
     } catch (error) {
         console.error('Error loading SVG content:', error);
     }
+}
+
+/*
+    * Method to create an SVG
+*/
+function createSvgIcon(svgId) {
+    const svgElement = document.getElementById(svgId).cloneNode(true);
+    svgElement.removeAttribute('id'); // Remove the id to prevent duplicates in the DOM
+    return svgElement;
 }
