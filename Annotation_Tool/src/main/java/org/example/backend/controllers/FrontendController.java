@@ -98,13 +98,6 @@ public class FrontendController {
      */
     @GetMapping("/frontend/codes")
     public ResponseEntity<List<AnnotationCode>> getCodes() throws IOException, SQLException {
-        File file = new File("C:\\Users\\pauls\\Downloads\\A_Chopra_Final.pdf");
-
-        byte[] fileContent = Files.readAllBytes(file.toPath());
-
-        // Create a SerialBlob object from the byte array
-        Blob blob = new SerialBlob(fileContent);
-        submissionService.addSubmission(new SubmissionDB("student@tudelft.nl", blob, "admin@tudelft.nl", "test_file", null, null, false));
         return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
     }
 }
