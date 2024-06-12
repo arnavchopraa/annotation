@@ -57,7 +57,7 @@ class SubmissionDBTest {
     void testConvertToBlob() throws SQLException {
         String content = "This is a test file content";
         String base64File = Base64.getEncoder().encodeToString(content.getBytes());
-        SubmissionDTO submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator", "testFile.txt", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+        SubmissionDTO submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator", "testFile.txt", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false);
 
         SubmissionDB submissionDB = SubmissionDB.convertToBlob(submissionDTO);
 

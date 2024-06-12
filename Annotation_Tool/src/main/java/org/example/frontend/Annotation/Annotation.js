@@ -1,13 +1,19 @@
-const pdfObject = document.getElementById('pdfObject');
+const role = localStorage.getItem('role')
 let getName = localStorage.getItem('file')
 var allCodes
 const subBtn = document.querySelector('#submitFile')
 const parseBtn = document.querySelector('#parseFile')
+const arr = document.querySelectorAll('.admin')
 let newFile;
 /**
     * Fetch the codes from the database when the page loads.
 **/
 document.addEventListener('DOMContentLoaded', function() {
+    if(role === 'student') {
+        arr.forEach(elem => {
+            elem.style.display = 'none'
+        })
+    }
     fetchCodes();
     loadPassedFile();
 });
