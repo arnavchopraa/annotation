@@ -206,6 +206,7 @@ function adobePreview(passedFile) {
 
             newFile.fileSubmission = base64string
             newFile.lastEdited = new Date()
+            newFile.lastSubmitted = new Date()
 
             var endpoint = `http://localhost:8080/submissions/${submissionEmail}`
             fetch(endpoint, {

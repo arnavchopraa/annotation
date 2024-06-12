@@ -54,16 +54,16 @@ public class SubmissionController {
     @GetMapping("/submitted/{id}")
     public ResponseEntity<List<SubmissionDTO>> getSubmittedSubmissions(@PathVariable("id") String id) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .filter(SubmissionDB::isSubmitted)
-                /*.sorted((x, other) -> { TODO - to be changed once last submitted is stored
-                    if(x.getLastSubmitted().after(other.getLastSubmitted()))
-                        return 1;
-                    else if(x.getLastSubmitted().before(other.getLastSubmitted()))
-                        return -1;
-                    return 0;
-                })*/
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .filter(SubmissionDB::isSubmitted)
+            /*.sorted((x, other) -> { TODO - to be changed once last submitted is stored
+                if(x.getLastSubmitted().after(other.getLastSubmitted()))
+                    return 1;
+                else if(x.getLastSubmitted().before(other.getLastSubmitted()))
+                    return -1;
+                return 0;
+            })*/
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
@@ -76,9 +76,9 @@ public class SubmissionController {
     @GetMapping("/notsubmitted/{id}")
     public ResponseEntity<List<SubmissionDTO>> getNotSubmittedSubmissions(@PathVariable("id") String id) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .filter(x -> !x.isSubmitted())
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .filter(x -> !x.isSubmitted())
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
