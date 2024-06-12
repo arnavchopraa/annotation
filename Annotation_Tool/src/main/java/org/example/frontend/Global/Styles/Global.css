@@ -12,6 +12,8 @@
 * {
     scrollbar-color: #717171 #000;
     scrollbar-width: none;
+
+    letter-spacing: 0.025em;
 }
 
 body {
@@ -19,7 +21,6 @@ body {
     color: hsla(0, 0%, 0%, 1.00);
     font-size: 15px;
     line-height: 1.2;
-    letter-spacing: 0.025em;
     font-weight: 500;
     overflow: hidden;
 
