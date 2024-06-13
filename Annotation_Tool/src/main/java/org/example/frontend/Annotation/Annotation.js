@@ -9,24 +9,42 @@ const prevButton = document.getElementById('prevFile')
 const nextButton = document.getElementById('nextFile')
 
 prevButton.addEventListener('click', function() {
-    let length = localStorage.getItem("sublength")
+    
+    let length
+    if(localStorage.getItem('whichList') === 'center')
+        length = localStorage.getItem('sublength')
+    else
+        length = localStorage.getItem('rightlength')
     let index = localStorage.getItem("curidx")
     if(index != 0) {
         index = Number(index) - 1
         localStorage.setItem('curidx', index)
-        const prevDoc = localStorage.getItem('submission'+index)
+        let prevDoc
+        if(localStorage.getItem('whichList') === 'center')
+            prevDoc = localStorage.getItem('submission'+index)
+        else
+            prevDoc = localStorage.getItem('rightsub'+index)
         localStorage.setItem('file', prevDoc)
         fetchSub(prevDoc)
     }
 })
 
 nextButton.addEventListener('click', function() {
-    let length = localStorage.getItem('sublength')
+    
+    let length
+    if(localStorage.getItem('whichList') === 'center')
+        length = localStorage.getItem('sublength')
+    else
+        length = localStorage.getItem('rightlength')
     let index = localStorage.getItem('curidx')
     if(index != length - 1) {
         index = Number(index) + 1
         localStorage.setItem('curidx', index)
-        const nextDoc = localStorage.getItem('submission'+index)
+        let nextDoc
+        if(localStorage.getItem('whichList') === 'center')
+            nextDoc = localStorage.getItem('submission'+index)
+        else
+            nextDoc = localStorage.getItem('rightsub'+index)
         localStorage.setItem('file', nextDoc)
         fetchSub(nextDoc)
     }

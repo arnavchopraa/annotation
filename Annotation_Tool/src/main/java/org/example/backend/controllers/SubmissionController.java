@@ -1,6 +1,7 @@
 package org.example.backend.controllers;
 
 import org.example.backend.models.SubmissionDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,44 @@ public class SubmissionController {
         return ResponseEntity.ok(service.getSubmissions().stream()
                 .map(x -> SubmissionDB.convertToBinary(x))
                 .collect(Collectors.toList()));
+    }
+
+    /**
+     * Endpoint for retrieving all files that have been submitted by a coordinator, sorted
+     * in descending order, by the lastSubmitted field.
+     *
+     * @param id the email of the coordinator
+     * @return a list of all submitted files
+     */
+    @GetMapping("/submitted/{id}")
+    public ResponseEntity<List<SubmissionDTO>> getSubmittedSubmissions(@PathVariable("id") String id) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .filter(SubmissionDB::isSubmitted)
+            /*.sorted((x, other) -> { TODO - to be changed once last submitted is stored
+                if(x.getLastSubmitted().after(other.getLastSubmitted()))
+                    return 1;
+                else if(x.getLastSubmitted().before(other.getLastSubmitted()))
+                    return -1;
+                return 0;
+            })*/
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint for retrieving all files that have not been submitted by a coordinator.
+     *
+     * @param id the email of the coordinator
+     * @return a list of all submitted files
+     */
+    @GetMapping("/notsubmitted/{id}")
+    public ResponseEntity<List<SubmissionDTO>> getNotSubmittedSubmissions(@PathVariable("id") String id) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .filter(x -> !x.isSubmitted())
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
     /**
