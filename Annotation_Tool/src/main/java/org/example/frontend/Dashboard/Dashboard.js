@@ -172,8 +172,9 @@ function displayRecentlySubmitted(submissions) {
         let name = 'rightsub'+index
         localStorage.setItem(name, cursub.id)
 
-        const div = document.createElement('div')
-        div.className = 'top-line'
+        const link = document.createElement('a')
+        link.className = 'top-line'
+        link.href = '#' // TODO - pass file to the annotation page
 
         const wrap = document.createElement('div')
         wrap.className = 'top-text'
@@ -189,9 +190,9 @@ function displayRecentlySubmitted(submissions) {
 
         wrap.appendChild(p1)
         wrap.appendChild(p2)
-        div.appendChild(wrap)
+        link.appendChild(wrap)
 
-        topSection.appendChild(div)
+        topSection.appendChild(link)
     }
 }
 
