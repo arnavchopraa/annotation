@@ -65,18 +65,23 @@ function displaySubmissions(submissions) {
 
         const three = document.createElement('p')
         three.className = 'table-cell'
-        if(sub.submitted === true)
-            three.innerText = 'Yes';
-        else
-            three.innerText = 'No';
+        three.innerText = "Not implemented";
         line.appendChild(three);
 
-                    line.addEventListener('click', function() {
-                        localStorage.setItem('whichList', 'center')
-                        localStorage.setItem('file', sub.id)
-                        localStorage.setItem('curidx', index)
-                        window.location.href = "../Annotation/Annotation.html"
-                    });
+        const four = document.createElement('p')
+        four.className = 'table-cell'
+        if(sub.submitted === true)
+            four.innerText = 'Yes';
+        else
+            four.innerText = 'No';
+        line.appendChild(four);
+
+        line.addEventListener('click', function() {
+            localStorage.setItem('whichList', 'center')
+            localStorage.setItem('file', sub.id)
+            localStorage.setItem('curidx', index)
+            window.location.href = "../Annotation/Annotation.html"
+        });
 
         table.appendChild(line)
     }

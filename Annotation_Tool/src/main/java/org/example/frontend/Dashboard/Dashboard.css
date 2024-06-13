@@ -202,7 +202,7 @@
     grid-column-gap: 40px;
     grid-row-gap: 30px;
 
-    grid-template-columns: minmax(210px, 1fr) minmax(100px, 1fr) minmax(30px, 1fr);
+    grid-template-columns: minmax(210px, 1fr) minmax(100px, 1fr) minmax(50px, 1fr) minmax(30px, 1fr);
     grid-template-rows: auto;
 
     color: hsla(0, 0%, 70.59%, 1.00);

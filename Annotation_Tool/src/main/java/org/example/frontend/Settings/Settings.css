@@ -52,7 +52,7 @@
     border-radius: 10px;
     border-style: solid;
     border-color: hsla(0, 0%, 0%, 0.10);
-    background-color: #f3f3f3;
+    background-color: #f5f5f5;
 
     padding-left: 50px;
     padding-right: 50px;
@@ -74,6 +74,9 @@
 .header {
     margin-bottom: 32px;
     margin-top: 0px;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .text-field-box {
@@ -136,6 +139,7 @@
     background-color: #000;
     color: #fff;
     font-size: 16px;
+    font-weight: 600;
 
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
     transition-property: all;
@@ -155,4 +159,47 @@
     margin-left: 15px;
     color: #c0c0c0;
     font-size: 13px;
+}
+
+.option-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    padding: 20px;
+    padding-top: 0px;
+
+    background-color: #fff;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: hsla(0, 0%, 0%, 0.10);
+}
+
+.option-text {
+    display: flex;
+    text-align: left;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    letter-spacing: 0.025em;
+
+    margin-bottom: 10px;
+}
+
+.option-wrapper .button {
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+.delete {
+    background-color: #9e2a2b;
+    color: #e6e6e6;
+
+    border-color: #9e2a2b;
+}
+
+.delete:hover {
+    background-color: #780000;
+    color: #fff;
 }
