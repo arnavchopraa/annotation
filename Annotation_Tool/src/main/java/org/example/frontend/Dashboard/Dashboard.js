@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 function getFiles() {
-    var endpoint =`http://localhost:8080/submissions/notsubmitted/${sessionEmail}`;
+    var endpoint =`http://localhost:8080/submissions/coordinator/${sessionEmail}`;
 
     fetch(endpoint, {
         method: "GET",
@@ -86,21 +86,6 @@ function displaySubmissions(submissions) {
         table.appendChild(line)
     }
 }
-
-/**
-    * Method to animate the arrows when clicked
-    * Should be expanded to sort by the column clicked
-*/
-const arrows = document.querySelectorAll('.arrow-icon');
-arrows.forEach(arrow => {
-    arrow.addEventListener('click', () => {
-        if (arrow.classList.contains('sorted')) {
-            arrow.classList.remove('sorted');
-        } else {
-            arrow.classList.add('sorted');
-        }
-    });
-});
 
 /*
     Listening to keyboard typing in the searchbar
@@ -209,4 +194,62 @@ topSection.addEventListener('click', (e) => {
         window.location.href = '../Annotation/Annotation.html'
     }
 })
+
+
+/**
+    * Method to animate the arrows when clicked
+    * Sorts the table by the column clicked, either ascending or descending
+*/
+const arrows = document.querySelectorAll('.arrow-icon');
+arrows.forEach(arrow => {
+    console.log(arrow.id);
+    arrow.addEventListener('click', () => {
+        if (arrow.classList.contains('sorted')) {
+            sortOrder(arrow.id, 'asc');
+            arrow.classList.remove('sorted');
+        } else {
+            sortOrder(arrow.id, 'desc');
+            arrow.classList.add('sorted');
+        }
+    });
+});
+
+function sortOrder(id, order) {
+    switch(id) {
+        case 'nameArrow':
+            sortName(order);
+            break;
+        case 'lastEditedArrow':
+            break;
+        case 'lastSubmittedArrow':
+            break;
+        default:
+            getFiles();
+    }
+}
+
+function sortName(order) {
+    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/student/${order}`;
+
+    fetch(endpoint, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+        if (response.ok) {
+            // Parse the JSON response
+            return response.json();
+        } else {
+            // If the response is not successful, throw an error
+            throw new Error('Failed to fetch user');
+        }
+    }).then(submissions => {
+        displaySubmissions(submissions);
+    }).catch(error => {
+        // Handle any errors that occur during the fetch
+        console.log(error)
+    });
+}
 
