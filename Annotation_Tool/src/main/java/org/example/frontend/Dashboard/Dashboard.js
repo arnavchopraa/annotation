@@ -1,5 +1,5 @@
 const sessionEmail = localStorage.getItem('username')
-const rightSection = document.getElementById('right-content')
+const topSection = document.getElementById('top-content')
 
 document.addEventListener('DOMContentLoaded', function () {
     getFiles();
@@ -167,13 +167,16 @@ function getRecentlySubmitted() {
 function displayRecentlySubmitted(submissions) {
 
     localStorage.setItem('rightlength', submissions.length)
-    for(let index = 0;index < submissions.length;index++) {
+    for(let index = 0; index < 5 && index < submissions.length; index++) {
         let cursub = submissions[index]
         let name = 'rightsub'+index
         localStorage.setItem(name, cursub.id)
 
         const div = document.createElement('div')
-        div.className = 'right-line'
+        div.className = 'top-line'
+
+        const wrap = document.createElement('div')
+        wrap.className = 'top-text'
 
         const p1 = document.createElement('p')
         p1.className = 'big-p'
@@ -184,18 +187,19 @@ function displayRecentlySubmitted(submissions) {
         p1.appendChild(text1)
         p2.appendChild(text2)
 
-        div.appendChild(p1)
-        div.appendChild(p2)
+        wrap.appendChild(p1)
+        wrap.appendChild(p2)
+        div.appendChild(wrap)
 
-        rightSection.appendChild(div)
+        topSection.appendChild(div)
     }
 }
 
-rightSection.addEventListener('click', (e) => {
-    if(e.target.className === 'right-line') {
-        localStorage.setItem('whichList', 'right')
+topSection.addEventListener('click', (e) => {
+    if(e.target.className === 'top-line') {
+        localStorage.setItem('whichList', 'top')
         localStorage.setItem('file', e.target.firstElementChild.innerText)
-        localStorage.setItem('curidx', Array.from(rightSection.children).indexOf(e.target))
+        localStorage.setItem('curidx', Array.from(topSection.children).indexOf(e.target))
         window.location.href = '../Annotation/Annotation.html'
     }
 })

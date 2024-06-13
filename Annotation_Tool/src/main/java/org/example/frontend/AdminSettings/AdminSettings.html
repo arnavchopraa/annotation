@@ -95,36 +95,62 @@
 
                     <h2 class="header">Admin Tools</h2>
 
-                    <div class="admin-tools">
-                        <h2 class="upload-header">1. All Submissions for an Assignment</h2>
-                            <input class="upload-input" type="file" id="zipInput" accept=".zip" required>
+                    <div class="admin-section">
+                        <div class="admin-left">
+                            <div class="admin-tools">
+                                <h2 class="upload-header">1. All Submissions for an Assignment</h2>
+                                <input class="upload-input" type="file" id="zipInput" accept=".zip" required>
 
-                            <label for="zipInput" class="upload-label">
-                                <span class="upload-button">Choose File</span>
-                                <span id="zipName" class="upload-name">No file chosen</span>
-                            </label>
-                    </div>
+                                <label for="zipInput" class="upload-label">
+                                    <span class="upload-button">Choose File</span>
+                                    <span id="zipName" class="upload-name">No file chosen</span>
+                                </label>
+                            </div>
 
-                    <div class="admin-tools">
-                        <h2 class="upload-header">2. List of Students and their Groups</h2>
+                            <div class="admin-tools">
+                                <h2 class="upload-header">2. List of Students and their Groups</h2>
 
-                        <input class="upload-input" type="file" id="csvInput" accept=".csv" required>
+                                <input class="upload-input" type="file" id="csvInput" accept=".csv" required>
 
-                        <label for="csvInput" class="upload-label">
-                            <span class="upload-button">Choose File</span>
-                            <span id="csvName" class="upload-name">No file chosen</span>
-                        </label>
-                    </div>
+                                <label for="csvInput" class="upload-label">
+                                    <span class="upload-button">Choose File</span>
+                                    <span id="csvName" class="upload-name">No file chosen</span>
+                                </label>
+                            </div>
 
-                    <div class="admin-tools">
-                        <h2 class="upload-header">3. List of Coordinators Assigned to Each Group</h2>
+                            <div class="admin-tools">
+                                <h2 class="upload-header">3. List of Coordinators Assigned to Each Group</h2>
 
-                        <input class="upload-input" type="file" id="xlsxInput" accept=".xlsx, .xls" required>
+                                <input class="upload-input" type="file" id="xlsxInput" accept=".xlsx, .xls" required>
 
-                        <label for="xlsxInput" class="upload-label">
-                            <span class="upload-button">Choose File</span>
-                            <span id="xlsxName" class="upload-name">No file chosen</span>
-                        </label>
+                                <label for="xlsxInput" class="upload-label">
+                                    <span class="upload-button">Choose File</span>
+                                    <span id="xlsxName" class="upload-name">No file chosen</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="admin-right">
+                            <div class="admin-tools">
+                                <h2 class="upload-header">4. Bulk Download all Parsed Reports</h2>
+
+                                <input class="upload-input" type="submit" id="bulkDownloadInput">
+
+                                <label for="bulkDownloadInput" class="upload-label">
+                                    <span class="upload-button">Download Text Files</span>
+                                </label>
+                            </div>
+
+                            <div class="admin-tools">
+                                <h2 class="upload-header">5. Bulk Delete all Reports</h2>
+
+                                <input class="upload-input" type="submit" id="bulkDeleteInput">
+
+                                <label for="bulkDeleteInput" class="upload-label">
+                                    <span class="upload-button">Delete all Files</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

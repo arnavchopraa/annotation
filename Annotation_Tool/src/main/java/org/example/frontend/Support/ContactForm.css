@@ -62,9 +62,10 @@
     color: #fff;
 
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-    transition-property: transform;
+    transition-property: all;
     transition-duration: 0.2s;
     transition-timing-function: ease;
+
     font-size: 16px;
     font-weight: 600;
 }
@@ -72,6 +73,7 @@
 .contact-submit:hover {
     background-color: #f0f0f0;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px);
     color: #000;
     cursor: pointer;
 }

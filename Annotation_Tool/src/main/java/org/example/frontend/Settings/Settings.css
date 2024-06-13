@@ -138,7 +138,7 @@
     font-size: 16px;
 
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-    transition-property: box-shadow;
+    transition-property: all;
     transition-duration: 0.2s;
     transition-timing-function: ease;
 }
@@ -146,6 +146,7 @@
 .button:hover {
     background-color: #f0f0f0;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+    transform: translateY(-5px);
     color: #000;
     cursor: pointer;
 }
