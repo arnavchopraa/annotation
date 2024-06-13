@@ -51,7 +51,7 @@
     border-color: transparent;
     background-color: #f5f5f5;
 
-    border-radius: 5px;
+    border-radius: 7px;
     transition-property: border-color, opacity;
     transition-duration: 0.2s, 0.2s;
     transition-timing-function: ease, ease;
@@ -63,7 +63,7 @@
 }
 
 .field-input::placeholder {
-    color: #a3a3a3;
+    color: #d0d0d0;
 }
 
 .text-field {
@@ -71,24 +71,10 @@
     height: 125px;
     min-height: 125px;
 
-    flex-wrap: wrap;
-    white-space: pre-wrap;
-
     padding-top: 15px;
     padding-bottom: 0px;
     margin-bottom: 0px;
     overflow-y: auto;
-}
-
-.text-field::before {
-    content: attr(placeholder);
-    position: absolute;
-    color: #a3a3a3;
-    pointer-events: none;
-}
-
-.text-field[data-empty="false"]::before{
-    display: none;
 }
 
 .submit-button {

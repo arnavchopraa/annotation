@@ -22,7 +22,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: transparent;
-    border-radius: 5px;
+    border-radius: 7px;
 
     background-color: #f5f5f5;
     font-size: 16px;
@@ -32,7 +32,7 @@
 }
 
 .contact-input::placeholder {
-    color: #a3a3a3;
+    color: #d0d0d0;
 }
 
 .contact-input.text-field {

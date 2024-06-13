@@ -47,6 +47,10 @@ section {
     max-width: 1920px;
 }
 
+textarea {
+    font-family: 'Inter-Tight', sans-serif;
+}
+
 .admin, .hidden {
     display: none;
 }

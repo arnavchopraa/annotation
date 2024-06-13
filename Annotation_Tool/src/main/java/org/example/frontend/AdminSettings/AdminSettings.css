@@ -27,6 +27,8 @@
     font-weight: 700;
     font-size: 40px;
     text-align: center;
+    letter-spacing: -1px;
+    text-transform: uppercase;
 }
 
 .upload-section {
