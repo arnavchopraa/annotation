@@ -1,11 +1,13 @@
 const sessionEmail = localStorage.getItem('username')
+const rightSection = document.getElementById('right-content')
 
 document.addEventListener('DOMContentLoaded', function () {
     getFiles();
+    getRecentlySubmitted();
 })
 
 function getFiles() {
-    var endpoint =`http://localhost:8080/submissions/coordinator/${sessionEmail}`;
+    var endpoint =`http://localhost:8080/submissions/notsubmitted/${sessionEmail}`;
 
     fetch(endpoint, {
         method: "GET",
@@ -69,11 +71,12 @@ function displaySubmissions(submissions) {
             three.innerText = 'No';
         line.appendChild(three);
 
-        line.addEventListener('click', function() {
-            localStorage.setItem('file', sub.id)
-            localStorage.setItem('curidx', index)
-            window.location.href = "../Annotation/Annotation.html"
-        });
+                    line.addEventListener('click', function() {
+                        localStorage.setItem('whichList', 'center')
+                        localStorage.setItem('file', sub.id)
+                        localStorage.setItem('curidx', index)
+                        window.location.href = "../Annotation/Annotation.html"
+                    });
 
         table.appendChild(line)
     }
@@ -139,3 +142,61 @@ function getSearchResults(writtenText) {
 function clearSearchResults() {
     document.getElementById("table-content").innerHTML = "";
 }
+
+function getRecentlySubmitted() {
+    var endpoint = `http://localhost:8080/submissions/submitted/${sessionEmail}`
+
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if(response.ok)
+            return response.json()
+        else
+            throw new Error("Couldn't retrieve files")
+    })
+    .then(submissions => {
+        displayRecentlySubmitted(submissions)
+    })
+    .catch(error => console.error(error)) // TODO - better error handling
+}
+
+function displayRecentlySubmitted(submissions) {
+
+    localStorage.setItem('rightlength', submissions.length)
+    for(let index = 0;index < submissions.length;index++) {
+        let cursub = submissions[index]
+        let name = 'rightsub'+index
+        localStorage.setItem(name, cursub.id)
+
+        const div = document.createElement('div')
+        div.className = 'right-line'
+
+        const p1 = document.createElement('p')
+        p1.className = 'big-p'
+        const p2 = document.createElement('p')
+        p2.className = 'grey-p'
+        const text1 = document.createTextNode(cursub.id)
+        const text2 = document.createTextNode(cursub.lastEdited)
+        p1.appendChild(text1)
+        p2.appendChild(text2)
+
+        div.appendChild(p1)
+        div.appendChild(p2)
+
+        rightSection.appendChild(div)
+    }
+}
+
+rightSection.addEventListener('click', (e) => {
+    if(e.target.className === 'right-line') {
+        localStorage.setItem('whichList', 'right')
+        localStorage.setItem('file', e.target.firstElementChild.innerText)
+        localStorage.setItem('curidx', Array.from(rightSection.children).indexOf(e.target))
+        window.location.href = '../Annotation/Annotation.html'
+    }
+})
+
