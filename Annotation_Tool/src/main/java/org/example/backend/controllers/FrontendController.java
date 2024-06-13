@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -93,7 +91,7 @@ public class FrontendController {
      * @return 200 OK - List of codes
      */
     @GetMapping("/frontend/codes")
-    public ResponseEntity<List<AnnotationCode>> getCodes() throws IOException, SQLException {
+    public ResponseEntity<List<AnnotationCode>> getCodes() {
         return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
     }
 }
