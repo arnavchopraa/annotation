@@ -54,7 +54,7 @@ public class SubmissionController {
     @GetMapping("/submitted/{id}")
     public ResponseEntity<List<SubmissionDTO>> getSubmittedSubmissions(@PathVariable("id") String id) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .filter(SubmissionDB::isSubmitted)
+            .filter(SubmissionDB::isSubmitted)
                 /*.sorted((x, other) -> { TODO - to be changed once last submitted is stored
                     if(x.getLastSubmitted().after(other.getLastSubmitted()))
                         return 1;
@@ -62,8 +62,8 @@ public class SubmissionController {
                         return -1;
                     return 0;
                 })*/
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
@@ -76,9 +76,9 @@ public class SubmissionController {
     @GetMapping("/notsubmitted/{id}")
     public ResponseEntity<List<SubmissionDTO>> getNotSubmittedSubmissions(@PathVariable("id") String id) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .filter(x -> !x.isSubmitted())
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .filter(x -> !x.isSubmitted())
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
@@ -109,8 +109,8 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
         List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
         List<SubmissionDTO> resp = sub.stream()
-                .map(x -> SubmissionDB.convertToBinary(x))
-                .collect(Collectors.toList());
+            .map(SubmissionDB::convertToBinary)
+            .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
     }
 
@@ -178,8 +178,8 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> searchSubmission(@PathVariable String text, @PathVariable String coordinator) {
         List<SubmissionDB> results = service.searchSubmissions(text, coordinator);
         List<SubmissionDTO> resp = results.stream()
-                .map(x -> SubmissionDB.convertToBinary(x))
-                .collect(Collectors.toList());
+            .map(SubmissionDB::convertToBinary)
+            .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
     }
 
