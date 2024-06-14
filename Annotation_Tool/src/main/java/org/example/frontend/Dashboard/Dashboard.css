@@ -182,17 +182,20 @@
 }
 
 .content-table {
+    display: flex;
+    flex-direction: column;
+
     height: 100%;
     width: 100%;
 }
 
 .table-content {
-    overflow: auto;
+    overflow-y: auto;
     flex-grow: 1;
     padding-bottom: 15px;
 
     width: 100%;
-    height: 158px;
+    height: 250px;
 }
 
 .table-line {
@@ -251,6 +254,8 @@
 }
 
 .table-line.table-headers {
+    flex-shrink: 0;
+
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-bottom-color: hsla(0, 0%, 0%, 0.10);
@@ -262,12 +267,6 @@
     background-color: #e6e6e6;
     font-weight: bold;
     width: 100%;
-}
-
-.table-cell .check {
-    position: absolute;
-    right: 10px;
-    display: none;
 }
 
 /* Support Options Display */

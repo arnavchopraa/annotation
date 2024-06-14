@@ -1,5 +1,4 @@
 const sessionEmail = localStorage.getItem('username')
-const topSection = document.getElementById('top-content')
 
 document.addEventListener('DOMContentLoaded', function () {
     getFiles();
@@ -173,7 +172,7 @@ function displayRecentlySubmitted(submissions) {
         const p2 = document.createElement('p')
         p2.className = 'grey-p'
         const text1 = document.createTextNode(cursub.id)
-        const text2 = document.createTextNode(cursub.lastEdited)
+        const text2 = document.createTextNode('Submitted on ' + cursub.lastSubmitted)
         p1.appendChild(text1)
         p2.appendChild(text2)
 
@@ -185,9 +184,10 @@ function displayRecentlySubmitted(submissions) {
     }
 }
 
+const topSection = document.getElementById('topContent')
 topSection.addEventListener('click', (e) => {
     if(e.target.className === 'top-line') {
-        localStorage.setItem('whichList', 'top')
+        localStorage.setItem('whichList', 'right')
         localStorage.setItem('file', e.target.firstElementChild.firstElementChild.innerText)
         localStorage.setItem('curidx', Array.from(topSection.children).indexOf(e.target))
         window.location.href = '../Annotation/Annotation.html'

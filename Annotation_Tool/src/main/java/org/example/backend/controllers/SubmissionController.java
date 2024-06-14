@@ -10,6 +10,7 @@ import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -178,10 +179,20 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedByLastEdited(@PathVariable("id") String id, @PathVariable("order") String order) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
             .sorted((x, other) -> {
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastEdited());
+                if (xDate == null) {
+                    xDate = new Timestamp(0L);
+                }
+
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastEdited());
+                if (otherDate == null) {
+                    otherDate = new Timestamp(0L);
+                }
+
                 if(order.equals("asc")) {
-                    return x.getLastEdited().compareTo(other.getLastEdited());
+                    return xDate.compareTo(otherDate);
                 } else {
-                    return other.getLastEdited().compareTo(x.getLastEdited());
+                    return otherDate.compareTo(xDate);
                 }
             })
             .map(SubmissionDB::convertToBinary)
