@@ -162,9 +162,8 @@ function displayRecentlySubmitted(submissions) {
         let name = 'rightsub'+index
         localStorage.setItem(name, cursub.id)
 
-        const link = document.createElement('a')
+        const link = document.createElement('div')
         link.className = 'top-line'
-        link.href = '#' // TODO - pass file to the annotation page
 
         const wrap = document.createElement('div')
         wrap.className = 'top-text'
@@ -189,7 +188,7 @@ function displayRecentlySubmitted(submissions) {
 topSection.addEventListener('click', (e) => {
     if(e.target.className === 'top-line') {
         localStorage.setItem('whichList', 'top')
-        localStorage.setItem('file', e.target.firstElementChild.innerText)
+        localStorage.setItem('file', e.target.firstElementChild.firstElementChild.innerText)
         localStorage.setItem('curidx', Array.from(topSection.children).indexOf(e.target))
         window.location.href = '../Annotation/Annotation.html'
     }
