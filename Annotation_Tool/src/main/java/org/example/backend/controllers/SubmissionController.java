@@ -180,14 +180,7 @@ public class SubmissionController {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
             .sorted((x, other) -> {
                 Timestamp xDate = service.convertStringToTimestamp(x.getLastEdited());
-                if (xDate == null) {
-                    xDate = new Timestamp(0L);
-                }
-
                 Timestamp otherDate = service.convertStringToTimestamp(other.getLastEdited());
-                if (otherDate == null) {
-                    otherDate = new Timestamp(0L);
-                }
 
                 if(order.equals("asc")) {
                     return xDate.compareTo(otherDate);
@@ -216,6 +209,12 @@ public class SubmissionController {
                 } else {
                     return !x.isSubmitted();
                 }
+            })
+            .sorted((x, other) -> {
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastSubmitted());
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastSubmitted());
+
+                return otherDate.compareTo(xDate);
             })
             .map(SubmissionDB::convertToBinary)
             .toList();
