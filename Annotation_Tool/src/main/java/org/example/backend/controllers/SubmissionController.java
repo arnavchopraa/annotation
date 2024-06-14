@@ -203,13 +203,33 @@ public class SubmissionController {
     @GetMapping("/{id}/sort/submitted/{order}")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedBySubmitted(@PathVariable("id") String id, @PathVariable("order") String order) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-            .filter(x -> {
-                if(order.equals("asc")) {
-                    return x.isSubmitted();
-                } else {
-                    return !x.isSubmitted();
+            .sorted((x, other) -> {
+                // First sort by submission status
+                int statusComparison = Boolean.compare(other.isSubmitted(), x.isSubmitted());
+                if (statusComparison != 0) {
+                    return order.equals("asc") ? -statusComparison : statusComparison;
                 }
+
+                // Then sort by date within each group
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastSubmitted());
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastSubmitted());
+
+                return order.equals("asc") ? xDate.compareTo(otherDate) : otherDate.compareTo(xDate);
             })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
+    }
+
+    /**
+     * This method returns all the documents that have been submitted sorted by the last submitted date
+     * @param id the email of the coordinator
+     * @return the submissions sorted by the last submitted date
+     */
+    @GetMapping("/{id}/submitted")
+    public ResponseEntity<List<SubmissionDTO>> getSubmittedSortedByLastSubmitted(@PathVariable("id") String id) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .filter(SubmissionDB::isSubmitted)
             .sorted((x, other) -> {
                 Timestamp xDate = service.convertStringToTimestamp(x.getLastSubmitted());
                 Timestamp otherDate = service.convertStringToTimestamp(other.getLastSubmitted());

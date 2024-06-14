@@ -26,19 +26,6 @@
     margin-bottom: 20px;
 }
 
-.grey-p {
-    margin-top: 0px;
-    color: hsla(0, 0%, 70.59%, 1.00);
-}
-
-.big-p {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    margin-top: 0px;
-    color: #474747;
-}
-
 .top-header {
     color: #3e3e3e;
     text-transform: uppercase;
@@ -105,6 +92,23 @@
 
 .top-line:hover .grey-p {
     color: #636363;
+}
+
+.top-text {
+    text-align: center;
+}
+
+.big-p {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    color: #474747;
+}
+
+.grey-p {
+    margin-top: 0px;
+    color: hsla(0, 0%, 70.59%, 1.00);
 }
 
 /* Bottom Content Display */

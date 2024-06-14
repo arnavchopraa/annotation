@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     getRecentlySubmitted();
 })
 
+/**
+    * Methood to get the files assigned to the supervisor
+*/
 function getFiles() {
     var endpoint =`http://localhost:8080/submissions/coordinator/${sessionEmail}`;
 
@@ -132,8 +135,11 @@ function clearSearchResults() {
     document.getElementById("table-content").innerHTML = "";
 }
 
+/**
+    * Method to get the recently submitted files
+*/
 function getRecentlySubmitted() {
-    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/submitted/asc`;
+    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/submitted`;
 
     fetch(endpoint, {
         method: 'GET',
@@ -153,6 +159,9 @@ function getRecentlySubmitted() {
     .catch(error => console.error(error)) // TODO - better error handling
 }
 
+/**
+    * Method to display the top 5 most recently submitted files
+*/
 function displayRecentlySubmitted(submissions) {
 
     localStorage.setItem('rightlength', submissions.length)
@@ -172,7 +181,7 @@ function displayRecentlySubmitted(submissions) {
         const p2 = document.createElement('p')
         p2.className = 'grey-p'
         const text1 = document.createTextNode(cursub.id)
-        const text2 = document.createTextNode('Submitted on ' + cursub.lastSubmitted)
+        const text2 = document.createTextNode('Submitted at ' + cursub.lastSubmitted)
         p1.appendChild(text1)
         p2.appendChild(text2)
 
@@ -184,6 +193,9 @@ function displayRecentlySubmitted(submissions) {
     }
 }
 
+/**
+    * Method to redirect to the file's annotation page when it is clicked in the recently submitted section
+*/
 const topSection = document.getElementById('topContent')
 topSection.addEventListener('click', (e) => {
     if(e.target.className === 'top-line') {
@@ -290,6 +302,10 @@ function sortLastEdited(order) {
     });
 }
 
+/**
+    * Method to sort the table by the last submitted date
+    * @param order - the order to sort the table by
+*/
 function sortSubmitted(order) {
     var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/submitted/${order}`;
 
