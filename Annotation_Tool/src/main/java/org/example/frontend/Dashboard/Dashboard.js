@@ -134,7 +134,7 @@ function clearSearchResults() {
 }
 
 function getRecentlySubmitted() {
-    var endpoint = `http://localhost:8080/submissions/submitted/${sessionEmail}`
+    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/submitted/asc`;
 
     fetch(endpoint, {
         method: 'GET',
@@ -213,20 +213,29 @@ arrows.forEach(arrow => {
     });
 });
 
+/**
+    * Method to sort the table by the column clicked
+*/
 function sortOrder(id, order) {
     switch(id) {
         case 'nameArrow':
             sortName(order);
             break;
         case 'lastEditedArrow':
+            sortLastEdited(order);
             break;
         case 'lastSubmittedArrow':
+            sortSubmitted(order);
             break;
         default:
             getFiles();
     }
 }
 
+/**
+    * Method to sort the table by the name of the student
+    * @param order - the order to sort the table by
+*/
 function sortName(order) {
     var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/student/${order}`;
 
@@ -252,3 +261,56 @@ function sortName(order) {
     });
 }
 
+/**
+    * Method to sort the table by the last edited date
+    * @param order - the order to sort the table by
+*/
+function sortLastEdited(order) {
+    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/lastEdited/${order}`;
+
+    fetch(endpoint, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+        if (response.ok) {
+            // Parse the JSON response
+            return response.json();
+        } else {
+            // If the response is not successful, throw an error
+            throw new Error('Failed to fetch user');
+        }
+    }).then(submissions => {
+        displaySubmissions(submissions);
+    }).catch(error => {
+        // Handle any errors that occur during the fetch
+        console.log(error)
+    });
+}
+
+function sortSubmitted(order) {
+    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/submitted/${order}`;
+
+    fetch(endpoint, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+        if (response.ok) {
+            // Parse the JSON response
+            return response.json();
+        } else {
+            // If the response is not successful, throw an error
+            throw new Error('Failed to fetch user');
+        }
+    }).then(submissions => {
+        displaySubmissions(submissions);
+    }).catch(error => {
+        // Handle any errors that occur during the fetch
+        console.log(error)
+    });
+}
