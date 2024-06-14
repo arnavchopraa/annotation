@@ -177,15 +177,15 @@ public class SubmissionController {
     @GetMapping("/{id}/sort/lastEdited/{order}")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedByLastEdited(@PathVariable("id") String id, @PathVariable("order") String order) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .sorted((x, other) -> {
-                    if(order.equals("asc")) {
-                        return x.getLastEdited().compareTo(other.getLastEdited());
-                    } else {
-                        return other.getLastEdited().compareTo(x.getLastEdited());
-                    }
-                })
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .sorted((x, other) -> {
+                if(order.equals("asc")) {
+                    return x.getLastEdited().compareTo(other.getLastEdited());
+                } else {
+                    return other.getLastEdited().compareTo(x.getLastEdited());
+                }
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 
@@ -199,15 +199,15 @@ public class SubmissionController {
     @GetMapping("/{id}/sort/submitted/{order}")
     public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedBySubmitted(@PathVariable("id") String id, @PathVariable("order") String order) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-                .filter(x -> {
-                    if(order.equals("asc")) {
-                        return x.isSubmitted();
-                    } else {
-                        return !x.isSubmitted();
-                    }
-                })
-                .map(SubmissionDB::convertToBinary)
-                .toList();
+            .filter(x -> {
+                if(order.equals("asc")) {
+                    return x.isSubmitted();
+                } else {
+                    return !x.isSubmitted();
+                }
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 }
