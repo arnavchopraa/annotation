@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.ToString;
 import org.example.backend.services.PasswordHashingService;
+import org.springframework.security.core.userdetails.UserDetails;
 
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Entity
 @ToString
 @Table(name="coordinators")
-public class User {
+public class User{
     @Id
     @Column(name="email")
     private String id;
