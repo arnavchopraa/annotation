@@ -2,8 +2,8 @@ package org.example.backend.services;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSArray;
-import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -61,6 +61,8 @@ public class ParsingService {
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+                        if(a.getContents() == null)
+                            continue;
                         AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
                         if(ac != null) {
                             annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
@@ -200,12 +202,12 @@ public class ParsingService {
         while(rectangle < quads.size()) {
 
             //getting the coordinates of the rectangle
-            COSFloat ulx = (COSFloat) quads.get(0+rectangle);       //upper left x coordinate
-            COSFloat uly = (COSFloat) quads.get(1+rectangle);       //upper left y coordinate
-            COSFloat urx = (COSFloat) quads.get(2+rectangle);       //upper right x coordinate
-            COSFloat ury = (COSFloat) quads.get(3+rectangle);       //upper right y coordinate
-            COSFloat llx = (COSFloat) quads.get(4+rectangle);       //lower left x coordinate
-            COSFloat lly = (COSFloat) quads.get(5+rectangle);       //lower left y coordinate
+            COSNumber ulx = (COSNumber) quads.get(rectangle);       //upper left x coordinate
+            COSNumber uly = (COSNumber) quads.get(1+rectangle);       //upper left y coordinate
+            COSNumber urx = (COSNumber) quads.get(2+rectangle);       //upper right x coordinate
+            COSNumber ury = (COSNumber) quads.get(3+rectangle);       //upper right y coordinate
+            COSNumber llx = (COSNumber) quads.get(4+rectangle);       //lower left x coordinate
+            COSNumber lly = (COSNumber) quads.get(5+rectangle);       //lower left y coordinate
 
             float xStart = ulx.floatValue() - 1;                    //x coordinate at the top left of the rectangle
             float yStart = uly.floatValue();                        //y coordinate at the top left of the rectangle

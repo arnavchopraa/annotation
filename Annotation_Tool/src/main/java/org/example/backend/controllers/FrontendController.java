@@ -2,11 +2,8 @@ package org.example.backend.controllers;
 
 import org.example.backend.exceptions.PDFException;
 import org.example.backend.models.AnnotationCode;
-import org.example.backend.services.AnnotationCodeService;
-import org.example.backend.services.FileService;
-import org.example.backend.services.SubmissionService;
+import org.example.backend.services.*;
 import org.example.backend.utils.FileUtils;
-import org.example.backend.services.ParsingService;
 import org.example.backend.utils.PairUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -17,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.*;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -29,6 +27,7 @@ public class FrontendController {
 
     private final AnnotationCodeService annotationCodeService;
     private final SubmissionService submissionService;
+    private final ExportService exportService;
 
     /**
      * This method creates a new instance of the FrontendController class
@@ -42,6 +41,7 @@ public class FrontendController {
         this.fileService = new FileService();
         this.annotationCodeService = annotationCodeService;
         this.submissionService = submissionService;
+        this.exportService = new ExportService(submissionService, annotationCodeService);
     }
 
     /**
@@ -93,5 +93,30 @@ public class FrontendController {
     @GetMapping("/frontend/codes")
     public ResponseEntity<List<AnnotationCode>> getCodes() {
         return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
+    }
+
+    /**
+     * Endpoint used to download all files, for a coordinator, containing all modifications done on the frontend.
+     *
+     * @param id Email of the coordinator for which to download all assigned files.
+     * @return 200 OK - .zip file containing all PDF files, containing all modifications done on our tool.
+     *         500 INTERNAL SERVER ERROR - if there was a problem with temporary files.
+     *         404 NOT FOUND - if there was a problem upon creating the zip file.
+     */
+    @GetMapping("/frontend/allsubmissions/{id}")
+    public ResponseEntity<byte[]> exportAllFiles(@PathVariable("id") String id) {
+        File zipFile;
+        try {
+            zipFile = exportService.getAllSubmissionsByCoordinator(id);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        try (InputStream inputStream = new FileInputStream(zipFile)) {
+            byte[] bytes = inputStream.readAllBytes();
+            return new ResponseEntity<>(bytes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -122,6 +122,13 @@ public class SubmissionService {
     }
 
     /**
+     * Delete all submissions from the repository.
+     */
+    public void deleteAll() {
+        repo.deleteAll();
+    }
+
+    /**
      * This method converts a string to a timestamp
      * @param dateString The string to convert
      * @return The timestamp
