@@ -3,8 +3,6 @@ package models;
 import org.example.backend.models.SubmissionDTO;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SubmissionDTOTest {
@@ -15,7 +13,7 @@ public class SubmissionDTOTest {
         String fileSubmission = "base64File";
         String assignedCoordinator = "coordinator1";
         String fileName = "test.txt";
-        Date now = new Date(System.currentTimeMillis());
+        String now = String.valueOf(System.currentTimeMillis());
 
         SubmissionDTO submissionDTO = new SubmissionDTO();
         submissionDTO.setId(id);
@@ -39,7 +37,7 @@ public class SubmissionDTOTest {
         String fileSubmission = "base64File";
         String assignedCoordinator = "coordinator1";
         String fileName = "test.txt";
-        Date now = new Date(System.currentTimeMillis());
+        String now = String.valueOf(System.currentTimeMillis());
 
         SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, assignedCoordinator, fileName, now, now, false);
 

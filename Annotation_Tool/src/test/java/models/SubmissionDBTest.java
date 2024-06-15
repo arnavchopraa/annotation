@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Base64;
 
@@ -21,7 +20,7 @@ class SubmissionDBTest {
         submissionDB.setFileSubmission(null);
         submissionDB.setAssignedCoordinator("coordinator");
         submissionDB.setFileName("testFile.txt");
-        submissionDB.setLastSubmitted(new Date(System.currentTimeMillis()));
+        submissionDB.setLastSubmitted(String.valueOf(System.currentTimeMillis()));
 
         SubmissionDTO dto = SubmissionDB.convertToBinary(submissionDB);
 
@@ -41,7 +40,7 @@ class SubmissionDBTest {
         submissionDB.setFileSubmission(blob);
         submissionDB.setAssignedCoordinator("coordinator");
         submissionDB.setFileName("testFile.txt");
-        submissionDB.setLastSubmitted(new Date(System.currentTimeMillis()));
+        submissionDB.setLastSubmitted(String.valueOf(System.currentTimeMillis()));
 
         SubmissionDTO dto = SubmissionDB.convertToBinary(submissionDB);
 
@@ -57,7 +56,7 @@ class SubmissionDBTest {
     void testConvertToBlob() throws SQLException {
         String content = "This is a test file content";
         String base64File = Base64.getEncoder().encodeToString(content.getBytes());
-        SubmissionDTO submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator", "testFile.txt", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false);
+        SubmissionDTO submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator", "testFile.txt", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false);
 
         SubmissionDB submissionDB = SubmissionDB.convertToBlob(submissionDTO);
 

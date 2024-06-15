@@ -10,6 +10,7 @@ import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,44 +46,6 @@ public class SubmissionController {
     }
 
     /**
-     * Endpoint for retrieving all files that have been submitted by a coordinator, sorted
-     * in descending order, by the lastSubmitted field.
-     *
-     * @param id the email of the coordinator
-     * @return a list of all submitted files
-     */
-    @GetMapping("/submitted/{id}")
-    public ResponseEntity<List<SubmissionDTO>> getSubmittedSubmissions(@PathVariable("id") String id) {
-        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-            .filter(SubmissionDB::isSubmitted)
-            /*.sorted((x, other) -> { TODO - to be changed once last submitted is stored
-                if(x.getLastSubmitted().after(other.getLastSubmitted()))
-                    return 1;
-                else if(x.getLastSubmitted().before(other.getLastSubmitted()))
-                    return -1;
-                return 0;
-            })*/
-            .map(SubmissionDB::convertToBinary)
-            .toList();
-        return new ResponseEntity<>(submissions, HttpStatus.OK);
-    }
-
-    /**
-     * Endpoint for retrieving all files that have not been submitted by a coordinator.
-     *
-     * @param id the email of the coordinator
-     * @return a list of all submitted files
-     */
-    @GetMapping("/notsubmitted/{id}")
-    public ResponseEntity<List<SubmissionDTO>> getNotSubmittedSubmissions(@PathVariable("id") String id) {
-        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
-            .filter(x -> !x.isSubmitted())
-            .map(SubmissionDB::convertToBinary)
-            .toList();
-        return new ResponseEntity<>(submissions, HttpStatus.OK);
-    }
-
-    /**
      * This method returns the submission with the given id
      *
      * @param id the id of the submission
@@ -109,7 +72,7 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
         List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
         List<SubmissionDTO> resp = sub.stream()
-            .map(x -> SubmissionDB.convertToBinary(x))
+            .map(SubmissionDB::convertToBinary)
             .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
     }
@@ -178,8 +141,103 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> searchSubmission(@PathVariable String text, @PathVariable String coordinator) {
         List<SubmissionDB> results = service.searchSubmissions(text, coordinator);
         List<SubmissionDTO> resp = results.stream()
-            .map(x -> SubmissionDB.convertToBinary(x))
+            .map(SubmissionDB::convertToBinary)
             .collect(Collectors.toList());
         return ResponseEntity.ok(resp);
+    }
+
+    /**
+     * This method returns all the submissions of a coordinator sorted by the id of the student
+     * either in ascending or descending order
+     * @param id the email of the coordinator
+     * @param order the order in which the submissions should be sorted
+     * @return the submissions sorted by the id of the student
+     */
+    @GetMapping("/{id}/sort/student/{order}")
+    public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedByStudent(@PathVariable("id") String id, @PathVariable("order") String order) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .sorted((x, other) -> {
+                if(order.equals("asc")) {
+                    return x.getId().compareTo(other.getId());
+                } else {
+                    return other.getId().compareTo(x.getId());
+                }
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
+    }
+
+    /**
+     * This method returns all the submissions of a coordinator sorted by the last edited date
+     * either in ascending or descending order
+     * @param id the email of the coordinator
+     * @param order the order in which the submissions should be sorted
+     * @return the submissions sorted by the last submitted date
+     */
+    @GetMapping("/{id}/sort/lastEdited/{order}")
+    public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedByLastEdited(@PathVariable("id") String id, @PathVariable("order") String order) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .sorted((x, other) -> {
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastEdited());
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastEdited());
+
+                if(order.equals("asc")) {
+                    return xDate.compareTo(otherDate);
+                } else {
+                    return otherDate.compareTo(xDate);
+                }
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
+    }
+
+    /**
+     * This method returns all the documents that either have or have not been submitted
+     * either in ascending or descending order
+     * @param id the email of the coordinator
+     * @param order asc - if the documents have been submitted, desc - if the documents have not been submitted
+     * @return the submissions sorted by the last submitted date
+     */
+    @GetMapping("/{id}/sort/submitted/{order}")
+    public ResponseEntity<List<SubmissionDTO>> getSubmissionsSortedBySubmitted(@PathVariable("id") String id, @PathVariable("order") String order) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .sorted((x, other) -> {
+                // First sort by submission status
+                int statusComparison = Boolean.compare(other.isSubmitted(), x.isSubmitted());
+                if (statusComparison != 0) {
+                    return order.equals("asc") ? -statusComparison : statusComparison;
+                }
+
+                // Then sort by date within each group
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastSubmitted());
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastSubmitted());
+
+                return order.equals("asc") ? xDate.compareTo(otherDate) : otherDate.compareTo(xDate);
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
+    }
+
+    /**
+     * This method returns all the documents that have been submitted sorted by the last submitted date
+     * @param id the email of the coordinator
+     * @return the submissions sorted by the last submitted date
+     */
+    @GetMapping("/{id}/submitted")
+    public ResponseEntity<List<SubmissionDTO>> getSubmittedSortedByLastSubmitted(@PathVariable("id") String id) {
+        List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
+            .filter(SubmissionDB::isSubmitted)
+            .sorted((x, other) -> {
+                Timestamp xDate = service.convertStringToTimestamp(x.getLastSubmitted());
+                Timestamp otherDate = service.convertStringToTimestamp(other.getLastSubmitted());
+
+                return otherDate.compareTo(xDate);
+            })
+            .map(SubmissionDB::convertToBinary)
+            .toList();
+        return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
 }

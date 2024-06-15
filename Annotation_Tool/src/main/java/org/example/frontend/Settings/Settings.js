@@ -10,6 +10,7 @@ dashboard.addEventListener('click', (e) => {
         window.location.href = "../Annotation/Annotation.js";
     }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     if(role === 'student') {
         arr.forEach(elem => {
@@ -18,4 +19,3 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 });
-

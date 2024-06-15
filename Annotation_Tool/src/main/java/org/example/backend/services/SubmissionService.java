@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service;
 import org.example.database.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,5 +119,19 @@ public class SubmissionService {
         if(text == null)
             return new ArrayList<>();
         return repo.findByIdIgnoreCaseContainingAndAssignedCoordinator(text, coordinator);
+    }
+
+    /**
+     * This method converts a string to a timestamp
+     * @param dateString The string to convert
+     * @return The timestamp
+     */
+    public Timestamp convertStringToTimestamp(String dateString) {
+        if (dateString == null)
+            return new Timestamp(0L);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateString, formatter);
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return Timestamp.from(instant);
     }
 }

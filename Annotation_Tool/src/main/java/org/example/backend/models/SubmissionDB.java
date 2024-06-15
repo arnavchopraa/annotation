@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Base64;
 
@@ -32,10 +31,10 @@ public class SubmissionDB {
     private String fileName;
 
     @Column(name="last_submitted")
-    private Date lastSubmitted;
+    private String lastSubmitted;
 
     @Column(name="last_edited")
-    private Date lastEdited;
+    private String lastEdited;
 
     @Column(name="is_submitted")
     private boolean isSubmitted;

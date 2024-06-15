@@ -94,21 +94,6 @@ function indexSlide(name) {
 }
 
 /**
-    * @returns {void} removes the placeholder when the user starts typing
-*/
-function removePlaceholder() {
-    textFields.forEach(function(textField) {
-        textField.addEventListener('input', function() {
-            if (this.textContent.trim() !== '') {
-                this.setAttribute('data-empty', 'false');
-            } else {
-                this.setAttribute('data-empty', 'true');
-            }
-        });
-    });
-}
-
-/**
     * @returns {void} opens and closes the answer to the faq question
 */
 function faqOpenAndClose() {
