@@ -147,12 +147,7 @@ public class UserService implements UserDetailsService {
         Optional<User> user = repo.findById(username);
         if(user.isPresent()) {
             User userObj = user.get();
-            return org.springframework.security.core.userdetails.User
-                    .builder()
-                    .username(userObj.getId())
-                    .password(userObj.getPassword())
-                    .roles(userObj.getRole())
-                    .build();
+            return userObj;
         } else {
             throw new UsernameNotFoundException("User not found.");
         }

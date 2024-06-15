@@ -3,6 +3,7 @@ package org.example.backend.services;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.example.backend.models.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -24,8 +26,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         // extra claims (information stored in the JWT)
         Map<String, String> claims = new HashMap<>();
-        claims.put("email", userDetails.getUsername());
-        //claims.put("role", userDetails.get)
+        claims.put("role", ((User) userDetails).getRole());
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
@@ -56,5 +57,14 @@ public class JwtService {
     public boolean isTokenValid(String jwt) {
         Claims claims = getClaims(jwt);
         return claims.getExpiration().after(Date.from(Instant.now()));
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 }

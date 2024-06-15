@@ -48,7 +48,7 @@ public class AuthController {
      * @throws NoSuchAlgorithmException if the password encryption service fails
      */
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) throws NoSuchAlgorithmException {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) throws NoSuchAlgorithmException {
         /*boolean authenticated = userService.authenticateUser(loginRequest);
         User user = userService.getUser(loginRequest.getUsername());
         if (authenticated) {
@@ -61,8 +61,7 @@ public class AuthController {
         ));
         if(auth.isAuthenticated()) {
             String token = jwtService.generateToken(userService.loadUserByUsername(loginRequest.getUsername()));
-            System.out.println(token);
-            return token;
+            return ResponseEntity.ok(token);
         } else {
             throw new UsernameNotFoundException("No username");
         }

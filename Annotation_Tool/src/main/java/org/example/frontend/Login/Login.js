@@ -32,7 +32,7 @@ function handleFormSubmission(event) {
         }
     })
         .then(x => {
-            localStorage.setItem('role', x)
+            localStorage.setItem('token', x)
             localStorage.setItem('username', login)
             if(x === 'student') {
                 window.location.href = "../Student/Student.html";
