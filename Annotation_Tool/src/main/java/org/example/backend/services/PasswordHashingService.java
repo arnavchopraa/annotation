@@ -1,10 +1,14 @@
 package org.example.backend.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class PasswordHashingService {
+@Service
+public class PasswordHashingService implements PasswordEncoder {
 
     /**
      * Method for hashing a password
@@ -27,5 +31,19 @@ public class PasswordHashingService {
         System.out.println();
         System.out.println(Charset.defaultCharset());
         return new String(digest, Charset.forName("windows-1252"));
+    }
+
+    @Override
+    public String encode(CharSequence rawPassword) {
+        try {
+            return hashPassword(rawPassword.toString());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return encode(rawPassword.toString()).equals(encodedPassword);
     }
 }
