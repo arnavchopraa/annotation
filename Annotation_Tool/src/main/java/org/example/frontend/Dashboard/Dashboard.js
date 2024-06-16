@@ -106,8 +106,6 @@ document.getElementById("search").addEventListener("keyup", () => {
 */
 function getSearchResults(writtenText) {
 
-    console.log("CALLED - " + writtenText)
-
     if(writtenText == "") {
         getFiles();
         return;
@@ -291,7 +289,6 @@ function sortName(order) {
     * @param order - the order to sort the table by
 */
 function sortLastEdited(order) {
-    displayedSubmissions.forEach(s => console.log(s.lastEdited))
     let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
         if(a.lastEdited === null) {
             if(order === 'asc')
