@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     localStorage.clear()
 })
-
 function handleFormSubmission(event) {
     event.preventDefault();
 

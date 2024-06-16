@@ -5,7 +5,7 @@ const logout = document.querySelector('#logout')
 
 logout.addEventListener('click', () => {
     localStorage.clear();
-    window.location.href = '../Login/Login.html'
+    window.location.href = '../Login/Login.html';
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
             sessionEmail = obj.email;
             // I don't see how we display admin functionality, this is if it doesn't happen:
             role = obj.role
+            if(role === 'student')
+                window.location.href = '../Student/Student.html'
             getFiles()
             getRecentlySubmitted()
         })

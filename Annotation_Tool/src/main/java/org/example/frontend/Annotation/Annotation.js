@@ -76,11 +76,6 @@ function fetchSub(name) {
     * Fetch the codes from the database when the page loads.
 **/
 document.addEventListener('DOMContentLoaded', function() {
-    if(role === 'student') {
-        arr.forEach(elem => {
-            elem.style.display = 'none'
-        })
-    }
     fetchCodes();
     loadPassedFile();
 });
@@ -153,6 +148,10 @@ function fetchCodes() {
 
 function loadPassedFile() {
     // getting the file from database
+    if(getName === null) {
+        alert("You have not accessed any file.")
+        window.history.go(-1)
+    }
     let sessionFile
     fetch( `http://localhost:8080/submissions/${getName}`, {
         method: 'GET',
