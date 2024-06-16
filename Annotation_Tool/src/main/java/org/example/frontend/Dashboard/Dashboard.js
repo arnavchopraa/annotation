@@ -151,6 +151,7 @@ function getSearchResults(writtenText) {
        method: "GET",
        headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
        }
     }).then(response => {
         if (response.ok) {
@@ -295,6 +296,7 @@ function sortName(order) {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     }).then(response => {
         // Check if the response is successful (status code 200)
@@ -325,6 +327,7 @@ function sortLastEdited(order) {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     }).then(response => {
         // Check if the response is successful (status code 200)
@@ -354,6 +357,7 @@ function sortSubmitted(order) {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     }).then(response => {
         // Check if the response is successful (status code 200)

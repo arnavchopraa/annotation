@@ -1,3 +1,5 @@
+const token = localStorage.getItem('token');
+
 /**
     Animate the screenshots when they come into view.
 */
@@ -84,6 +86,9 @@ function communicate(formData) {
     var endpoint = "http://localhost:8080/admin/files";
     fetch(endpoint, {
         method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
         body: formData
     })
     .then(response => {

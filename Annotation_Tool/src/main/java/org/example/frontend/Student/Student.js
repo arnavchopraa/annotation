@@ -88,6 +88,7 @@ function adobePreview(passedFile) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(newFile)
             }).then(
