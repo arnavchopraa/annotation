@@ -1,6 +1,6 @@
 package org.example.backend.controllers;
 
-import org.example.backend.models.LoginRequest;
+import org.example.backend.requestModels.LoginRequest;
 import org.example.backend.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

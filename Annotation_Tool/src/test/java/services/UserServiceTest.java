@@ -123,4 +123,14 @@ public class UserServiceTest {
         assertNull(result);
         verify(repo, never()).deleteById("1");
     }
+
+    @Test
+    public void testCheckPassword() {
+        User user = new User();
+        user.setId("1");
+        user.setPassword("password");
+
+        assertTrue(service.checkPassword(user, "password"));
+    }
+
 }

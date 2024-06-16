@@ -91,44 +91,22 @@
             <div class="content-wrap">
                 <div class="settings-wrap">
                     <div class="settings">
-                        <div class="settings-block">
-                            <h2 class="header">Account Info</h2>
-                            <div class="form-block">
-                                <form class="form">
-                                    <div class="text-field-box double">
-                                        <input type="text" class="text-field double" placeholder="First Name">
-                                        <input type="text" class="text-field double" placeholder="Last Name">
-                                    </div>
-
-                                    <div class="text-field-box single">
-                                        <input type="text" class="text-field single" placeholder="Display name">
-                                        <p class="text-warning">Only letters and numbers with no spaces.</p>
-                                    </div>
-
-                                    <div class="text-field-box single">
-                                        <input type="email" class="text-field single" placeholder="Email">
-                                    </div>
-
-                                    <input type="submit" class="button" value="Save changes">
-                                </form>
-                            </div>
-                        </div>
 
                         <div class="settings-block">
                             <h2 class="header">Change Password</h2>
                             <div class="form-block">
                                 <form class="form">
                                     <div class="text-field-box single">
-                                        <input type="password" class="text-field single" placeholder="Current Password">
+                                        <input id="oldPassword" type="password" class="text-field single" placeholder="Current Password">
                                     </div>
                                     <div class="text-field-box single">
-                                        <input type="password" class="text-field single" placeholder="New Password">
+                                        <input id="newPassword" type="password" class="text-field single" placeholder="New Password">
                                     </div>
                                     <div class="text-field-box single">
-                                        <input type="password" class="text-field single" placeholder="Confirm New Password">
+                                        <input id="newPasswordConfirmation" type="password" class="text-field single" placeholder="Confirm New Password">
                                     </div>
 
-                                    <input type="submit" class="button" value="Save changes">
+                                    <input id="save" type="submit" class="button" value="Save changes">
                                 </form>
                             </div>
                         </div>
