@@ -1,6 +1,7 @@
 const arr = document.querySelectorAll('.student')
 const dashboard = document.querySelector('#settingsDashboard')
-const role = localStorage.getItem('role')
+var role;
+const token = localStorage.getItem('token')
 let sessionEmail = localStorage.getItem('username')
 
 dashboard.addEventListener('click', (e) => {
@@ -13,12 +14,22 @@ dashboard.addEventListener('click', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    if(role === 'student') {
-        arr.forEach(elem => {
-            console.log(elem)
-            elem.style.display = 'none'
-        })
-    }
+    fetch( "http://localhost:8080/users/me", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => response.json()).then(pageDetails => {
+        console.log(pageDetails.role)
+        role = pageDetails.role
+        if(role === 'student') {
+            arr.forEach(elem => {
+                // console.log(elem)
+                elem.style.display = 'none'
+            })
+        }
+    })
 });
 
 document.getElementById('downloadSubmitted').addEventListener('click', function () {
@@ -26,7 +37,8 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     fetch(endpoint, {
         method: 'GET',
         headers: {
-            "Content-Type": "application/zip"
+            "Content-Type": "application/zip",
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {

@@ -1,5 +1,6 @@
 const email = localStorage.getItem('username')
 const state = document.getElementById('state')
+let token = localStorage.getItem('token')
 
 document.addEventListener('DOMContentLoaded', loadFile);
 
@@ -8,8 +9,13 @@ function loadFile() {
     // getting the file from database
     console.log(email)
     let sessionFile;
-    fetch( `http://localhost:8080/submissions/${email}`)
-        .then(response => {
+    fetch( `http://localhost:8080/submissions/${email}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
             if(response.ok) {
                 //sessionFile = response.json()
                 return response.json()
@@ -82,6 +88,7 @@ function adobePreview(passedFile) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(newFile)
             }).then(

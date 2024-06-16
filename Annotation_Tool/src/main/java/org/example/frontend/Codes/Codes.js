@@ -1,3 +1,5 @@
+const token = localStorage.getItem('token');
+
  document.addEventListener('DOMContentLoaded', function() {
     fetchCodes();
 });
@@ -7,7 +9,12 @@
 **/
 function fetchCodes() {
     var endpoint = "http://localhost:8080/frontend/codes";
-    fetch(endpoint)
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => {
         if(response.ok) {
             return response.json();
@@ -130,7 +137,10 @@ function createIcons(svgId, codeId) {
 function deleteCode(codeId) {
     var endpoint = `http://localhost:8080/annotations/${codeId}`;
         fetch(endpoint, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
         .then(response => {
             if (response.ok) {
@@ -165,7 +175,8 @@ function addCode(id, text) {
     fetch(endpoint, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
             body: JSON.stringify(newCode)
     })
@@ -238,7 +249,8 @@ function editCode(id, text) {
     fetch(endpoint, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(updatedCode)
     })

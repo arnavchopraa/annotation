@@ -1,6 +1,8 @@
 package org.example.backend.controllers;
 
+import org.example.backend.importmodels.PageDetails;
 import org.example.backend.models.User;
+import org.example.backend.services.JwtService;
 import org.example.backend.services.PasswordHashingService;
 import org.example.backend.services.UserService;
 
@@ -18,14 +20,18 @@ import java.util.List;
 public class UserController {
     private UserService service;
 
+    private JwtService jwtService;
+
     /**
      * Constructor for the UserController
      *
      * @param service the service for the user
+     * @param jwtService the token service for the jwt
      */
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service, JwtService jwtService) {
         this.service = service;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -46,13 +52,26 @@ public class UserController {
      * @return the user with the given id
      */
     @GetMapping("/{id}")
-
     public ResponseEntity<User> getUser(@PathVariable("id") String id) {
         User user = service.getUser(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(user);
+    }
+    /**
+     * This method returns a page detauls entity containing the username and the role
+     * of the user that has been authenticated
+     *
+     * @param authorizationHeader the authorization header, containg the token of the user
+     * @return a page details entity containing the username and the role of the user
+     */
+    @GetMapping("/me")
+    public ResponseEntity<PageDetails> getPageDetails(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUsername(token);
+        String role = jwtService.extractRole(token);
+        return ResponseEntity.ok(new PageDetails(username, role));
     }
 
     /**
