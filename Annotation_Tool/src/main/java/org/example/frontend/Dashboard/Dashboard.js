@@ -1,6 +1,13 @@
 var sessionEmail;
 var role;
-const token = localStorage.getItem('token')
+let token = localStorage.getItem('token')
+const logout = document.querySelector('#logout')
+
+logout.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = '../Login/Login.html'
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     fetch("http://localhost:8080/users/me", {
         method: "GET",
@@ -37,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     * Methood to get the files assigned to the supervisor
 */
 function getFiles() {
+    console.log(sessionEmail)
     var endpoint =`http://localhost:8080/submissions/coordinator/${sessionEmail}`;
 
     fetch(endpoint, {
@@ -46,7 +54,6 @@ function getFiles() {
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        console.log(response)
         // Check if the response is successful (status code 200)
         if (response.ok) {
             // Parse the JSON response
@@ -58,6 +65,7 @@ function getFiles() {
         }
     })
         .then(submissions => {
+            console.log(submissions)
             displaySubmissions(submissions);
         })
         .catch(error => {
