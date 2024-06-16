@@ -7,7 +7,6 @@ logout.addEventListener('click', () => {
     localStorage.clear();
     window.location.href = '../Login/Login.html';
 });
-const sessionEmail = localStorage.getItem('username')
 let displayedSubmissions
 let sortBy = 'lastSubmitted'
 let orderSortBy = 'desc'

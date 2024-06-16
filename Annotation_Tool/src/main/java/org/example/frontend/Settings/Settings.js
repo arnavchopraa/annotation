@@ -84,7 +84,8 @@ document.getElementById("save").addEventListener('click', (e) => {
     fetch(endpoint, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
             oldPassword: oldPassword,
