@@ -9,8 +9,6 @@ import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.ImportException;
 import org.example.backend.exceptions.NoSubmissionException;
 import org.example.backend.importmodels.*;
-import org.example.database.SubmissionRepository;
-import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
@@ -23,20 +21,16 @@ import java.util.zip.ZipFile;
 public class ImportService {
 
     private final AccountService accountService;
-    private final UserRepository userRepository;
-    private final SubmissionRepository submissionRepository;
 
     /**
      * Constructor for ImportService, Autowired by Spring
      *
-     * @param userRepository Repository used to save users
-     * @param submissionRepository Repository used to save submissions
+     * @param userService Repository used to save users
+     * @param submissionService Repository used to save submissions
      */
     @Autowired
-    public ImportService(UserRepository userRepository, SubmissionRepository submissionRepository) {
-        this.userRepository = userRepository;
-        this.submissionRepository = submissionRepository;
-        this.accountService = new AccountService(userRepository, submissionRepository);
+    public ImportService(UserService userService, SubmissionService submissionService) {
+        this.accountService = new AccountService(userService, submissionService);
     }
     /**
      * Import data as downloaded from Brightspace and ProjectForum to the application

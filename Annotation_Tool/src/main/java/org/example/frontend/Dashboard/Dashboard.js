@@ -207,8 +207,9 @@ function getRecentlySubmitted() {
 */
 function displayRecentlySubmitted(submissions) {
 
+    submissions = Array.from(submissions).slice(0, 5)
     localStorage.setItem('rightlength', submissions.length)
-    for(let index = 0; index < 5 && index < submissions.length; index++) {
+    for(let index = 0; index < submissions.length; index++) {
         let cursub = submissions[index]
         let name = 'rightsub'+index
         localStorage.setItem(name, cursub.id)

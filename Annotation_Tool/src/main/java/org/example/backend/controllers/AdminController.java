@@ -3,10 +3,9 @@ package org.example.backend.controllers;
 import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.ImportException;
 import org.example.backend.exceptions.NoSubmissionException;
-import org.example.backend.services.ImportService;
+import org.example.backend.exceptions.PDFException;
+import org.example.backend.services.*;
 import org.example.backend.utils.FileUtils;
-import org.example.database.SubmissionRepository;
-import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.zip.ZipException;
 
@@ -21,20 +23,21 @@ import java.util.zip.ZipException;
 @CrossOrigin(origins = "*")
 public class AdminController {
     private final ImportService importService;
-    private final UserRepository userRepository;
-    private final SubmissionRepository submissionRepository;
+    private final ExportService exportService;
+    private final SubmissionService submissionService;
 
     /**
      * Constructor for AdminController, autowired by Spring
      *
-     * @param userRepository Repository used to save users
-     * @param submissionRepository Repository used to save submissions
+     * @param userService Service that manages users
+     * @param submissionService Service that manages submissions
+     * @param annotationCodeService Service that manages annotation codes
      */
     @Autowired
-    public AdminController(UserRepository userRepository, SubmissionRepository submissionRepository) {
-        this.userRepository = userRepository;
-        this.submissionRepository = submissionRepository;
-        this.importService = new ImportService(userRepository, submissionRepository);
+    public AdminController(UserService userService, SubmissionService submissionService, AnnotationCodeService annotationCodeService) {
+        this.submissionService = submissionService;
+        this.importService = new ImportService(userService, submissionService);
+        this.exportService = new ExportService(submissionService, annotationCodeService);
     }
 
     /**
@@ -67,5 +70,44 @@ public class AdminController {
         } catch (ImportException | NoSubmissionException | FileException | SQLException | ZipException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * Endpoint used for downloading all files from the system, after applying the parsing operation on them.
+     *
+     * @return 200 OK - A zip file, containing all files from the system, parsed.
+     *         500 INTERNAL SERVER ERROR - If something went wrong with temporary files.
+     *         400 BAD REQUEST - If something went wrong while parsing files.
+     */
+    @GetMapping("/admin/bulkdownload")
+    public ResponseEntity<byte[]> downloadAllParsed() {
+        File zipFile;
+        try {
+            zipFile = exportService.getAllSubmissionsParsed();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (PDFException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try (InputStream inputStream = new FileInputStream(zipFile)) {
+            byte[] bytes = inputStream.readAllBytes();
+            return new ResponseEntity<>(bytes, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Endpoint for deleting all submissions from the database - DO NOT TEST!
+     *
+     * @return 200 OK - all submissions have been deleted
+     */
+    @DeleteMapping("/admin/deleteall")
+    public ResponseEntity<String> deleteAllSubmissions() {
+        submissionService.deleteAll();
+        return new ResponseEntity<>("Submission database has been cleared!", HttpStatus.OK);
     }
 }
