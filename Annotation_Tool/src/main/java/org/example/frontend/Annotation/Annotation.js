@@ -7,6 +7,7 @@ const arr = document.querySelectorAll('.admin')
 let newFile;
 const prevButton = document.getElementById('prevFile')
 const nextButton = document.getElementById('nextFile')
+let token = localStorage.getItem('token')
 
 prevButton.addEventListener('click', function() {
     
@@ -55,7 +56,8 @@ function fetchSub(name) {
     fetch(endpoint, {
         method: "GET",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
@@ -94,6 +96,7 @@ subBtn.addEventListener('click', () => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(newFile)
     }).then(
@@ -116,7 +119,12 @@ parseBtn.addEventListener('click', () => {
 **/
 function fetchCodes() {
     var endpoint = "http://localhost:8080/frontend/codes";
-    fetch(endpoint)
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
     .then(response => {
         if(response.ok) {
             return response.json();
@@ -145,7 +153,13 @@ function fetchCodes() {
 function loadPassedFile() {
     // getting the file from database
     let sessionFile
-    fetch( `http://localhost:8080/submissions/${getName}`)
+    fetch( `http://localhost:8080/submissions/${getName}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => {
             if(response.ok) {
                 //sessionFile = response.json()
@@ -213,6 +227,7 @@ function adobePreview(passedFile) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(newFile)
             }).then(

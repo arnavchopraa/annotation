@@ -34,11 +34,25 @@ function handleFormSubmission(event) {
         .then(x => {
             localStorage.setItem('token', x)
             localStorage.setItem('username', login)
-            if(x === 'student') {
+            fetch( "http://localhost:8080/users/me", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${x}`
+                }
+            }).then(response => response.json()).then(pageDetails => {
+                console.log(pageDetails)
+                if (pageDetails.role === 'student') {
+                    window.location.href = "../Student/Student.html";
+                } else if (pageDetails.role === 'admin' || pageDetails.role === 'supervisor') {
+                    window.location.href = "../Dashboard/Dashboard.html"
+                }
+            })
+           /** if(x === 'student') {
                 window.location.href = "../Student/Student.html";
             } else {
                 window.location.href = "../Dashboard/Dashboard.html";
-            }
+            }*/
         })
     .catch(error => {
         // If there is an error with the request, display an error message

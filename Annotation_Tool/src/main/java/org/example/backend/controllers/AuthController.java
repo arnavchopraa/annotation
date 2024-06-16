@@ -1,10 +1,8 @@
 package org.example.backend.controllers;
 
 import org.example.backend.models.LoginRequest;
-import org.example.backend.models.User;
 import org.example.backend.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +30,8 @@ public class AuthController {
      * Constructor for the AuthController
      *
      * @param userService the userService instance
+     * @param authenticationManager the authentication manager used for authentication
+     * @param jwtService the jwt service used for authentication
      */
     @Autowired
     public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
@@ -57,8 +57,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }*/
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-           loginRequest.getUsername(), loginRequest.getPassword()
-        ));
+            loginRequest.getUsername(), loginRequest.getPassword()));
         if(auth.isAuthenticated()) {
             String token = jwtService.generateToken(userService.loadUserByUsername(loginRequest.getUsername()));
             return ResponseEntity.ok(token);

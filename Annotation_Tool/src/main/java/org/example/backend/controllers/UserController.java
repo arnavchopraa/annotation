@@ -26,6 +26,7 @@ public class UserController {
      * Constructor for the UserController
      *
      * @param service the service for the user
+     * @param jwtService the token service for the jwt
      */
     @Autowired
     public UserController(UserService service, JwtService jwtService) {
@@ -58,7 +59,13 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
-
+    /**
+     * This method returns a page detauls entity containing the username and the role
+     * of the user that has been authenticated
+     *
+     * @param authorizationHeader the authorization header, containg the token of the user
+     * @return a page details entity containing the username and the role of the user
+     */
     @GetMapping("/me")
     public ResponseEntity<PageDetails> getPageDetails(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.substring(7);

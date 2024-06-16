@@ -3,6 +3,7 @@ const fileInput = document.getElementById('fileInput');
 const pdfText = document.getElementById('pdfText');
 const annotationsText = document.getElementById('annotationsText');
 const errorMessage = document.getElementById('error')
+const token = localStorage.getItem('token')
 var fileName; // Global variable to store the name of the input file
 
 /**
@@ -17,7 +18,13 @@ fileInput.addEventListener('change', function(e) {
 
 document.addEventListener('DOMContentLoaded', () => {
     let getName = localStorage.getItem('file')
-    fetch( `http://localhost:8080/submissions/${getName}`)
+    fetch( `http://localhost:8080/submissions/${getName}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(response => {
             if(response.ok) {
                 //sessionFile = response.json()
@@ -49,13 +56,17 @@ function processFile(file) {
     let blob = new Blob([bytes], { type: 'application/pdf' })
     const formData = new FormData();
     formData.append("file", blob);
-
+    console.log(binaryString);
     var endpoint = "http://localhost:8080/frontend";
     fetch(endpoint, {
         method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
         body: formData
     })
     .then(response => {
+        console.log(response);
         if(response.ok) {
             return response.json();
         } else {
@@ -134,6 +145,10 @@ function exportPDF(text, annotations) {
 
     fetch(endpoint, {
         method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
         body: formData
     })
     .then(response => {
