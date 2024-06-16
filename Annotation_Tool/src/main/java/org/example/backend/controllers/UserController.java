@@ -1,6 +1,7 @@
 package org.example.backend.controllers;
 
 import org.example.backend.models.User;
+import org.example.backend.requestModels.PasswordsRequest;
 import org.example.backend.services.PasswordHashingService;
 import org.example.backend.services.UserService;
 
@@ -108,4 +109,40 @@ public class UserController {
         }
         return ResponseEntity.ok(deleted);
     }
+
+    /**
+     * This method updates the password of a user
+     * @param id the id of the user to be changed
+     * @param pass An object containing the old and new password
+     * @return the new updated user
+     */
+    @PutMapping("/updatePassword/{id}")
+    @ResponseBody
+    public ResponseEntity<User> updatePassword(@PathVariable String id, @RequestBody PasswordsRequest pass) {
+
+        String oldPassword = pass.getOldPassword();
+        String newPassword = pass.getNewPassword();
+
+        User user = service.getUser(id);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            if(!service.checkPassword(user, PasswordHashingService.hashPassword(oldPassword)))
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            user.setPassword(PasswordHashingService.hashPassword(newPassword));
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        User updated = service.updateUser(user);
+        return ResponseEntity.ok(updated);
+    }
+
 }

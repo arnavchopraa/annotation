@@ -1,4 +1,4 @@
-package org.example.backend.models;
+package org.example.backend.requestModels;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

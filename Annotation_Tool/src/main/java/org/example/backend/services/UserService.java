@@ -1,7 +1,7 @@
 package org.example.backend.services;
 
 import org.example.backend.models.User;
-import org.example.backend.models.LoginRequest;
+import org.example.backend.requestModels.LoginRequest;
 import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -137,4 +137,15 @@ public class UserService {
 
         return user.getPassword().equals(PasswordHashingService.hashPassword(loginRequest.getPassword()));
     }
+
+    /**
+     * This method checks if the password of the user matches
+     * @param user The user to check
+     * @param password The password to verify if it's the correct one for the user
+     * @return true if it matches, false if not
+     */
+    public boolean checkPassword(User user, String password) {
+        return user.getPassword().equals(password);
+    }
+
 }
