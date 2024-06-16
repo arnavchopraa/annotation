@@ -7,6 +7,8 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -26,6 +28,13 @@ public class SubmissionDB {
 
     @Column(name="assigned_coordinator")
     private String assignedCoordinator;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "coordinator_assignments",
+            joinColumns = @JoinColumn(name = "submission", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "coordinator", referencedColumnName = "email"))
+    Set<User> assignedCoordinators;
 
     @Column(name="file_name")
     private String fileName;
@@ -70,10 +79,14 @@ public class SubmissionDB {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
-                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
+                    , new HashSet<>(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void addUser(User user) {
+        this.assignedCoordinators.add(user);
     }
 
 }

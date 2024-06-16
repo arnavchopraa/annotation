@@ -2,10 +2,7 @@ package org.example.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.ToString;
 import org.example.backend.services.PasswordHashingService;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @ToString
@@ -34,6 +32,9 @@ public class User implements UserDetails{
     // supervisor / student / admin
     @Column(name="role")
     private String role;
+
+    @ManyToMany(mappedBy = "assignedCoordinators", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    Set<SubmissionDB> correspondingSubmissions;
 
     /**
      * Basic constructor for User
@@ -200,6 +201,10 @@ public class User implements UserDetails{
      */
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void addSubmission(SubmissionDB submission) {
+        correspondingSubmissions.add(submission);
     }
 
     /**
