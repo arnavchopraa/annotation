@@ -70,12 +70,12 @@ document.getElementById("save").addEventListener('click', (e) => {
     let newPasswordConfirmation = document.getElementById("newPasswordConfirmation").value
 
     if(newPassword.length == 0) {
-        alert("New password cannot be empty")
+        displayErrorPasswordPopUp("New password cannot be empty");
         return
     }
 
     if(!(newPassword === newPasswordConfirmation)) {
-        alert("Please make sure that the new password matches the confirmation!")
+        displayErrorPasswordPopUp("Please make sure that the new password matches the confirmation!");
         return
     }
 
@@ -93,13 +93,15 @@ document.getElementById("save").addEventListener('click', (e) => {
         })
     }).then(response => {
         if(response.ok) {
-            alert("The password was successfully updated")
+            displaySavedPopUp("The password was successfully updated");
             console.log("Successfully changed password")
+
             document.getElementById("oldPassword").value = ""
             document.getElementById("newPassword").value = ""
             document.getElementById("newPasswordConfirmation").value = ""
         } else if (response.status === 403) {
-            alert("Incorrect old password")
+            displayErrorPasswordPopUp("Incorrect old password");
+
             console.log("Incorrect old password.");
         } else if (response.status === 404) {
             console.log("User not found.");
