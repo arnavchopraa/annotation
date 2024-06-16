@@ -31,7 +31,7 @@ function getFiles() {
     })
         .then(submissions => {
             displayedSubmissions = submissions
-            displaySubmissions(submissions);
+            sortSubmitted(orderSortBy)
         })
         .catch(error => {
             // Handle any errors that occur during the fetch
@@ -322,17 +322,17 @@ function sortLastEdited(order) {
 function sortSubmitted(order) {
 
     let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
-        if(a.lastEdited === null) {
+        if(a.lastSubmitted === null) {
             if(order === 'asc')
                 return 1
             return -1
         }
-        if(b.lastEdited === null) {
+        if(b.lastSubmitted === null) {
             if(order === 'asc')
                 return -1
             return 1
         }
-        if(a.lastEdited < b.lastEdited) {
+        if(a.lastSubmitted < b.lastSubmitted) {
             if(order == 'asc') {
                 return 1;
             } else {
