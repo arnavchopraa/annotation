@@ -97,3 +97,50 @@ function communicate(formData) {
         alert("Error encountered!")
     })
 }
+
+document.getElementById('downloadTXT').addEventListener('click', function() {
+    var endpoint = "http://localhost:8080/admin/bulkdownload"
+
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/zip"
+        }
+    })
+    .then(response => {
+        if(response.ok)
+            return response.blob()
+        else
+            throw new Error("Couldn't fetch file - bulk download")
+    })
+    .then(bytes => {
+        var blob = new Blob([bytes], {type: 'application/zip'})
+        var a = document.createElement('a')
+
+        a.download = 'download.zip'
+        a.style = 'display: none'
+        let url = window.URL.createObjectURL(blob)
+        a.href = url
+        a.click()
+        a.remove()
+        window.URL.revokeObjectURL(url)
+    })
+    .catch(error => console.error(error))
+})
+
+document.getElementById('deleteALL').addEventListener('click', function() {
+    if(confirm('Are you sure you want to delete ALL submissions from the database? Note that this process is irreversible')) {
+        var endpoint = "http://localhost:8080/admin/deleteall"
+
+        fetch(endpoint, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if(response.ok)
+                alert('All submissions have been deleted!')
+            else
+                throw new Error('Deleting failed')
+        })
+        .catch(e => console.error(error))
+    }
+})

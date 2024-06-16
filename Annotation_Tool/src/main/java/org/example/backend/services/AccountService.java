@@ -6,39 +6,29 @@ import org.example.backend.importmodels.Student;
 import org.example.backend.importmodels.Submission;
 import org.example.backend.models.SubmissionDB;
 import org.example.backend.models.User;
-import org.example.backend.utils.ServerUtils;
 import org.example.backend.importmodels.Coordinator;
-import org.example.database.SubmissionRepository;
-import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class AccountService {
     private final EmailService emailService = new EmailService();
-    private final UserRepository userRepository;
-    private final SubmissionRepository submissionRepository;
     private final UserService userService;
     private final SubmissionService submissionService;
 
     /**
      * Constructor for Account service, autowired by Spring.
      *
-     * @param userRepository Repository used to save users.
-     * @param submissionRepository Repository used to save submissions.
+     * @param userService Repository used to save users.
+     * @param submissionService Repository used to save submissions.
      */
     @Autowired
-    public AccountService(UserRepository userRepository, SubmissionRepository submissionRepository) {
-        this.userRepository = userRepository;
-        this.submissionRepository = submissionRepository;
-        this.userService = new UserService(userRepository);
-        this.submissionService = new SubmissionService(submissionRepository);
+    public AccountService(UserService userService, SubmissionService submissionService) {
+        this.userService = userService;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -122,35 +112,5 @@ public class AccountService {
                 " created an account for you. Here are the credentials that you can use to access your" +
                 "account: <br> Username: <b>" + username + "</b> <br> Password: <b>" +
                 password + "</b> <br> You can reset your password later on the platform!";
-    }
-
-    /**
-     * Method that allows mass download of all files, allocated to a coordinator, into a zip file
-     *
-     * @param coordinator coordinator for which to download associated submissions
-     * @return zipFile containing all submissions
-     * @throws IOException if zip file could not be opened
-     * @throws SQLException if there is an error with processing blobs
-     */
-    public File getAllSubmissionsByCoordinator(Coordinator coordinator) throws IOException, SQLException {
-        List<SubmissionDB> files = ServerUtils.getSubmissionDBs().stream()
-            .filter(s -> s.getAssignedCoordinator().equals(coordinator.getEmail()))
-            .toList();
-        File file = new File(System.getProperty("java.io.tmpdir") + "/" + "download.zip");
-        OutputStream outputStream = new FileOutputStream(file);
-        ZipOutputStream zos = new ZipOutputStream(outputStream);
-        for(SubmissionDB submission : files) {
-            Blob b = submission.getFileSubmission();
-            byte[] content = b.getBytes(1,(int) b.length());
-            String fileName = submission.getFileName();
-            try {
-                zos.putNextEntry(new ZipEntry(fileName));
-                zos.write(content, 0, content.length);
-            } catch (FileNotFoundException e) {
-                throw new IOException(e);
-            }
-            zos.closeEntry();
-        }
-        return file;
     }
 }
