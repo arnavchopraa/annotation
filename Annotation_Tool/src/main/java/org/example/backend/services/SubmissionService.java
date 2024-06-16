@@ -136,7 +136,7 @@ public class SubmissionService {
     public Timestamp convertStringToTimestamp(String dateString) {
         if (dateString == null)
             return new Timestamp(0L);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
         LocalDateTime localDateTime = LocalDateTime.parse(dateString, formatter);
         Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Timestamp.from(instant);
