@@ -1,23 +1,63 @@
+var sessionEmail;
+var role;
+let token = localStorage.getItem('token')
+const logout = document.querySelector('#logout')
+
+logout.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = '../Login/Login.html';
+});
 const sessionEmail = localStorage.getItem('username')
 let displayedSubmissions
 let sortBy = 'lastSubmitted'
 let orderSortBy = 'desc'
 
 document.addEventListener('DOMContentLoaded', function () {
-    getFiles();
-    getRecentlySubmitted();
+    fetch("http://localhost:8080/users/me", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+
+        if (response.ok) {
+            // Parse the JSON response
+            return response.json();
+        } else {
+            // If the response is not successful, throw an error
+
+            throw new Error('Failed to fetch user');
+        }
+    })
+        .then(obj =>{
+            sessionEmail = obj.email;
+            // I don't see how we display admin functionality, this is if it doesn't happen:
+            role = obj.role
+            if(role === 'student')
+                window.location.href = '../Student/Student.html'
+            getFiles()
+            getRecentlySubmitted()
+        })
+        .catch(error => {
+            // Handle any errors that occur during the fetch
+            console.log(error)
+        });
 })
 
 /**
     * Methood to get the files assigned to the supervisor
 */
 function getFiles() {
+    console.log(sessionEmail)
     var endpoint =`http://localhost:8080/submissions/coordinator/${sessionEmail}`;
 
     fetch(endpoint, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     }).then(response => {
         // Check if the response is successful (status code 200)
@@ -26,6 +66,7 @@ function getFiles() {
             return response.json();
         } else {
             // If the response is not successful, throw an error
+
             throw new Error('Failed to fetch user');
         }
     })
@@ -116,6 +157,7 @@ function getSearchResults(writtenText) {
        method: "GET",
        headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
        }
     }).then(response => {
         if (response.ok) {
@@ -156,7 +198,8 @@ function getRecentlySubmitted() {
     fetch(endpoint, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
@@ -268,7 +311,6 @@ function sortOrder(id, order) {
     * @param order - the order to sort the table by
 */
 function sortName(order) {
-
     let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
         if(a.id < b.id) {
             if(order == 'asc') {
@@ -284,6 +326,7 @@ function sortName(order) {
     })
     displaySubmissions(sortedSubmissions)
 }
+
 
 /**
     * Method to sort the table by the last edited date
@@ -321,7 +364,6 @@ function sortLastEdited(order) {
     * @param order - the order to sort the table by
 */
 function sortSubmitted(order) {
-
     let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
         if(a.lastSubmitted === null) {
             if(order === 'asc')

@@ -2,13 +2,42 @@ const slides = document.querySelectorAll('.slide');
 const options = document.querySelectorAll('.option');
 const backButtons = document.querySelectorAll('.back-button');
 const textFields = document.querySelectorAll('.text-field');
-
+const arr = document.querySelectorAll('.student')
 const faqQuestions = document.querySelectorAll('.faq-question');
+const dashboard = document.querySelector('#settingsDashboard')
+const token = localStorage.getItem('token')
+var role;
+
+dashboard.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(role === 'student') {
+        window.location.href = "../Student/Student.html";
+    } else {
+        window.location.href = "../Annotation/Annotation.js";
+    }
+});
+
 
 /**
     * @returns {void} adds an event listener to each option and associates them with the corresponding slide
 */
 document.addEventListener('DOMContentLoaded', function() {
+    fetch( "http://localhost:8080/users/me", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => response.json()).then(pageDetails => {
+        console.log(pageDetails.role)
+        role = pageDetails.role
+        if(role === 'student') {
+            arr.forEach(elem => {
+                // console.log(elem)
+                elem.style.display = 'none'
+            })
+        }
+    })
     options.forEach((option, index) => {
         option.addEventListener('click', () => {
             showSlide(index + 1);
