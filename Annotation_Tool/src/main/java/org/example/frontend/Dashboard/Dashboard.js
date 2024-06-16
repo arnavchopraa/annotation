@@ -7,6 +7,10 @@ logout.addEventListener('click', () => {
     localStorage.clear();
     window.location.href = '../Login/Login.html';
 });
+const sessionEmail = localStorage.getItem('username')
+let displayedSubmissions
+let sortBy = 'lastSubmitted'
+let orderSortBy = 'desc'
 
 document.addEventListener('DOMContentLoaded', function () {
     fetch("http://localhost:8080/users/me", {
@@ -67,8 +71,8 @@ function getFiles() {
         }
     })
         .then(submissions => {
-            console.log(submissions)
-            displaySubmissions(submissions);
+            displayedSubmissions = submissions
+            sortSubmitted(orderSortBy)
         })
         .catch(error => {
             // Handle any errors that occur during the fetch
@@ -163,7 +167,15 @@ function getSearchResults(writtenText) {
         }
     })
     .then(submissions => {
-        displaySubmissions(submissions);
+        displayedSubmissions = submissions
+        if(sortBy === 'name')
+            sortName(orderSortBy)
+        else if(sortBy === 'lastEdited')
+            sortLastEdited(orderSortBy)
+        else if(sortBy === 'lastSubmitted')
+            sortSubmitted(orderSortBy)
+        else
+            displaySubmissions(submissions);
     })
     .catch(error => {
         console.error("Could not fetch submissions: " , error);
@@ -275,16 +287,22 @@ arrows.forEach(arrow => {
 function sortOrder(id, order) {
     switch(id) {
         case 'nameArrow':
+            sortBy = 'name'
+            orderSortBy = order
             sortName(order);
             break;
         case 'lastEditedArrow':
+            sortBy = 'lastEdited'
+            orderSortBy = order
             sortLastEdited(order);
             break;
         case 'lastSubmittedArrow':
+            sortBy = 'lastSubmitted'
+            orderSortBy = order
             sortSubmitted(order);
             break;
         default:
-            getFiles();
+            displaySubmissions(displayedSubmissions)
     }
 }
 
@@ -293,29 +311,20 @@ function sortOrder(id, order) {
     * @param order - the order to sort the table by
 */
 function sortName(order) {
-    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/student/${order}`;
-
-    fetch(endpoint, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+    let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
+        if(a.id < b.id) {
+            if(order == 'asc') {
+                return 1;
+            } else {
+                return -1;
+            }
         }
-    }).then(response => {
-        // Check if the response is successful (status code 200)
-        if (response.ok) {
-            // Parse the JSON response
-            return response.json();
-        } else {
-            // If the response is not successful, throw an error
-            throw new Error('Failed to fetch user');
+        else if(order == 'asc') {
+            return -1;
         }
-    }).then(submissions => {
-        displaySubmissions(submissions);
-    }).catch(error => {
-        // Handle any errors that occur during the fetch
-        console.log(error)
-    });
+        return 1;
+    })
+    displaySubmissions(sortedSubmissions)
 }
 
 
@@ -324,29 +333,30 @@ function sortName(order) {
     * @param order - the order to sort the table by
 */
 function sortLastEdited(order) {
-    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/lastEdited/${order}`;
-
-    fetch(endpoint, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+    let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
+        if(a.lastEdited === null) {
+            if(order === 'asc')
+                return 1
+            return -1
         }
-    }).then(response => {
-        // Check if the response is successful (status code 200)
-        if (response.ok) {
-            // Parse the JSON response
-            return response.json();
-        } else {
-            // If the response is not successful, throw an error
-            throw new Error('Failed to fetch user');
+        if(b.lastEdited === null) {
+            if(order === 'asc')
+                return -1
+            return 1
         }
-    }).then(submissions => {
-        displaySubmissions(submissions);
-    }).catch(error => {
-        // Handle any errors that occur during the fetch
-        console.log(error)
-    });
+        if(a.lastEdited < b.lastEdited) {
+            if(order == 'asc') {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        else if(order == 'asc') {
+            return -1;
+        }
+        return 1;
+    })
+    displaySubmissions(sortedSubmissions)
 }
 
 /**
@@ -354,27 +364,28 @@ function sortLastEdited(order) {
     * @param order - the order to sort the table by
 */
 function sortSubmitted(order) {
-    var endpoint =`http://localhost:8080/submissions/${sessionEmail}/sort/submitted/${order}`;
-
-    fetch(endpoint, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+    let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
+        if(a.lastSubmitted === null) {
+            if(order === 'asc')
+                return 1
+            return -1
         }
-    }).then(response => {
-        // Check if the response is successful (status code 200)
-        if (response.ok) {
-            // Parse the JSON response
-            return response.json();
-        } else {
-            // If the response is not successful, throw an error
-            throw new Error('Failed to fetch user');
+        if(b.lastSubmitted === null) {
+            if(order === 'asc')
+                return -1
+            return 1
         }
-    }).then(submissions => {
-        displaySubmissions(submissions);
-    }).catch(error => {
-        // Handle any errors that occur during the fetch
-        console.log(error)
-    });
+        if(a.lastSubmitted < b.lastSubmitted) {
+            if(order == 'asc') {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        else if(order == 'asc') {
+            return -1;
+        }
+        return 1;
+    })
+    displaySubmissions(sortedSubmissions)
 }

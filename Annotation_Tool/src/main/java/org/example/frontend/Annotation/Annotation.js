@@ -85,7 +85,7 @@ subBtn.addEventListener('click', () => {
 
     }
     newFile.submitted = true;
-    newFile.lastSubmitted = formatTimestamp(new Date())
+    newFile.lastSubmitted = new Date().toUTCString()
     console.log(newFile)
     fetch(`http://localhost:8080/submissions/${getName}`, {
         method: 'PUT',
@@ -220,7 +220,7 @@ function adobePreview(passedFile) {
             let base64string = btoa(binaryString)
 
             newFile.fileSubmission = base64string
-            newFile.lastEdited = formatTimestamp(new Date())
+            newFile.lastEdited = new Date().toUTCString()
 
             var endpoint = `http://localhost:8080/submissions/${submissionEmail}`
             fetch(endpoint, {
@@ -322,23 +322,3 @@ function replaceCodes(annotationManager, data) {
         }
     });
 }
-
-
-/**
-    * Format the timestamp to a HH-mm-ss yyyy-MM-dd format
-    * @param timestamp - the timestamp to be formatted
-*/
-function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const year = date.getFullYear();
-
-    return `${hours}:${minutes}:${seconds} ${year}-${month}-${day}`;
-}
-
