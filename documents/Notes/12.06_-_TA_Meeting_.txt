@@ -1,0 +1,28 @@
+Notes TA Meeting:
+
+- Radu, Stefan - will do bug fixes after finding them during interviews
+
+- send draft report to coach ( ask for written feedback )
+if we get it before ta feedback let her know
+
+- we are extending this sprint to next wednesday ( week 7-8 sprint )
+
+- add alerts to explain things that cannot happen ( exp: trying a code with an already existing id, having no previous or next file when clicking button )
+- maybe add some keyboard shortcuts
+
+- next sprint - refactoring
+
+- testing: 
+reach 80% line coverage
+calin is doing selenium testing
+paul will do more interviews
+
+- report: 
+maybe find more references based on tw feedback
+
+- presentation:
+stefan, radu and paul
+have the video as a backup in case the server breaks
+
+
+
