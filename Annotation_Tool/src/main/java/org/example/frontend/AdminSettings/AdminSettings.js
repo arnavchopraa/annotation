@@ -150,13 +150,14 @@ document.getElementById('deleteALL').addEventListener('click', function() {
         color: '#a6a6a6',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete them!',
+        cancelButtonText: 'No, cancel!',
         customClass: {
             popup: 'popup-container',
             title: 'popup-title',
             confirmButton: 'popup-confirm-delete-button',
             cancelButton: 'popup-cancel-button'
         },
-        buttonsStyling: false
+        buttonsStyling: false,
     }).then((result) => {
         if (result.isConfirmed) {
             var endpoint = "http://localhost:8080/admin/deleteall"

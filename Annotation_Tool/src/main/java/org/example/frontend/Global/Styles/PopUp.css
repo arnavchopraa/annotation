@@ -50,16 +50,13 @@
     transform: translateY(-3px) !important;
 }
 
-.popup-confirm-delete-button, .popup-confirm-delete-button:focus {
+.popup-confirm-delete-button {
     background-color: #588157 !important;
     color: #fff !important;
 
     margin-right: 10px !important;
-
-    border-color: #385237 !important;
-    border-radius: 10px !important;
-    border-style: solid !important
-    border-width: 1px !important;
+    border-width: 0px !important;
+    border-radius: 5px !important;
 
     font-size: 16px !important;
     font-weight: 600 !important;
@@ -82,11 +79,8 @@
 .popup-cancel-button {
     background-color: #bd3233 !important;
     color: #fff !important;
-
-    border-color: #6f1d25 !important;
-    border-radius: 10px !important;
-    border-style: solid !important;
-    border-width: 1px !important;
+    border-width: 0px !important;
+    border-radius: 5px !important;
 
     font-size: 16px !important;
     font-weight: 600 !important;
@@ -101,11 +95,6 @@
 .popup-cancel-button:hover, .popup-cancel-button:focus {
     background-color: #ad2e3a !important;
     color: #000 !important;
-
-    border-color: #6f1d25 !important;
-    border-radius: 10px !important;
-    border-style: solid !important;
-    border-width: 1px !important;
 
     transform: translateY(-3px) !important;
 }
