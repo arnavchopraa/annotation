@@ -119,8 +119,10 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
         }
     })
     .then(response => {
-        if(response.ok)
+        if(response.ok) {
+            displaySavedPopUp("All submissions have been downloaded successfully!")
             return response.blob()
+        }
         else
             throw new Error("Couldn't fetch file - bulk download")
     })
@@ -140,18 +142,37 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
 })
 
 document.getElementById('deleteALL').addEventListener('click', function() {
-    if(confirm('Are you sure you want to delete ALL submissions from the database? Note that this process is irreversible')) {
-        var endpoint = "http://localhost:8080/admin/deleteall"
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to delete ALL submissions from the database? Note that this process is irreversible.',
+        icon: 'warning',
+        iconColor: '#bd3233',
+        color: '#a6a6a6',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete them!',
+        customClass: {
+            popup: 'popup-container',
+            title: 'popup-title',
+            confirmButton: 'popup-confirm-delete-button',
+            cancelButton: 'popup-cancel-button'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var endpoint = "http://localhost:8080/admin/deleteall"
 
-        fetch(endpoint, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if(response.ok)
-                alert('All submissions have been deleted!')
-            else
-                throw new Error('Deleting failed')
-        })
-        .catch(e => console.error(error))
-    }
+            fetch(endpoint, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    displaySavedPopUp("All submissions have been deleted successfully!")
+                } else {
+                    throw new Error('Deleting failed')
+                }
+            })
+            .catch(e => console.error('Error:', e));
+        }
+    })
+    .catch (error => console.error(error));
 })
