@@ -93,7 +93,7 @@ document.getElementById("save").addEventListener('click', (e) => {
         })
     }).then(response => {
         if(response.ok) {
-            displaySavedPopUp("The password was successfully updated");
+            displaySavedPopUp("Your password has been changed successfully!");
             console.log("Successfully changed password")
 
             document.getElementById("oldPassword").value = ""

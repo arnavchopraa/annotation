@@ -17,6 +17,12 @@
     font-weight: 600 !important;
 }
 
+.popup-saved-title {
+    color: #3e3e3e !important;
+    font-size: 18px !important;
+    text-align: center !important;
+}
+
 .popup-confirm-button {
     background-color: #000 !important;
     color: #fff !important;
