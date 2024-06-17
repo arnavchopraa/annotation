@@ -140,9 +140,13 @@ function fetchCodes() {
         codes.forEach(code => {
             const codeButton = document.createElement('div');
             codeButton.className = 'code';
-
             codeButton.textContent = code.id;
-            codeButton.title = code.codeContent
+
+            const codeDescription = document.createElement('div');
+            codeDescription.className = 'code-description';
+            codeDescription.textContent = code.codeContent;
+
+            codeButton.appendChild(codeDescription);
 
             codesContainer.appendChild(codeButton);
         });
