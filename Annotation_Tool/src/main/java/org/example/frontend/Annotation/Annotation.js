@@ -96,7 +96,11 @@ subBtn.addEventListener('click', () => {
         body: JSON.stringify(newFile)
     }).then(
         function (response) {
-            if(response.status == 200) console.log('ESTI CEL MAI TARE PAUL')
+            if(response.status == 200) {
+                displaySavedPopUp("Your file has been successfully submitted!")
+
+                console.log('file has been submitted')
+            }
         }
     ).catch(e => {
         console.log(e)
@@ -149,8 +153,7 @@ function fetchCodes() {
 function loadPassedFile() {
     // getting the file from database
     if(getName === null) {
-        alert("You have not accessed any file.")
-        window.history.go(-1)
+        displayErrorPopUp("You have not accessed any file.", true) // redirected to the last accessed page automatically
     }
     let sessionFile
     fetch( `http://localhost:8080/submissions/${getName}`, {

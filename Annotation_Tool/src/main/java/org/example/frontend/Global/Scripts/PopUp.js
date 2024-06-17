@@ -22,7 +22,7 @@ function displaySavedPopUp(textContent) {
     });
 }
 
-function displayErrorPopUp (textContent) {
+function displayErrorPopUp (textContent, shouldRedirect) {
     Swal.fire({
         title: 'ERROR!',
         text: textContent,
@@ -37,6 +37,11 @@ function displayErrorPopUp (textContent) {
         buttonsStyling: false,
         showConfirmButton: true,
         confirmButtonText: 'OK',
-        confirmButtonAriaLabel: 'OK button'
+        confirmButtonAriaLabel: 'OK button',
+        willClose: () => {
+            if (shouldRedirect) {
+                window.history.go(-1); // Redirect to the last accessed page
+            }
+        }
     });
 }
