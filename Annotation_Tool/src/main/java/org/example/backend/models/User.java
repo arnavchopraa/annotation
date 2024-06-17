@@ -3,14 +3,9 @@ package org.example.backend.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.ToString;
-import org.example.backend.services.PasswordHashingService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -49,11 +44,6 @@ public class User implements UserDetails{
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "id: " + id + ",pass: " + password;
-    }
-
     /**
      * AllArgsConstructor for User - Did not use lombok to specify that the password must
      * be hashed upon user creation.
@@ -70,6 +60,14 @@ public class User implements UserDetails{
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "User@" + Integer.toHexString(hashCode()) +
+                ":[email=" + id +
+                ",name=" + name +
+                ",password=" + password +
+                ",role=" + role + "]";
+    }
 
     /**
         * Json Constructor for User with all arguments
@@ -199,6 +197,11 @@ public class User implements UserDetails{
         this.role = role;
     }
 
+    /**
+     * Adds a submission to the user's list of submissions
+     *
+     * @param submission submission to be added to the coordinator's list
+     */
     public void addSubmission(SubmissionDB submission) {
         correspondingSubmissions.add(submission);
     }

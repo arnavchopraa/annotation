@@ -27,6 +27,8 @@ public interface SubmissionRepository extends JpaRepository<SubmissionDB, String
      * @param assignedCoordinator the id of the coordinator
      * @return the list of files associated with this coordinator containing id in their email
      */
-    @Query("SELECT s FROM SubmissionDB s JOIN s.assignedCoordinators c WHERE c.id = :assignedCoordinator AND LOWER(s.id) LIKE LOWER(CONCAT('%', :search, '%'))")
-    List<SubmissionDB> findByIdIgnoreCaseContainingAndAssignedCoordinator(@Param("search") String search, @Param("assignedCoordinator") String assignedCoordinator);
+    @Query("SELECT s FROM SubmissionDB s JOIN s.assignedCoordinators c WHERE c.id = :assignedCoordinator " +
+        "AND LOWER(s.id) LIKE LOWER(CONCAT('%', :search, '%'))")
+    List<SubmissionDB> findByIdIgnoreCaseContainingAndAssignedCoordinator(
+        @Param("search") String search, @Param("assignedCoordinator") String assignedCoordinator);
 }

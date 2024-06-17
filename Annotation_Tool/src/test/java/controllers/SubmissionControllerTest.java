@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -37,10 +38,10 @@ class SubmissionControllerTest {
         MockitoAnnotations.initMocks(this);
 
         Blob blob = new SerialBlob("dummy content".getBytes());
-        submissionDB = new SubmissionDB("test@example.com", blob, "coordinator@example.com", "file.pdf", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false);
+        submissionDB = new SubmissionDB("test@example.com", blob, "groupName", new HashSet<>(), "file.pdf", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false);
 
         String base64File = Base64.getEncoder().encodeToString("dummy content".getBytes());
-        submissionDTO = new SubmissionDTO("test@example.com", base64File, "coordinator@example.com", "file.pdf", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false);
+        submissionDTO = new SubmissionDTO("test@example.com", base64File, "groupName", new HashSet<>(), "file.pdf", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false);
     }
 
     @Test

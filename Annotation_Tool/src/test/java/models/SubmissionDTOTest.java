@@ -3,6 +3,8 @@ package models;
 import org.example.backend.models.SubmissionDTO;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SubmissionDTOTest {
@@ -11,21 +13,21 @@ public class SubmissionDTOTest {
     public void testGettersAndSetters() {
         String id = "test@example.com";
         String fileSubmission = "base64File";
-        String assignedCoordinator = "coordinator1";
+        String groupName = "groupName";
         String fileName = "test.txt";
         String now = String.valueOf(System.currentTimeMillis());
 
         SubmissionDTO submissionDTO = new SubmissionDTO();
         submissionDTO.setId(id);
         submissionDTO.setFileSubmission(fileSubmission);
-        submissionDTO.setAssignedCoordinator(assignedCoordinator);
+        submissionDTO.setGroupName(groupName);
         submissionDTO.setFileName(fileName);
         submissionDTO.setLastSubmitted(now);
         submissionDTO.setLastEdited(now);
 
         assertEquals(id, submissionDTO.getId());
         assertEquals(fileSubmission, submissionDTO.getFileSubmission());
-        assertEquals(assignedCoordinator, submissionDTO.getAssignedCoordinator());
+        assertEquals(groupName, submissionDTO.getGroupName());
         assertEquals(fileName, submissionDTO.getFileName());
         assertEquals(now, submissionDTO.getLastSubmitted());
         assertEquals(now, submissionDTO.getLastEdited());
@@ -35,15 +37,15 @@ public class SubmissionDTOTest {
     public void testConstructorAndToString() {
         String id = "test@example.com";
         String fileSubmission = "base64File";
-        String assignedCoordinator = "coordinator1";
+        String groupName = "groupName";
         String fileName = "test.txt";
         String now = String.valueOf(System.currentTimeMillis());
 
-        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, assignedCoordinator, fileName, now, now, false);
+        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, groupName, new HashSet<>(), fileName, now, now, false);
 
         assertEquals(id, submissionDTO.getId());
         assertEquals(fileSubmission, submissionDTO.getFileSubmission());
-        assertEquals(assignedCoordinator, submissionDTO.getAssignedCoordinator());
+        assertEquals(groupName, submissionDTO.getGroupName());
         assertEquals(fileName, submissionDTO.getFileName());
         assertEquals(now, submissionDTO.getLastSubmitted());
         assertEquals(now, submissionDTO.getLastEdited());

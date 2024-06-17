@@ -7,7 +7,6 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -31,9 +30,9 @@ public class SubmissionDB {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "coordinator_assignments",
-            joinColumns = @JoinColumn(name = "submission", referencedColumnName = "email"),
-            inverseJoinColumns = @JoinColumn(name = "coordinator", referencedColumnName = "email"))
+        name = "coordinator_assignments",
+        joinColumns = @JoinColumn(name = "submission", referencedColumnName = "email"),
+        inverseJoinColumns = @JoinColumn(name = "coordinator", referencedColumnName = "email"))
     Set<User> assignedCoordinators;
 
     @Column(name="file_name")
@@ -79,12 +78,18 @@ public class SubmissionDB {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getGroupName()
-                    , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
+                    , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted()
+                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Adds a user to the submission's assigned coordinator list.
+     *
+     * @param user User to be added to the list
+     */
     public void addUser(User user) {
         this.assignedCoordinators.add(user);
     }
