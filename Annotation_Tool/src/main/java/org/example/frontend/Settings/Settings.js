@@ -42,8 +42,10 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
         }
     })
     .then(response => {
-        if(response.ok)
+        if(response.ok) {
+            displaySavedPopUp("Your submissions have been downloaded successfully!");
             return response.blob()
+        }
         else
             throw new Error("Couldn't fetch downloads")
     })
@@ -70,12 +72,12 @@ document.getElementById("save").addEventListener('click', (e) => {
     let newPasswordConfirmation = document.getElementById("newPasswordConfirmation").value
 
     if(newPassword.length == 0) {
-        displayErrorPasswordPopUp("New password cannot be empty");
+        displayErrorPopUp("New password cannot be empty");
         return
     }
 
     if(!(newPassword === newPasswordConfirmation)) {
-        displayErrorPasswordPopUp("Please make sure that the new password matches the confirmation!");
+        displayErrorPopUp("Please make sure that the new password matches the confirmation!");
         return
     }
 
@@ -100,7 +102,7 @@ document.getElementById("save").addEventListener('click', (e) => {
             document.getElementById("newPassword").value = ""
             document.getElementById("newPasswordConfirmation").value = ""
         } else if (response.status === 403) {
-            displayErrorPasswordPopUp("Incorrect old password");
+            displayErrorPopUp("Incorrect old password");
 
             console.log("Incorrect old password.");
         } else if (response.status === 404) {

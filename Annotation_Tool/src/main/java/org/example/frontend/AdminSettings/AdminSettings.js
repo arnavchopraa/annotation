@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     zipInput.addEventListener('change', () => {
         if (zipInput.files.length > 0) {
+            displaySavedPopUp("Your files have been uploaded successfully!");
             console.log("zip uploaded!\n");
+
             zipName.textContent = zipInput.files[0].name;
             formData.append("zipFile", zipInput.files[0]);
             zipUploaded = true;
@@ -50,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     csvInput.addEventListener('change', () => {
         if (csvInput.files.length > 0) {
+            displaySavedPopUp("Your file has been uploaded successfully!");
             console.log("csv uploaded!\n");
+
             csvName.textContent = csvInput.files[0].name;
             formData.append("csvFile", csvInput.files[0]);
             csvUploaded = true;
@@ -67,7 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     xlsxInput.addEventListener('change', () => {
         if (xlsxInput.files.length > 0) {
+            displaySavedPopUp("Your file has been uploaded successfully!");
             console.log("excel uploaded!\n");
+
             xlsxName.textContent = xlsxInput.files[0].name;
             formData.append("xlsxFile", xlsxInput.files[0]);
             xlsxUploaded = true;

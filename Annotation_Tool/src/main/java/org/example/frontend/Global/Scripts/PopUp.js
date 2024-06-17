@@ -22,7 +22,7 @@ function displaySavedPopUp(textContent) {
     });
 }
 
-function displayErrorPasswordPopUp (textContent) {
+function displayErrorPopUp (textContent) {
     Swal.fire({
         title: 'ERROR!',
         text: textContent,
