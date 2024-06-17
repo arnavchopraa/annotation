@@ -1,0 +1,32 @@
+Notes client:
+
+Fixes:
+
+- add code: alert if the code already exists 
+
+- html when hovering over codes ( use a dropdown instead of the html title )
+
+- add autosave to codes
+
+- improve security
+
+- remove debugging button from parsing.html
+
+- button to clean up database - clears database of submissions
+
+- if one users is annotating a file, lock the file so others cannot change it
+
+- dashboard - separate lists with submitted and not submitted files; recently edited can be removed
+
+- also display time not just date on recently edited
+
+- display the group of the report
+
+- deployment???
+
+- uploading a file manually for admins in case a student submits his work after deadline
+
+
+Presentation tips:
+showcase why it is better to use our app instead of an external tool to annotate
+we can say something about the autosave / database situation
