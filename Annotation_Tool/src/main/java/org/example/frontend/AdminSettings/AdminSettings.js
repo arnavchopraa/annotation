@@ -105,7 +105,7 @@ function communicate(formData) {
         }
     })
     .catch(error => {
-        alert("Error encountered!")
+        displayErrorPopUp("An error occurred while uploading the files. Please try again later.", false);
     })
 }
 

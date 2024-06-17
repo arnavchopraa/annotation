@@ -72,7 +72,7 @@ document.getElementById("save").addEventListener('click', (e) => {
     let newPasswordConfirmation = document.getElementById("newPasswordConfirmation").value
 
     if(newPassword.length == 0) {
-        displayErrorPopUp("New password cannot be empty", false);
+        displayErrorPopUp("New password cannot be empty.", false);
         return
     }
 
@@ -102,7 +102,7 @@ document.getElementById("save").addEventListener('click', (e) => {
             document.getElementById("newPassword").value = ""
             document.getElementById("newPasswordConfirmation").value = ""
         } else if (response.status === 403) {
-            displayErrorPopUp("Incorrect old password", false);
+            displayErrorPopUp("Incorrect old password.", false);
 
             console.log("Incorrect old password.");
         } else if (response.status === 404) {
