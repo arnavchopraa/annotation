@@ -64,7 +64,7 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     .catch(error => console.error(error))
 })
 
-document.getElementById("save").addEventListener('click', (e) => {
+document.getElementById("savePassword").addEventListener('click', (e) => {
     e.preventDefault()
 
     let oldPassword = document.getElementById("oldPassword").value
@@ -112,3 +112,42 @@ document.getElementById("save").addEventListener('click', (e) => {
         }
     })
 })
+
+document.getElementById("saveDetails").addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // do backend logic here
+    // if (response.ok)
+    displaySavedPopUp("Your details have been saved successfully!");
+});
+
+document.getElementById("deleteAccount").addEventListener('click', (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to delete your account? Note that this process is irreversible.',
+        icon: 'warning',
+        iconColor: '#bd3233',
+        color: '#a6a6a6',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        customClass: {
+            popup: 'popup-container',
+            title: 'popup-title',
+            confirmButton: 'popup-confirm-delete-button',
+            cancelButton: 'popup-cancel-button'
+        },
+        buttonsStyling: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // do backend logic here
+            // if (response.ok)
+            displaySavedPopUp("Your account has been successfully deleted!");
+        } else if(result.dismiss === Swal.DismissReason.cancel) {
+            displayCancelPopUp("Your account has not been deleted.");
+        }
+    })
+    .catch(error => console.error(error));
+});

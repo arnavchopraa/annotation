@@ -173,6 +173,8 @@ document.getElementById('deleteALL').addEventListener('click', function() {
                 }
             })
             .catch(e => console.error('Error:', e));
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            displayCancelPopUp("Your submissions are safe!")
         }
     })
     .catch (error => console.error(error));

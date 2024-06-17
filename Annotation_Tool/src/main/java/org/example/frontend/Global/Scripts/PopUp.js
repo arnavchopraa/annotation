@@ -45,3 +45,22 @@ function displayErrorPopUp (textContent, shouldRedirect) {
         }
     });
 }
+
+function displayCancelPopUp (textContent) {
+    Swal.fire({
+        title: 'CANCELLED',
+        text: textContent,
+        icon: 'error',
+        iconColor: '#bd3233',
+        color: '#a6a6a6',
+        customClass: {
+            popup: 'popup-container',
+            title: 'popup-title',
+            confirmButton: 'popup-confirm-button'
+        },
+        buttonsStyling: false,
+        showConfirmButton: true,
+        confirmButtonText: 'OK',
+        confirmButtonAriaLabel: 'OK button',
+    });
+}
