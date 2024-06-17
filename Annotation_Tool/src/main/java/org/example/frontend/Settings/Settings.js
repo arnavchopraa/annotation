@@ -144,7 +144,7 @@ document.getElementById("deleteAccount").addEventListener('click', (e) => {
         if (result.isConfirmed) {
             // do backend logic here
             // if (response.ok)
-            displaySavedPopUp("Your account has been successfully deleted!");
+            window.location.href = "../Login/Login.html";
         } else if(result.dismiss === Swal.DismissReason.cancel) {
             displayCancelPopUp("Your account has not been deleted.");
         }
