@@ -146,3 +146,15 @@ function faqOpenAndClose() {
         });
     });
 }
+
+document.getElementById('contactSubmit').addEventListener('click', function () {
+    // do backend logic here
+    // if (response.ok)
+    displaySavedPopUp("Your message has been successfully submitted!");
+});
+
+document.getElementById('feedbackSubmit').addEventListener('click', function () {
+    // do backend logic here
+    // if (response.ok)
+    displaySavedPopUp("Your feedback has been successfully submitted!");
+});
