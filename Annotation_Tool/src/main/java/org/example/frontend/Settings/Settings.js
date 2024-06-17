@@ -108,3 +108,28 @@ document.getElementById("save").addEventListener('click', (e) => {
         }
     })
 })
+
+document.getElementById("delete").addEventListener('click', (e) => {
+    e.preventDefault()
+
+    const endpoint = `http://localhost:8080/users/${sessionEmail}`
+
+    fetch(endpoint, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        if(response.ok) {
+            alert("The account was successfully deleted!")
+            window.location.href = "../Login/Login.html"
+        }
+        else {
+            alert("Failed to delete account!")
+        }
+    })
+
+})
+
+
