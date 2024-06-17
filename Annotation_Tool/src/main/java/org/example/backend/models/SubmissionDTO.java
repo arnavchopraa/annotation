@@ -12,7 +12,7 @@ import java.util.Set;
 public class SubmissionDTO {
     private String id;
     private String fileSubmission;
-    private String assignedCoordinator;
+    private String groupName;
     private Set<User> assignedCoordinators;
     private String fileName;
     private String lastSubmitted;

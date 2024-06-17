@@ -26,8 +26,8 @@ public class SubmissionDB {
     @Lob
     private Blob fileSubmission;
 
-    @Column(name="assigned_coordinator")
-    private String assignedCoordinator;
+    @Column(name="group_name")
+    private String groupName;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -57,7 +57,7 @@ public class SubmissionDB {
     public static SubmissionDTO convertToBinary(SubmissionDB submissionDB) {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
-            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator(), submissionDB.getAssignedCoordinators()
+            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
                     , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
@@ -65,7 +65,7 @@ public class SubmissionDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator(), submissionDB.getAssignedCoordinators()
+        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
                 , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
     }
 
@@ -78,7 +78,7 @@ public class SubmissionDB {
     public static SubmissionDB convertToBlob(SubmissionDTO submissionDTO) {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
-            return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
+            return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getGroupName()
                     , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
