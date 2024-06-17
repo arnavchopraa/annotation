@@ -10,9 +10,12 @@ import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 @RestController
@@ -69,7 +72,32 @@ public class SubmissionController {
      */
     @GetMapping("/coordinator/{id}")
     @ResponseBody
-    public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
+    public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) throws IOException {
+        /* TODO -- Creates a zip file in the same format as Brightspace. Delete this when done
+        File file = new File("test.zip");
+        OutputStream outputStream = new FileOutputStream(file);
+        ZipOutputStream zos = new ZipOutputStream(outputStream);
+        for(int i = 0;i < 10;i++) {
+            String folderName;
+            if(i < 5)
+                folderName = "678925-136654 - Test group - Sort " + i + " - 27 May, 2024 1441";
+            else
+                folderName = "678925-136654 - Group 2 - Sort " + i + " - 27 May, 2024 1441";
+            String path = "sample2.pdf";
+
+            File originalFile = new File(path);
+            InputStream inputStream = new FileInputStream(originalFile);
+            byte[] originalBytes = inputStream.readAllBytes();
+            inputStream.close();
+
+            String newFileName = folderName + "/" + "thesis" + i + ".pdf";
+            zos.putNextEntry(new ZipEntry(newFileName));
+            zos.write(originalBytes, 0, originalBytes.length);
+            zos.closeEntry();
+        }
+        zos.close();
+        outputStream.close();
+        */
         List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
         List<SubmissionDTO> resp = sub.stream()
             .map(SubmissionDB::convertToBinary)

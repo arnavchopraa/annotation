@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@ToString
 @Table(name="coordinators")
 public class User implements UserDetails{
     @Id
@@ -46,12 +45,13 @@ public class User implements UserDetails{
 
     public User(String name, String password, String role) {
         this.name = name;
-        try {
-            this.password = PasswordHashingService.hashPassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        this.password = password;
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "id: " + id + ",pass: " + password;
     }
 
     /**
@@ -66,11 +66,7 @@ public class User implements UserDetails{
     public User(String email, String name, String password, String role) {
         this.id = email;
         this.name = name;
-        try {
-            this.password = PasswordHashingService.hashPassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        this.password = password;
         this.role = role;
     }
 

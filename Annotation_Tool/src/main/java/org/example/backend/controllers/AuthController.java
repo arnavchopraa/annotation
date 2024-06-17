@@ -49,13 +49,6 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) throws NoSuchAlgorithmException {
-        /*boolean authenticated = userService.authenticateUser(loginRequest);
-        User user = userService.getUser(loginRequest.getUsername());
-        if (authenticated) {
-            return ResponseEntity.ok(user.getRole());
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        }*/
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
             loginRequest.getUsername(), loginRequest.getPassword()));
         if(auth.isAuthenticated()) {

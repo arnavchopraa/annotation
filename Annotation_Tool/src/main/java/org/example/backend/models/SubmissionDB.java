@@ -57,7 +57,7 @@ public class SubmissionDB {
     public static SubmissionDTO convertToBinary(SubmissionDB submissionDB) {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
-            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator()
+            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator(), submissionDB.getAssignedCoordinators()
                     , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
@@ -65,7 +65,7 @@ public class SubmissionDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator()
+        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator(), submissionDB.getAssignedCoordinators()
                 , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
     }
 
@@ -79,7 +79,7 @@ public class SubmissionDB {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
-                    , new HashSet<>(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
+                    , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -45,7 +46,12 @@ public class AccountService {
             String password = emailService.generateRandomCode();
             User optionalUser = userService.getUser(coordinator.getEmail());
             if(optionalUser == null) {
-                User user = new User(coordinator.getEmail(), coordinator.getFullName(), password, "supervisor");
+                User user;
+                try {
+                    user = new User(coordinator.getEmail(), coordinator.getFullName(), PasswordHashingService.hashPassword(password), "supervisor");
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(coordinator.getEmail(), password);
                 try {
@@ -72,7 +78,12 @@ public class AccountService {
             String password = emailService.generateRandomCode();
             User optionalUser = userService.getUser(student.getEmail());
             if(optionalUser == null) {
-                User user = new User(student.getEmail(), student.getStudentName(), password, "student");
+                User user;
+                try {
+                    user = new User(student.getEmail(), student.getStudentName(), PasswordHashingService.hashPassword(password), "student");
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(student.getEmail(), password);
                 try {
@@ -105,13 +116,9 @@ public class AccountService {
                 SubmissionDB submissionDB = new SubmissionDB(
                         student.getEmail(), file, coordinator.getEmail(), userSet, submission.getFileName(), null, null, false);
                 submissionService.addSubmission(submissionDB);
-                user.addSubmission(submissionDB);
-                userService.updateUser(user);
             } else {
                 existingSubmission.addUser(user);
-                user.addSubmission(existingSubmission);
                 submissionService.updateSubmission(existingSubmission);
-                userService.updateUser(user);
             }
 
         }

@@ -92,14 +92,9 @@ function communicate(formData) {
         body: formData
     })
     .then(response => {
-        if(response.ok) {
-            return response.json();
-        } else {
-            throw new Error("Failed to fetch response");
+        if(!response.ok) {
+            alert("Error encountered!")
         }
-    })
-    .catch(error => {
-        alert("Error encountered!")
     })
 }
 
@@ -138,7 +133,10 @@ document.getElementById('deleteALL').addEventListener('click', function() {
         var endpoint = "http://localhost:8080/admin/deleteall"
 
         fetch(endpoint, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
         .then(response => {
             if(response.ok)
@@ -146,6 +144,6 @@ document.getElementById('deleteALL').addEventListener('click', function() {
             else
                 throw new Error('Deleting failed')
         })
-        .catch(e => console.error(error))
+        .catch(error => console.error(error))
     }
 })
