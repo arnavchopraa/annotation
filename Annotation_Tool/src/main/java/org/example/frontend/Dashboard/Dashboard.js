@@ -30,19 +30,19 @@ document.addEventListener('DOMContentLoaded', function () {
             throw new Error('Failed to fetch user');
         }
     })
-        .then(obj =>{
-            sessionEmail = obj.email;
-            // I don't see how we display admin functionality, this is if it doesn't happen:
-            role = obj.role
-            if(role === 'student')
-                window.location.href = '../Student/Student.html'
-            getFiles()
-            getRecentlySubmitted()
-        })
-        .catch(error => {
-            // Handle any errors that occur during the fetch
-            console.log(error)
-        });
+    .then(obj =>{
+        sessionEmail = obj.email;
+        // I don't see how we display admin functionality, this is if it doesn't happen:
+        role = obj.role
+        if(role === 'student')
+            window.location.href = '../Student/Student.html'
+        getFiles()
+        getRecentlySubmitted()
+    })
+    .catch(error => {
+        // Handle any errors that occur during the fetch
+        console.log(error)
+    });
 })
 
 /**
@@ -69,14 +69,14 @@ function getFiles() {
             throw new Error('Failed to fetch user');
         }
     })
-        .then(submissions => {
-            displayedSubmissions = submissions
-            sortSubmitted(orderSortBy)
-        })
-        .catch(error => {
-            // Handle any errors that occur during the fetch
-            console.log(error)
-        });
+    .then(submissions => {
+        displayedSubmissions = submissions
+        sortSubmitted(orderSortBy)
+    })
+    .catch(error => {
+        // Handle any errors that occur during the fetch
+        console.log(error)
+    });
 }
 
 
@@ -171,6 +171,8 @@ function getSearchResults(writtenText) {
             sortName(orderSortBy)
         else if(sortBy === 'lastEdited')
             sortLastEdited(orderSortBy)
+        else if(sortBy === 'groupName')
+            sortGroupName(orderSortBy)
         else if(sortBy === 'lastSubmitted')
             sortSubmitted(orderSortBy)
         else
@@ -295,6 +297,11 @@ function sortOrder(id, order) {
             orderSortBy = order
             sortLastEdited(order);
             break;
+        case 'groupNameArrow':
+            sortBy = 'groupName'
+            orderSortBy = order
+            sortSubmitted(order);
+            break;
         case 'lastSubmittedArrow':
             sortBy = 'lastSubmitted'
             orderSortBy = order
@@ -353,6 +360,28 @@ function sortLastEdited(order) {
         else if(order == 'asc') {
             return -1;
         }
+        return 1;
+    })
+    displaySubmissions(sortedSubmissions)
+}
+
+/**
+    * Method to sort the table by the group name
+    * @param order - the order to sort the table by
+*/
+function sortGroupName(order) {
+    let sortedSubmissions = Array.from(displayedSubmissions).sort((a, b) => {
+        if(a.groupName < b.groupName) {
+            if(order == 'asc') {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+        else if(order == 'asc') {
+            return -1;
+        }
+
         return 1;
     })
     displaySubmissions(sortedSubmissions)
