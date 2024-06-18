@@ -55,8 +55,8 @@
 }
 
 .step-image {
-    height: 300px;
-    width: 460px;
+    height: 400px;
+    width: 650px;
 
     opacity: 0;
     transition: transform 0.5s ease-out, opacity 0.5s ease-out;

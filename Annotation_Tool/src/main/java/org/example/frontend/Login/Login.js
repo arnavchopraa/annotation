@@ -53,6 +53,6 @@ function handleFormSubmission(event) {
         })
     .catch(error => {
         // If there is an error with the request, display an error message
-        alert(error.message);
+        displayErrorPopUp("Something went wrong. Try again.", false);
     });
 }
