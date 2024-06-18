@@ -173,5 +173,6 @@ document.getElementById('deleteALL').addEventListener('click', function() {
                 throw new Error('Deleting failed')
         })
         .catch(error => console.error(error))
-    }
+        }
+    })
 })
