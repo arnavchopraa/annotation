@@ -319,7 +319,7 @@ function sortOrder(id, order) {
         case 'groupNameArrow':
             sortBy = 'groupName'
             orderSortBy = order
-            sortSubmitted(order);
+            sortGroupName(order);
             break;
         case 'lastSubmittedArrow':
             sortBy = 'lastSubmitted'

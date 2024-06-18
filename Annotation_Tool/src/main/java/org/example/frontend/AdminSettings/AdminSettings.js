@@ -114,6 +114,7 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
         method: 'GET',
         headers: {
             "Content-Type": "application/zip"
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
