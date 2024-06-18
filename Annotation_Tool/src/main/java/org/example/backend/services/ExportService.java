@@ -37,9 +37,7 @@ public class ExportService {
      * @throws SQLException if there is an error with processing blobs
      */
     public File getAllSubmissionsByCoordinator(String coordinator) throws IOException, SQLException {
-        List<SubmissionDB> files = submissionService.getCoordinatorsSubmissions(coordinator).stream()
-            .filter(s -> s.getAssignedCoordinator().equals(coordinator))
-            .toList();
+        List<SubmissionDB> files = submissionService.getCoordinatorsSubmissions(coordinator);
         File file = new File(System.getProperty("java.io.tmpdir") + "/" + "download.zip");
         OutputStream outputStream = new FileOutputStream(file);
         ZipOutputStream zos = new ZipOutputStream(outputStream);

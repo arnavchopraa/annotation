@@ -111,7 +111,7 @@ function displaySubmissions(submissions) {
 
         const three = document.createElement('p')
         three.className = 'table-cell'
-        three.innerText = "Not implemented";
+        three.innerText = sub.groupName;
         line.appendChild(three);
 
         const four = document.createElement('p')

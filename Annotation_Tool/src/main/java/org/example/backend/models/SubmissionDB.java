@@ -7,6 +7,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -24,8 +25,15 @@ public class SubmissionDB {
     @Lob
     private Blob fileSubmission;
 
-    @Column(name="assigned_coordinator")
-    private String assignedCoordinator;
+    @Column(name="group_name")
+    private String groupName;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "coordinator_assignments",
+        joinColumns = @JoinColumn(name = "submission", referencedColumnName = "email"),
+        inverseJoinColumns = @JoinColumn(name = "coordinator", referencedColumnName = "email"))
+    Set<User> assignedCoordinators;
 
     @Column(name="file_name")
     private String fileName;
@@ -48,7 +56,7 @@ public class SubmissionDB {
     public static SubmissionDTO convertToBinary(SubmissionDB submissionDB) {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
-            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getAssignedCoordinator()
+            return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
                     , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
@@ -56,7 +64,7 @@ public class SubmissionDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getAssignedCoordinator()
+        return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
                 , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
     }
 
@@ -69,11 +77,21 @@ public class SubmissionDB {
     public static SubmissionDB convertToBlob(SubmissionDTO submissionDTO) {
         byte[] decodedBytes = Base64.getDecoder().decode(submissionDTO.getFileSubmission());
         try {
-            return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getAssignedCoordinator()
-                    , submissionDTO.getFileName(), submissionDTO.getLastSubmitted(), submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
+            return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getGroupName()
+                    , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted()
+                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Adds a user to the submission's assigned coordinator list.
+     *
+     * @param user User to be added to the list
+     */
+    public void addUser(User user) {
+        this.assignedCoordinators.add(user);
     }
 
 }

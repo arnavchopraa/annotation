@@ -98,10 +98,8 @@ function communicate(formData) {
         body: formData
     })
     .then(response => {
-        if(response.ok) {
-            return response.json();
-        } else {
-            throw new Error("Failed to fetch response");
+        if(!response.ok) {
+            alert("Error encountered!")
         }
     })
     .catch(error => {
@@ -162,20 +160,18 @@ document.getElementById('deleteALL').addEventListener('click', function() {
         if (result.isConfirmed) {
             var endpoint = "http://localhost:8080/admin/deleteall"
 
-            fetch(endpoint, {
-                method: 'DELETE'
-            })
-            .then(response => {
-                if (response.ok) {
-                    displaySavedPopUp("All submissions have been deleted successfully!")
-                } else {
-                    throw new Error('Deleting failed')
-                }
-            })
-            .catch(e => console.error('Error:', e));
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            displayCancelPopUp("Your submissions are safe!")
-        }
-    })
-    .catch (error => console.error(error));
+        fetch(endpoint, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if(response.ok)
+                alert('All submissions have been deleted!')
+            else
+                throw new Error('Deleting failed')
+        })
+        .catch(error => console.error(error))
+    }
 })

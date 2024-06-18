@@ -2,23 +2,15 @@ package org.example.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.ToString;
-import org.example.backend.services.PasswordHashingService;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@ToString
 @Table(name="coordinators")
 public class User implements UserDetails{
     @Id
@@ -35,6 +27,9 @@ public class User implements UserDetails{
     @Column(name="role")
     private String role;
 
+    @ManyToMany(mappedBy = "assignedCoordinators", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    Set<SubmissionDB> correspondingSubmissions;
+
     /**
      * Basic constructor for User
      *
@@ -45,11 +40,7 @@ public class User implements UserDetails{
 
     public User(String name, String password, String role) {
         this.name = name;
-        try {
-            this.password = PasswordHashingService.hashPassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        this.password = password;
         this.role = role;
     }
 
@@ -65,14 +56,18 @@ public class User implements UserDetails{
     public User(String email, String name, String password, String role) {
         this.id = email;
         this.name = name;
-        try {
-            this.password = PasswordHashingService.hashPassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        this.password = password;
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "User@" + Integer.toHexString(hashCode()) +
+                ":[email=" + id +
+                ",name=" + name +
+                ",password=" + password +
+                ",role=" + role + "]";
+    }
 
     /**
         * Json Constructor for User with all arguments
@@ -200,6 +195,15 @@ public class User implements UserDetails{
      */
     public void setRole(String role) {
         this.role = role;
+    }
+
+    /**
+     * Adds a submission to the user's list of submissions
+     *
+     * @param submission submission to be added to the coordinator's list
+     */
+    public void addSubmission(SubmissionDB submission) {
+        correspondingSubmissions.add(submission);
     }
 
     /**
