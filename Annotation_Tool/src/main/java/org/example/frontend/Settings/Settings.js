@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 });
 
+/**
+    * Method that handles the user downloading all submitted files
+*/
 document.getElementById('downloadSubmitted').addEventListener('click', function () {
     var endpoint = `http://localhost:8080/frontend/allsubmissions/${sessionEmail}`
     fetch(endpoint, {
@@ -64,6 +67,9 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     .catch(error => console.error(error))
 })
 
+/**
+    * Method that handles a user changing their password.
+*/
 document.getElementById("savePassword").addEventListener('click', (e) => {
     e.preventDefault()
 
@@ -111,17 +117,11 @@ document.getElementById("savePassword").addEventListener('click', (e) => {
             console.log("An error occurred with the hashing service");
         }
     })
-})
+});
 
-
-//document.getElementById("saveDetails").addEventListener('click', (e) => {
-//    e.preventDefault();
-//
-//    // do backend logic here
-//    // if (response.ok)
-//    displaySavedPopUp("Your details have been saved successfully!");
-//});
-
+/**
+    * Method that handles the deletion of the user account.
+*/
 document.getElementById("deleteAccount").addEventListener('click', (e) => {
     e.preventDefault();
 
