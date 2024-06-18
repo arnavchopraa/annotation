@@ -117,7 +117,7 @@
     display: flex;
     margin-bottom: 20px;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: stretch;
 }
 
@@ -204,13 +204,16 @@
 .back-arrow {
     margin: 0px;
     margin-right: 10px;
+    fill: #c9c9c9;
 }
 
 .back-text {
     margin: 0px;
     font-size: 16px;
+    color: #c9c9c9;
 }
 
 .back-button:hover .back-arrow, .back-button:hover .back-text {
     color: #ababab;
+    fill: #ababab;
 }
