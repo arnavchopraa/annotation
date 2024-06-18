@@ -1,0 +1,100 @@
+* {
+    font-family: 'Inter-Tight', sans-serif;
+    color: #000;
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+}
+
+.popup-container {
+    background-color: #f0f0f0 !important;
+    border-radius: 10px !important;
+}
+
+.popup-title {
+    color: #000 !important;
+    font-size: 25px !important;
+    font-weight: 600 !important;
+}
+
+.popup-saved-title {
+    color: #3e3e3e !important;
+    font-size: 18px !important;
+    text-align: center !important;
+}
+
+.popup-confirm-button {
+    background-color: #000 !important;
+    color: #fff !important;
+
+    border-color: #000 !important;
+    border-radius: 10px !important;
+    border-style: solid !important;
+    border-width: 1px !important;
+
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 10px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.popup-confirm-button:hover {
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+
+    transform: translateY(-3px) !important;
+}
+
+.popup-confirm-delete-button {
+    background-color: #588157 !important;
+    color: #fff !important;
+
+    margin-right: 10px !important;
+    border-width: 0px !important;
+    border-radius: 5px !important;
+
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 10px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    cursor: pointer !important;
+
+    transition: all 0.2s ease !important;
+}
+
+.popup-confirm-delete-button:hover {
+    background-color: #50754f !important;
+    color: #000 !important;
+
+    transform: translateY(-3px) !important;
+}
+
+.popup-cancel-button {
+    background-color: #bd3233 !important;
+    color: #fff !important;
+    border-width: 0px !important;
+    border-radius: 5px !important;
+
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 10px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.popup-cancel-button:hover, .popup-cancel-button:focus {
+    background-color: #ad2e3a !important;
+    color: #000 !important;
+
+    transform: translateY(-3px) !important;
+}

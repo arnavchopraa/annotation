@@ -150,3 +150,32 @@ iframe {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
   transform: translateY(-5px);
 }
+
+.code-description {
+    display: none;
+    position: fixed;
+    min-width: 100px;
+
+    background-color: #3e3e3e;
+    color: #fff;
+
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+
+    padding: 12px 16px;
+    border: 1px solid #f0f0f0;
+    border-radius: 5px;
+
+    text-align: left;
+    font-size: 14px;
+    font-weight: 550;
+    line-height: 1.5;
+    letter-spacing: 0.025em;
+}
+
+.code:hover .code-description {
+    display: block;
+    top: 100%;
+    left: 0;
+    transform: translateY(10px);
+}
