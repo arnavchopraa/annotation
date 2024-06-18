@@ -15,16 +15,31 @@
     height: 5vh;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+}
+
+.middle-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: calc(70% - 550px);
 }
 
 .control-button {
     display: flex;
     align-items: center;
     height: 100%;
+
+    margin-right: 20px;
 }
 
-.control-buttons .last {
+.control-button.first {
+    margin-right: auto;
+}
+
+.control-button.last {
     margin-left: auto;
 }
 

@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 });
 
+/**
+    * Method that handles the user downloading all submitted files
+*/
 document.getElementById('downloadSubmitted').addEventListener('click', function () {
     var endpoint = `http://localhost:8080/frontend/allsubmissions/${sessionEmail}`
     fetch(endpoint, {
@@ -64,6 +67,9 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     .catch(error => console.error(error))
 })
 
+/**
+    * Method that handles a user changing their password.
+*/
 document.getElementById("savePassword").addEventListener('click', (e) => {
     e.preventDefault()
 
@@ -152,11 +158,11 @@ document.getElementById("deleteAccount").addEventListener('click', (e) => {
                     }
                 }).then(response => {
                     if(response.ok) {
-                        alert("The account was successfully deleted!")
+                        displaySavedPopUp("Your account has been successfully deleted!");
                         window.location.href = "../Login/Login.html";
                     }
                     else {
-                        alert("Failed to delete account!")
+                        displayErrorPopUp("Failed to delete account!", false)
                     }
                 })
         } else if(result.dismiss === Swal.DismissReason.cancel) {
