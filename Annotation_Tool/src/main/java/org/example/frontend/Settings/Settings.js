@@ -153,11 +153,11 @@ document.getElementById("deleteAccount").addEventListener('click', (e) => {
                     }
                 }).then(response => {
                     if(response.ok) {
-                        alert("The account was successfully deleted!")
+                        displaySavedPopUp("Your account has been successfully deleted!");
                         window.location.href = "../Login/Login.html";
                     }
                     else {
-                        alert("Failed to delete account!")
+                        displayErrorPopUp("Failed to delete account!", false)
                     }
                 })
         } else if(result.dismiss === Swal.DismissReason.cancel) {
