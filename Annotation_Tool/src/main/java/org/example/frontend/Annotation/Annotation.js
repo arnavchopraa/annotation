@@ -141,7 +141,9 @@ function fetchCodes() {
             codeDescription.textContent = code.codeContent;
 
             if (even == true) {
-                codeDescription.className = 'code-description even'
+                codeDescription.classList.add('even');
+            } else {
+                codeDescription.classList.remove('even');
             }
             even = !even;
 

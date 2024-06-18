@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     openSlide();
-    removePlaceholder();
     faqOpenAndClose();
 });
 
@@ -63,11 +62,19 @@ backButtons.forEach(backButton => {
     * @returns {void} shows the slide with the given index
 */
 function showSlide(index) {
+    const slider = document.getElementById('slider');
     slides.forEach((slide, i) => {
         if (i === index) {
             slide.classList.add('active');
+
+            if (i == 3) {
+                slider.classList.add('feedback');
+            } else {
+                slider.classList.remove('feedback');
+            }
         } else {
             slide.classList.remove('active');
+            slider.classList.remove('feedback');
         }
 
         updateURL(slideName(index));
