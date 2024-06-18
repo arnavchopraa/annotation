@@ -47,16 +47,16 @@
 }
 
 .step-image-wrap {
-    width: auto;
     height: 100%;
+    wdith: 65%;
     object-fit: contain;
     object-position: 50% 50%;
     overflow: hidden;
 }
 
 .step-image {
-    height: 400px;
-    width: 650px;
+    height: 350px;
+    width: min(600px, 90%);
 
     opacity: 0;
     transition: transform 0.5s ease-out, opacity 0.5s ease-out;

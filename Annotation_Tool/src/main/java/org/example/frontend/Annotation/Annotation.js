@@ -343,7 +343,7 @@ document.getElementById('exportButton').addEventListener('click', function() {
     })
     .then(response => {
         if(response.ok) {
-            displaySavedPopUp("Your submissions have been downloaded successfully!");
+            displaySavedPopUp("Your submission has been downloaded successfully!");
             return response.blob()
         }
         else
