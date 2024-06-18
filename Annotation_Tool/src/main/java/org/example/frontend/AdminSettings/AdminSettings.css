@@ -118,12 +118,14 @@
 
 .upload-name {
     margin-left: 10px;
+    width: 50%;
 }
 
 .upload-button {
     background-color: #000;
     color: white;
     padding: 10px;
+    width: auto;
 
     font-weight: 700;
 

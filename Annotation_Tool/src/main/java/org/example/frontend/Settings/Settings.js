@@ -42,8 +42,10 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
         }
     })
     .then(response => {
-        if(response.ok)
+        if(response.ok) {
+            displaySavedPopUp("Your submissions have been downloaded successfully!");
             return response.blob()
+        }
         else
             throw new Error("Couldn't fetch downloads")
     })
@@ -62,7 +64,7 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     .catch(error => console.error(error))
 })
 
-document.getElementById("save").addEventListener('click', (e) => {
+document.getElementById("savePassword").addEventListener('click', (e) => {
     e.preventDefault()
 
     let oldPassword = document.getElementById("oldPassword").value
@@ -70,12 +72,12 @@ document.getElementById("save").addEventListener('click', (e) => {
     let newPasswordConfirmation = document.getElementById("newPasswordConfirmation").value
 
     if(newPassword.length == 0) {
-        alert("New password cannot be empty")
+        displayErrorPopUp("New password cannot be empty.", false);
         return
     }
 
     if(!(newPassword === newPasswordConfirmation)) {
-        alert("Please make sure that the new password matches the confirmation!")
+        displayErrorPopUp("Please make sure that the new password matches the confirmation!", false);
         return
     }
 
@@ -93,13 +95,15 @@ document.getElementById("save").addEventListener('click', (e) => {
         })
     }).then(response => {
         if(response.ok) {
-            alert("The password was successfully updated")
+            displaySavedPopUp("Your password has been changed successfully!");
             console.log("Successfully changed password")
+
             document.getElementById("oldPassword").value = ""
             document.getElementById("newPassword").value = ""
             document.getElementById("newPasswordConfirmation").value = ""
         } else if (response.status === 403) {
-            alert("Incorrect old password")
+            displayErrorPopUp("Incorrect old password.", false);
+
             console.log("Incorrect old password.");
         } else if (response.status === 404) {
             console.log("User not found.");
@@ -108,3 +112,42 @@ document.getElementById("save").addEventListener('click', (e) => {
         }
     })
 })
+
+document.getElementById("saveDetails").addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // do backend logic here
+    // if (response.ok)
+    displaySavedPopUp("Your details have been saved successfully!");
+});
+
+document.getElementById("deleteAccount").addEventListener('click', (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to delete your account? Note that this process is irreversible.',
+        icon: 'warning',
+        iconColor: '#bd3233',
+        color: '#a6a6a6',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        customClass: {
+            popup: 'popup-container',
+            title: 'popup-title',
+            confirmButton: 'popup-confirm-delete-button',
+            cancelButton: 'popup-cancel-button'
+        },
+        buttonsStyling: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // do backend logic here
+            // if (response.ok)
+            window.location.href = "../Login/Login.html";
+        } else if(result.dismiss === Swal.DismissReason.cancel) {
+            displayCancelPopUp("Your account has not been deleted.");
+        }
+    })
+    .catch(error => console.error(error));
+});

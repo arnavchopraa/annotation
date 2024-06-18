@@ -115,15 +115,15 @@ function createIcons(svgId, codeId) {
     button.setAttribute('code', codeId)
     button.appendChild(createSvgIcon(svgId));
 
-    if(svgId === 'delete-icon')
+    if (svgId === 'delete-icon') {
         button.addEventListener('click', function() {
-                    deleteCode(codeId);
-                });
-    else if(svgId === 'edit-icon') {
+            deleteCode(codeId);
+        });
+    } else if (svgId === 'edit-icon') {
         button.setAttribute('formVisible', false)
         button.addEventListener('click', function() {
-                    showEditForm(codeId, button);
-                });
+            showEditForm(codeId, button);
+        });
     }
 
     wrapper.appendChild(button);
@@ -157,9 +157,9 @@ function deleteCode(codeId) {
 /*
     Event listener for adding a code
 */
-document.getElementById("add-code-button").addEventListener('click', function() {addCode(document.getElementById("code-id").value, document.getElementById("code-text").value)})
-
-
+document.getElementById("add-code-button").addEventListener('click', function() {
+    addCode(document.getElementById("code-id").value, document.getElementById("code-text").value)
+});
 
 /*
     Method to add a code to the database
@@ -183,6 +183,10 @@ function addCode(id, text) {
     .then(response => {
         if (response.ok) {
             return response.json();
+        } else if (response.status === 400) {
+            displayErrorPopUp("Feedback shortcut code already exists.", false);
+            timeout(2000);
+            console.log('Code already exists');
         } else {
             throw new Error('Failed to add code');
         }

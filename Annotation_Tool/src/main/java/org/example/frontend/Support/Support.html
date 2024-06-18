@@ -5,6 +5,7 @@
     <title>Support Page</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="Support.css">
     <link rel="stylesheet" href="FAQ.css">
@@ -13,6 +14,7 @@
 
     <link rel="stylesheet" href="../Global/Styles/Navbar.css">
     <link rel="stylesheet" href="../Global/Styles/Global.css">
+    <link rel="stylesheet" href="../Global/Styles/PopUp.css">
 </head>
 <body>
 <section>
@@ -148,7 +150,7 @@
 
                 <textarea class="contact-input text-field" placeholder="Message"></textarea>
 
-                <input class="contact-submit" type="submit" value="Send Message">
+                <input id="contactSubmit" class="contact-submit" type="submit" value="Send Message">
               </div>
             </div>
 
@@ -274,7 +276,7 @@
                   <textarea class="field-input text-field" placeholder="Enter your feedback"></textarea>
                 </div>
 
-                <input class="submit-button" type="submit" value="Submit">
+                <input id="feedbackSubmit" class="submit-button" type="submit" value="Submit">
               </div>
             </div>
           </div>
@@ -287,5 +289,7 @@
 
   <script src="Support.js"></script>
   <script src="../Global/Scripts/Global.js"></script>
+  <script src="../Global/Scripts/PopUp.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.all.min.js"></script>
 </body>
 </html>
