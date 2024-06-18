@@ -48,7 +48,7 @@
 
 .step-image-wrap {
     height: 100%;
-    wdith: 65%;
+    width: 65%;
     object-fit: contain;
     object-position: 50% 50%;
     overflow: hidden;
