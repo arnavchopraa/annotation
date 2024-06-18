@@ -87,8 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function communicate(formData) {
-    console.log("send?");
-
     var endpoint = "http://localhost:8080/admin/files";
     fetch(endpoint, {
         method: "POST",
@@ -98,12 +96,24 @@ function communicate(formData) {
         body: formData
     })
     .then(response => {
-        if(!response.ok) {
-            alert("Error encountered!")
+        if(response.ok) {
+            return {
+                success: true,
+                resp: response.text()
+            }
+        } else {
+            return response.text()
+        }
+    })
+    .then(data => {
+        if(data.success) {
+            displaySavedPopUp(data.resp)
+        } else {
+            throw new Error(data)
         }
     })
     .catch(error => {
-        displayErrorPopUp("An error occurred while uploading the files. Please try again later.", false);
+        displayErrorPopUp(error, false);
     })
 }
 
@@ -113,17 +123,19 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
     fetch(endpoint, {
         method: 'GET',
         headers: {
-            "Content-Type": "application/zip"
+            "Content-Type": "application/zip",
             'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
-        if(response.ok) {
+        if(response.status == 200) {
             displaySavedPopUp("All submissions have been downloaded successfully!")
             return response.blob()
         }
+        else if(response.status == 400)
+            throw new Error('Could not parse a PDF file correctly - Bulk download')
         else
-            throw new Error("Couldn't fetch file - bulk download")
+            throw new Error('Error occurred while creating zip file containing all submissions - Bulk download')
     })
     .then(bytes => {
         var blob = new Blob([bytes], {type: 'application/zip'})
@@ -137,7 +149,7 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
         a.remove()
         window.URL.revokeObjectURL(url)
     })
-    .catch(error => console.error(error))
+    .catch(error => displayErrorPopUp(error, false))
 })
 
 document.getElementById('deleteALL').addEventListener('click', function() {
@@ -168,12 +180,22 @@ document.getElementById('deleteALL').addEventListener('click', function() {
                 }
             })
             .then(response => {
-                if(response.ok)
-                    displaySavedPopUp("All submissions have been successfully deleted!")
+                if(response.status == 200) {
+                    return {
+                        success: true,
+                        resp: response.text()
+                    }
+                }
                 else
-                    throw new Error('Deleting failed')
+                    return response.text()
             })
-            .catch(error => console.error(error))
+            .then(message => {
+                if(message.success)
+                    displaySavedPopUp(message.resp)
+                else
+                    throw new Error(message)
+            })
+            .catch(error => displayErrorPopUp(error, false))
         }
     })
 });

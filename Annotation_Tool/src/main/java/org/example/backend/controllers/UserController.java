@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -61,10 +60,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
     /**
-     * This method returns a page detauls entity containing the username and the role
+     * This method returns a page details entity containing the username and the role
      * of the user that has been authenticated
      *
-     * @param authorizationHeader the authorization header, containg the token of the user
+     * @param authorizationHeader the authorization header, containing the token of the user
      * @return a page details entity containing the username and the role of the user
      */
     @GetMapping("/me")
@@ -86,7 +85,7 @@ public class UserController {
     public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
             user.setPassword(PasswordHashingService.hashPassword(user.getPassword()));
-        } catch (NoSuchAlgorithmException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         User user1 = service.addUser(user);
@@ -139,6 +138,10 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<User> updatePassword(@PathVariable String id, @RequestBody PasswordsRequest pass) {
 
+        if(id == null || pass == null || pass.getOldPassword() == null || pass.getNewPassword() == null
+            || pass.getOldPassword().equals("") || pass.getNewPassword().equals(""))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         String oldPassword = pass.getOldPassword();
         String newPassword = pass.getNewPassword();
 
@@ -150,13 +153,13 @@ public class UserController {
         try {
             if(!service.checkPassword(user, PasswordHashingService.hashPassword(oldPassword)))
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
             user.setPassword(PasswordHashingService.hashPassword(newPassword));
-        } catch (NoSuchAlgorithmException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
