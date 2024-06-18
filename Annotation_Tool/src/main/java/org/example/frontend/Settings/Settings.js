@@ -113,13 +113,14 @@ document.getElementById("savePassword").addEventListener('click', (e) => {
     })
 })
 
-document.getElementById("saveDetails").addEventListener('click', (e) => {
-    e.preventDefault();
 
-    // do backend logic here
-    // if (response.ok)
-    displaySavedPopUp("Your details have been saved successfully!");
-});
+//document.getElementById("saveDetails").addEventListener('click', (e) => {
+//    e.preventDefault();
+//
+//    // do backend logic here
+//    // if (response.ok)
+//    displaySavedPopUp("Your details have been saved successfully!");
+//});
 
 document.getElementById("deleteAccount").addEventListener('click', (e) => {
     e.preventDefault();
@@ -142,9 +143,23 @@ document.getElementById("deleteAccount").addEventListener('click', (e) => {
         buttonsStyling: false,
     }).then((result) => {
         if (result.isConfirmed) {
-            // do backend logic here
-            // if (response.ok)
-            window.location.href = "../Login/Login.html";
+            const endpoint = `http://localhost:8080/users/${sessionEmail}`
+
+                fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(response => {
+                    if(response.ok) {
+                        alert("The account was successfully deleted!")
+                        window.location.href = "../Login/Login.html";
+                    }
+                    else {
+                        alert("Failed to delete account!")
+                    }
+                })
         } else if(result.dismiss === Swal.DismissReason.cancel) {
             displayCancelPopUp("Your account has not been deleted.");
         }
