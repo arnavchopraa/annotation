@@ -165,14 +165,194 @@
 
 .bottom-icons {
     display: flex;
+    width: calc(100% + 20px);
+
+    justify-content: center;
     align-items: center;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    margin-bottom: 0px;
 }
 
 .bottom-icons .nav-link {
     margin-bottom: 0px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+
+    bottom: -50%;
+    right: 100%;
+
+    background-color: #000;
+    z-index: 1;
+
+    width: 450px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;
+    border-radius: 10px;
+}
+
+.dropdown-add {
+    margin-left: auto;
+
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-add:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-header {
+    margin-top: 10px;
+    padding-top: 10px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+    color: #fff;
+    text-align: center;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.add-details {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: flex-start;
+
+    width: 100%;
+
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-radius: 10px;
+}
+
+.add-header {
+    margin-top: auto;
+    margin-bottom: auto;
+
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+
+    color: #fff;
+}
+
+.add-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: calc(100% - 150px);
+
+    padding: 10px;
+    margin: 10px;
+
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+
+    background-color: #fff;
+}
+
+.add-input::placeholder {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a6a6a6;
+}
+
+.add-submission-button {
+    font-size: 14px;
+    font-weight: 700;
+
+    width: 90%;
+    background-color: #3e3e3e;
+    color: #f5f5f5;
+
+    border-radius: 10px;
+    border-color: #000;
+    border-style: solid;
+    border-width: 1px;
+
+    padding: 10px;
+    margin: 10px;
+    align-self: center;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    transition-property: background-color, color;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: ease, ease;
+}
+
+.add-submission-button:hover {
+    background-color: #f5f5f5;
+    color: #3e3e3e;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+
+    cursor: pointer;
+}
+
+.upload-input {
+    display: none;
+}
+
+.upload-label {
+    font-size: 14px;
+    color: #a6a6a6;
+
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+
+    padding: 10px;
+    margin-left: 0px;
+    border-radius: 10px;
+    width: 65%;
+}
+
+.upload-name {
+    margin-left: 10px;
+    width: 50%;
+}
+
+.upload-button {
+    background-color: #3e3e3e;
+    color: #f5f5f5;
+    padding: 10px;
+    width: auto;
+    margin-right: 0px;
+
+    font-weight: 700;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.upload-button:hover {
+    background-color: #f5f5f5;
+    color: #3e3e3e;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
 /* PDF Table */

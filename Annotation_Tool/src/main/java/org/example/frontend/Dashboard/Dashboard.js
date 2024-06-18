@@ -133,6 +133,25 @@ function displaySubmissions(submissions) {
     }
 }
 
+/**
+    Show the file name when a file is selected.
+*/
+document.addEventListener('DOMContentLoaded', () => {
+    const submissionInput = document.getElementById('newSubmissionInput');
+    const submissionName = document.getElementById('submissionName');
+
+    submissionInput.addEventListener('change', () => {
+        if (submissionInput.files.length > 0) {
+            displaySavedPopUp("Your file has been uploaded successfully!");
+            console.log("Submission uploaded!\n");
+
+            submissionName.textContent = submissionInput.files[0].name;
+        } else {
+            submissionName.textContent = 'No file chosen';
+        }
+    });
+});
+
 /*
     Listening to keyboard typing in the searchbar
 */

@@ -134,6 +134,7 @@ function fetchCodes() {
     })
     .then(codes => {
         allCodes = codes
+        var even = false;
 
         const codesContainer = document.getElementById('codes');
 
@@ -145,6 +146,11 @@ function fetchCodes() {
             const codeDescription = document.createElement('div');
             codeDescription.className = 'code-description';
             codeDescription.textContent = code.codeContent;
+
+            if (even == true) {
+                codeDescription.className = 'code-description even'
+            }
+            even = !even;
 
             codeButton.appendChild(codeDescription);
 

@@ -154,7 +154,7 @@ iframe {
 .code-description {
     display: none;
     position: fixed;
-    min-width: 100px;
+    min-width: 200px;
 
     background-color: #3e3e3e;
     color: #fff;
@@ -177,5 +177,12 @@ iframe {
     display: block;
     top: 100%;
     left: 0;
+    transform: translateY(10px);
+}
+
+.code:hover .code-description.even {
+    display: block;
+    top: 100%;
+    left: -100%;
     transform: translateY(10px);
 }

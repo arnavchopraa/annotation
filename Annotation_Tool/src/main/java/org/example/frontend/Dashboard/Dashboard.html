@@ -5,10 +5,12 @@
     <title>Dashboard</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="Dashboard.css">
     <link rel="stylesheet" type="text/css" href="../Global/Styles/Global.css">
     <link rel="stylesheet" type="text/css" href="../Global/Styles/Navbar.css">
+    <link rel="stylesheet" type="text/css" href="../Global/Styles/PopUp.css">
 </head>
 
 <!--will need to switch to React after all the HTML part is done-->
@@ -112,15 +114,38 @@
                                 </form>
                             </div>
 
-                            <!--Buttons next to the Search bar-->
-                            <div class="bottom-icons">
-                                <!--Upload Button-->
-                                <a href="#" class="nav-link">
-                                    <svg class="embed-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                                        <path d="M7 1h2v6h6v2h-6v6h-2v-6H1v-2h6V1z" fill="currentColor"/>
-                                    </svg>
-                                </a>
+                            <!--Add button next to the Search bar-->
+                            <div class="dropdown-add">
+                                <div class="bottom-icons">
+                                    <div class="nav-link">
+                                        <svg class="embed-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                            <path d="M7 1h2v6h6v2h-6v6h-2v-6H1v-2h6V1z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="dropdown-content">
+                                    <h2 class="dropdown-header">Add a New Submission</h2>
+
+                                    <div class="add-details">
+                                        <h3 class="add-header">Student ID</h3>
+                                        <input type="text" class="add-input" id="add-text" placeholder="Enter the student's email address">
+                                    </div>
+
+                                    <div class="add-details">
+                                        <h3 class="add-header">Submission</h3>
+                                        <input class="upload-input" type="file" id="newSubmissionInput" accept="application/pdf" required>
+
+                                        <label for="newSubmissionInput" class="upload-label">
+                                            <span class="upload-button">Choose File</span>
+                                            <span id="submissionName" class="upload-name">No file chosen</span>
+                                        </label>
+                                    </div>
+
+                                    <input type="submit" value="Add Submission" class="add-submission-button" id="add-submission-button">
+                                </div>
                             </div>
+
                         </div>
 
                         <div class="content-all-pdfs">
@@ -228,6 +253,8 @@
 
     <script src="Dashboard.js"></script>
     <script src="../Global/Scripts/Global.js"></script>
+    <script src="../Global/Scripts/PopUp.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.all.min.js"></script>
 </body>
 
 </html>
