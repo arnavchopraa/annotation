@@ -229,7 +229,7 @@ function showEditForm(codeId, button) {
         saveButton.className = 'save-button icon'
         saveButton.addEventListener('click', function() {
             editCode(codeId, textArea.value);
-            codeDescription.textContent = textArea.value; //update visualization
+            codeDescription.innerHTML = boldTitle(textArea.value); //update visualization
             codeWrapper.removeChild(editForm); //remove the form after saving
             button.setAttribute('formVisible', false) //make it possible to edit again
         });
