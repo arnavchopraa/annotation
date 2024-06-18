@@ -66,7 +66,7 @@ public class AdminController {
             File csv = FileUtils.convertToFile(csvFile);
             File xlsx = FileUtils.convertToFile(xlsxFile);
             importService.importData(zip, csv, xlsx);
-            return new ResponseEntity<>("Import successful", HttpStatus.OK);
+            return new ResponseEntity<>("Files imported successfully", HttpStatus.OK);
         } catch (ImportException | NoSubmissionException | FileException | SQLException | ZipException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -107,7 +107,11 @@ public class AdminController {
      */
     @DeleteMapping("/admin/deleteall")
     public ResponseEntity<String> deleteAllSubmissions() {
-        submissionService.deleteAll();
+        try {
+            submissionService.deleteAll();
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong while trying to delete all submissions", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<>("Submission database has been cleared!", HttpStatus.OK);
     }
 }

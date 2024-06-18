@@ -15,31 +15,23 @@ public class PasswordHashingService implements PasswordEncoder {
      *
      * @param password the password to be hashed
      * @return the hashed password
-     * @throws NoSuchAlgorithmException if the hashing algorithm is not found
+     * @throws RuntimeException if the hashing algorithm is not found
      */
-    public static String hashPassword(String password) throws NoSuchAlgorithmException {
+    public static String hashPassword(String password) {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmException("No such algorithm found");
+            throw new RuntimeException("No such algorithm found");
         }
         md.update(password.getBytes());
         byte[] digest = md.digest();
-        for(byte b : digest)
-            System.out.print((int) b + " ");
-        System.out.println();
-        System.out.println(Charset.defaultCharset());
         return new String(digest, Charset.forName("windows-1252"));
     }
 
     @Override
     public String encode(CharSequence rawPassword) {
-        try {
-            return hashPassword(rawPassword.toString());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        return hashPassword(rawPassword.toString());
     }
 
     @Override
