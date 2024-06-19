@@ -353,7 +353,7 @@ document.getElementById('exportButton').addEventListener('click', function() {
         var blob = new Blob([bytes], {type: 'application/pdf'})
         var a = document.createElement('a')
 
-        a.download = `${newFile.id} - ${newFile.fileName}.pdf`
+        a.download = `${newFile.id} - ${newFile.fileName}`
         a.style = 'display: none'
         let url = window.URL.createObjectURL(blob)
         a.href = url

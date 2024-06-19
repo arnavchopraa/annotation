@@ -39,6 +39,8 @@
 
 .step-row {
     display: flex;
+    justify-content: center;
+    align-items: center;
     padding-bottom: 280px;
 }
 
@@ -56,7 +58,7 @@
 
 .step-image {
     height: 350px;
-    width: min(600px, 90%);
+    width: min(700px, 90%);
 
     opacity: 0;
     transition: transform 0.5s ease-out, opacity 0.5s ease-out;

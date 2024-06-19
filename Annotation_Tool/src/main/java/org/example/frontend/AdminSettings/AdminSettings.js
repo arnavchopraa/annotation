@@ -107,7 +107,7 @@ function communicate(formData) {
     })
     .then(data => {
         if(data.success) {
-            displaySavedPopUp(data.resp)
+            displaySavedPopUp("Your course has been successfully configured!");
         } else {
             throw new Error(data)
         }
@@ -191,7 +191,7 @@ document.getElementById('deleteALL').addEventListener('click', function() {
             })
             .then(message => {
                 if(message.success)
-                    displaySavedPopUp(message.resp)
+                    displaySavedPopUp("Your files have been successfully deleted!")
                 else
                     throw new Error(message)
             })
