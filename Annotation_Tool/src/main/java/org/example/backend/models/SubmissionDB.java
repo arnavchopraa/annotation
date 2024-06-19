@@ -1,5 +1,6 @@
 package org.example.backend.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Set;
 
+@Schema(description = "Submission entity")
 @Entity
 @Setter
 @Getter
@@ -17,17 +19,25 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name="submissions")
 public class SubmissionDB {
+
+    @Schema(description = "ID of the submission, which represents the student's email", example = "student@tudelft.nl")
     @Id
     @Column(name="email")
     private String id;
 
+    @Schema(description = "File submitted by the student", example = "<file>")
     @Column(name="file_submission")
     @Lob
     private Blob fileSubmission;
 
+    @Schema(description = "Group name of the student", example = "Test Group")
     @Column(name="group_name")
     private String groupName;
 
+    @Schema(description = "Assigned coordinators", example = "[{\"email\": \"supervisor@tudelft.nl\"," +
+            "\"username\": \"supervisor1\"," +
+            "\"password\": \"superPass\"," +
+            "\"role\": \"supervisor\"}]")
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "coordinator_assignments",
@@ -35,15 +45,19 @@ public class SubmissionDB {
         inverseJoinColumns = @JoinColumn(name = "coordinator", referencedColumnName = "email"))
     Set<User> assignedCoordinators;
 
+    @Schema(description = "File name of the submission", example = "file.pdf")
     @Column(name="file_name")
     private String fileName;
 
+    @Schema(description = "Date of last submission by the coordinator", example = "Tue, 14 Jun 2024 16:50:02 GMT")
     @Column(name="last_submitted")
     private String lastSubmitted;
 
+    @Schema(description = "Date of last edit made by the coordinator", example = "Never")
     @Column(name="last_edited")
     private String lastEdited;
 
+    @Schema(description = "Flag that remembers whether the file is submitted", example = "true")
     @Column(name="is_submitted")
     private boolean isSubmitted;
 

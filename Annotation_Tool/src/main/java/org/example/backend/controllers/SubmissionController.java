@@ -1,5 +1,12 @@
 package org.example.backend.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.example.backend.models.SubmissionDTO;
 import org.example.backend.services.AnnotationCodeService;
 import org.example.backend.services.ExportService;
@@ -49,8 +56,18 @@ public class SubmissionController {
      *
      * @return a list of all the submissions in the database
      */
+    @Operation(summary = "Retrieve all submissions from the database",
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully retrieved all submissions",
+                        content = @Content(
+                                mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = SubmissionDTO.class))
+                        )
+                )
+            }
+    )
     @GetMapping("/")
-    @ResponseBody
     public ResponseEntity<List<SubmissionDTO>> getSubmissions() {
         return ResponseEntity.ok(service.getSubmissions().stream()
                 .map(x -> SubmissionDB.convertToBinary(x))
@@ -63,8 +80,22 @@ public class SubmissionController {
      * @param id the id of the submission
      * @return the submission with the given id
      */
+    @Operation(summary = "Retrieve a submission from the database",
+            parameters = {
+                @Parameter(name = "id", description = "ID of the submission to be retrieved", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully retrieved submission with specified id",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = SubmissionDTO.class)
+                        )
+                ),
+                @ApiResponse(responseCode = "404", description = "Could not find the specified submission in the database")
+            }
+    )
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<SubmissionDTO> getSubmission(@PathVariable("id") String id) {
         SubmissionDB sub = service.getSubmission(id);
         if (sub == null) {
@@ -79,8 +110,17 @@ public class SubmissionController {
      * @param id the id of the submission
      * @return a pdf of the submission with the given id
      */
+    @Operation(summary = "Download a submission's file from the database",
+            parameters = {
+                @Parameter(name = "id", description = "ID of the submission whose file should be downloaded", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Successfully passed the file's bytes"),
+                @ApiResponse(responseCode = "404", description = "Couldn't find the submission's file"),
+                @ApiResponse(responseCode = "500", description = "Couldn't retrieve the file bytes")
+            }
+    )
     @GetMapping("/export/{id}")
-    @ResponseBody
     public ResponseEntity<byte[]> downloadSubmission(@PathVariable("id") String id) {
         File pdfFile;
         try {
@@ -103,14 +143,32 @@ public class SubmissionController {
      * @param id the email of the coordinator
      * @return the submissions
      */
+    @Operation(summary = "Retrieve all submissions associated to a coordinator, as a list",
+            parameters = {
+                @Parameter(name = "id", description = "ID of the coordinator whose submissions should be retrieved", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully retrieved all submissions",
+                        content = @Content(
+                                mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = SubmissionDTO.class))
+                        )
+                ),
+                @ApiResponse(responseCode = "500", description = "Could not retrieve submissions from the database")
+            }
+    )
     @GetMapping("/coordinator/{id}")
-    @ResponseBody
     public ResponseEntity<List<SubmissionDTO>> getCoordinatorsSubmission(@PathVariable("id") String id) {
-        List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
-        List<SubmissionDTO> resp = sub.stream()
-            .map(SubmissionDB::convertToBinary)
-            .collect(Collectors.toList());
-        return ResponseEntity.ok(resp);
+        try {
+            List<SubmissionDB> sub = service.getCoordinatorsSubmissions(id);
+            List<SubmissionDTO> resp = sub.stream()
+                    .map(SubmissionDB::convertToBinary)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(resp);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -119,8 +177,26 @@ public class SubmissionController {
      * @param submissionDTO the submission to be added
      * @return the submission that was added
      */
+    @Operation(summary = "Add a submission to the database",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "The submission to be added to the database",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubmissionDTO.class)
+                    )
+            ),
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully saved submission",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = SubmissionDB.class)
+                        )
+                ),
+                @ApiResponse(responseCode = "400", description = "Could not add the submission to the database")
+            }
+    )
     @PostMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDTO submissionDTO) {
         SubmissionDB sub1 = service.addSubmission(SubmissionDB.convertToBlob(submissionDTO));
         if (sub1 == null) {
@@ -136,8 +212,29 @@ public class SubmissionController {
      * @param submissionDTO the submission to be updated
      * @return the submission that was updated
      */
+    @Operation(summary = "Update a submission in the database",
+            parameters = {
+                @Parameter(name = "id", description = "ID of the submission to be updated", required = true, in = ParameterIn.PATH)
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "New submission details to be saved",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubmissionDTO.class)
+                    )
+            ),
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully updated a submission",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = SubmissionDTO.class)
+                        )
+                ),
+                @ApiResponse(responseCode = "400", description = "Submission could not be updated")
+            }
+    )
     @PutMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<SubmissionDTO> updateSubmission(@PathVariable("id") String id, @RequestBody SubmissionDTO submissionDTO) {
         // TODO: check if id is same in both
 
@@ -155,8 +252,19 @@ public class SubmissionController {
      * @param id the id of the submission to be deleted
      * @return the submission that was deleted
      */
+    @Operation(summary = "Delete a submission from the database",
+            parameters = {
+                @Parameter(name = "id", description = "ID of the submission who should be deleted", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully deleted submission",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = SubmissionDB.class))
+                ),
+                @ApiResponse(responseCode = "404", description = "Could not find the submission to be deleted")
+            }
+    )
     @DeleteMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<SubmissionDB> deleteSubmission(@PathVariable String id) {
         SubmissionDB deleted = service.deleteSubmission(id);
         if (deleted == null) {
@@ -172,8 +280,22 @@ public class SubmissionController {
      * @param coordinator The coordinator which the submissions must have
      * @return A list of submission which match this
      */
+    @Operation(summary = "Search for submissions given some text",
+            parameters = {
+                @Parameter(name = "text", description = "Text to be searched in the submissions", required = true, in = ParameterIn.PATH),
+                @Parameter(name = "coordinator", description = "Coordinator whose submissions must belong to", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                @ApiResponse(responseCode = "200",
+                        description = "Successfully retrieved submissions which match the given text",
+                        content = @Content(
+                                mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = SubmissionDTO.class))
+                        )
+                )
+            }
+    )
     @GetMapping("/search/{text}/{coordinator}")
-    @ResponseBody
     public ResponseEntity<List<SubmissionDTO>> searchSubmission(@PathVariable String text, @PathVariable String coordinator) {
         List<SubmissionDB> results = service.searchSubmissions(text, coordinator);
         List<SubmissionDTO> resp = results.stream()
@@ -186,6 +308,8 @@ public class SubmissionController {
      * This method returns all the documents that have been submitted sorted by the last submitted date
      * @param id the email of the coordinator
      * @return the submissions sorted by the last submitted date
+     *
+     * ??? - IS THIS UNUSED? if yes, please comment in the MR so I can delete this.
      */
     @GetMapping("/{id}/submitted")
     public ResponseEntity<List<SubmissionDTO>> getSubmittedSortedByLastSubmitted(@PathVariable("id") String id) {

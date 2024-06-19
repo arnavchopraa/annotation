@@ -2,6 +2,7 @@ package org.example.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,23 +11,36 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
+@Schema(description = "User entity")
 @Entity
 @Table(name="coordinators")
 public class User implements UserDetails{
+
+    @Schema(description = "ID of the user, which also represents his email", example = "supervisor@tudelft.nl")
     @Id
     @Column(name="email")
     private String id;
 
+    @Schema(description = "Username for the user", example = "supervisor1")
     @Column(name="username")
     private String name;
 
+    @Schema(description = "Password of the user", example = "superPass")
     @Column(name="password")
     private String password;
 
     // supervisor / student / admin
+    @Schema(description = "Role of the user, dictates its access permissions", example = "supervisor")
     @Column(name="role")
     private String role;
 
+    @Schema(description = "Associated submissions", example = "[{\"email\": \"student@tudelft.nl\"," +
+            "\"file_submission\": \"<file>\"," +
+            "\"group_name\": \"Test Group\"," +
+            "\"file_name\": \"test.pdf\"," +
+            "\"last_submitted\": \"Never\"," +
+            "\"last_edited\": \"Never\"," +
+            "\"is_submitted\": \"false\"}]")
     @ManyToMany(mappedBy = "assignedCoordinators", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<SubmissionDB> correspondingSubmissions;
 
