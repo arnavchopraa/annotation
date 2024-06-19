@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 });
 
+/**
+    * Method that handles the user downloading all submitted files
+*/
 document.getElementById('downloadSubmitted').addEventListener('click', function () {
     var endpoint = `http://localhost:8080/frontend/allsubmissions/${sessionEmail}`
     fetch(endpoint, {
@@ -64,6 +67,9 @@ document.getElementById('downloadSubmitted').addEventListener('click', function 
     .catch(error => console.error(error))
 })
 
+/**
+    * Method that handles a user changing their password.
+*/
 document.getElementById("savePassword").addEventListener('click', (e) => {
     e.preventDefault()
 
@@ -95,32 +101,31 @@ document.getElementById("savePassword").addEventListener('click', (e) => {
         })
     }).then(response => {
         if(response.ok) {
-            displaySavedPopUp("Your password has been changed successfully!");
-            console.log("Successfully changed password")
-
             document.getElementById("oldPassword").value = ""
             document.getElementById("newPassword").value = ""
             document.getElementById("newPasswordConfirmation").value = ""
+            return {
+                success: true,
+                resp: "Your password has been updated!"
+            }
+        } else if(response.status == 400) {
+            return "Fields cannot be empty. In case they are not empty, something went wrong while processing the request."
         } else if (response.status === 403) {
-            displayErrorPopUp("Incorrect old password.", false);
-
-            console.log("Incorrect old password.");
+            return "Incorrect old password! Please try again"
         } else if (response.status === 404) {
-            console.log("User not found.");
+            return "User not found"
         } else {
-            console.log("An error occurred with the hashing service");
+            return "An error occurred when attempting to hash the new password"
         }
     })
+    .then(message => {
+        if(message.success)
+            displaySavedPopUp(message.resp)
+        else
+            throw new Error(message)
+    })
+    .catch(error => displayErrorPopUp(error, false))
 })
-
-
-//document.getElementById("saveDetails").addEventListener('click', (e) => {
-//    e.preventDefault();
-//
-//    // do backend logic here
-//    // if (response.ok)
-//    displaySavedPopUp("Your details have been saved successfully!");
-//});
 
 document.getElementById("deleteAccount").addEventListener('click', (e) => {
     e.preventDefault();
@@ -153,11 +158,11 @@ document.getElementById("deleteAccount").addEventListener('click', (e) => {
                     }
                 }).then(response => {
                     if(response.ok) {
-                        alert("The account was successfully deleted!")
+                        displaySavedPopUp("Your account has been successfully deleted!");
                         window.location.href = "../Login/Login.html";
                     }
                     else {
-                        alert("Failed to delete account!")
+                        displayErrorPopUp("Failed to delete account!", false)
                     }
                 })
         } else if(result.dismiss === Swal.DismissReason.cancel) {

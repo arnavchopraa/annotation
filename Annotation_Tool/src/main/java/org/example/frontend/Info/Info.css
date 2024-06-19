@@ -39,6 +39,8 @@
 
 .step-row {
     display: flex;
+    justify-content: center;
+    align-items: center;
     padding-bottom: 280px;
 }
 
@@ -47,16 +49,16 @@
 }
 
 .step-image-wrap {
-    width: auto;
     height: 100%;
+    width: 50%;
     object-fit: contain;
     object-position: 50% 50%;
     overflow: hidden;
 }
 
 .step-image {
-    height: 300px;
-    width: 460px;
+    height: 350px;
+    width: min(700px, 90%);
 
     opacity: 0;
     transition: transform 0.5s ease-out, opacity 0.5s ease-out;
@@ -64,10 +66,12 @@
 
 .step-image.left {
    transform: translateX(-5%);
+   margin-right: auto;
 }
 
 .step-image.right {
     transform: translateX(5%);
+    margin-left: auto;
 }
 
 .step-image.in-view {

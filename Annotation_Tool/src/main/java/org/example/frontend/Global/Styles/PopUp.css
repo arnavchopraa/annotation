@@ -1,30 +1,34 @@
-* {
-    font-family: 'Inter-Tight', sans-serif;
-    color: #000;
-    font-size: 15px;
-    line-height: 1.2;
-    font-weight: 500;
-    letter-spacing: 0.025em;
-}
-
 .popup-container {
     background-color: #f0f0f0 !important;
     border-radius: 10px !important;
 }
 
 .popup-title {
+    font-family: 'Inter-Tight', sans-serif;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+
     color: #000 !important;
     font-size: 25px !important;
     font-weight: 600 !important;
 }
 
 .popup-saved-title {
+    font-family: 'Inter-Tight', sans-serif;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+
     color: #3e3e3e !important;
     font-size: 18px !important;
     text-align: center !important;
 }
 
 .popup-confirm-button {
+    font-family: 'Inter-Tight', sans-serif;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+
     background-color: #000 !important;
     color: #fff !important;
 
@@ -51,6 +55,10 @@
 }
 
 .popup-confirm-delete-button {
+    font-family: 'Inter-Tight', sans-serif;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+
     background-color: #588157 !important;
     color: #fff !important;
 
@@ -77,6 +85,10 @@
 }
 
 .popup-cancel-button {
+    font-family: 'Inter-Tight', sans-serif;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+
     background-color: #bd3233 !important;
     color: #fff !important;
     border-width: 0px !important;

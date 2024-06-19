@@ -22,11 +22,20 @@ function handleFormSubmission(event) {
         // Check if the response is successful (status code 200)
         if (response.ok) {
             // Parse the JSON response
-            return response.text()
+            return {
+                success: true,
+                resp: response.text()
+            }
         } else {
             // If the response is not successful, throw an error
-            throw new Error('Invalid login credentials. Please try again.');
+            return response.text()
         }
+    })
+    .then(message => {
+        if(message.success)
+            return message.resp
+        else
+            throw new Error(message)
     })
         .then(x => {
             localStorage.setItem('token', x)
@@ -45,14 +54,9 @@ function handleFormSubmission(event) {
                     window.location.href = "../Dashboard/Dashboard.html"
                 }
             })
-           /** if(x === 'student') {
-                window.location.href = "../Student/Student.html";
-            } else {
-                window.location.href = "../Dashboard/Dashboard.html";
-            }*/
         })
     .catch(error => {
         // If there is an error with the request, display an error message
-        alert(error.message);
+        displayErrorPopUp("Something went wrong. Try again.", false);
     });
 }
