@@ -50,7 +50,7 @@
 
 .step-image-wrap {
     height: 100%;
-    width: 65%;
+    width: 50%;
     object-fit: contain;
     object-position: 50% 50%;
     overflow: hidden;
@@ -66,10 +66,12 @@
 
 .step-image.left {
    transform: translateX(-5%);
+   margin-right: auto;
 }
 
 .step-image.right {
     transform: translateX(5%);
+    margin-left: auto;
 }
 
 .step-image.in-view {
