@@ -196,6 +196,8 @@ document.getElementById('deleteALL').addEventListener('click', function() {
                     throw new Error(message)
             })
             .catch(error => displayErrorPopUp(error, false))
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            displayCancelPopUp("Your submissions are safe!");
         }
     })
 });
