@@ -29,6 +29,33 @@ public class ExportService {
     }
 
     /**
+     * Method that retrieves a submission from the database, and returns it as a File
+     * @param id ID of the submission to retrieve
+     * @return the submission as a PDF
+     * @throws IOException if the file could not be opened
+     * @throws SQLException if there is an error with processing blobs
+     */
+    public File getSubmission(String id) throws IOException, SQLException {
+        SubmissionDB submission = submissionService.getSubmission(id);
+        Blob fileSubmission = submission.getFileSubmission();
+        if(fileSubmission == null)
+            return null;
+        byte[] content = fileSubmission.getBytes(1,(int) fileSubmission.length());
+
+        String fileName = submission.getFileName();
+        if(fileName.lastIndexOf(".") == -1)
+            fileName = fileName + ".pdf";
+        fileName = submission.getId() + " - " + fileName;
+
+        File file = new File(System.getProperty("java.io.tmpdir") + "/" + fileName);
+        OutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(content);
+        outputStream.close();
+
+        return file;
+    }
+
+    /**
      * Method that allows mass download of all files, allocated to a coordinator, into a zip file
      *
      * @param coordinator coordinator for which to download associated submissions
@@ -39,23 +66,29 @@ public class ExportService {
     public File getAllSubmissionsByCoordinator(String coordinator) throws IOException, SQLException {
         List<SubmissionDB> files = submissionService.getCoordinatorsSubmissions(coordinator);
         File file = new File(System.getProperty("java.io.tmpdir") + "/" + "download.zip");
+
         OutputStream outputStream = new FileOutputStream(file);
         ZipOutputStream zos = new ZipOutputStream(outputStream);
+
         for(SubmissionDB submission : files) {
             Blob b = submission.getFileSubmission();
             byte[] content = b.getBytes(1,(int) b.length());
+
             String fileName = submission.getFileName();
             if(fileName.lastIndexOf(".") == -1)
                 fileName = fileName + ".pdf";
             fileName = submission.getId() + " - " + fileName;
+
             try {
                 zos.putNextEntry(new ZipEntry(fileName));
                 zos.write(content, 0, content.length);
             } catch (FileNotFoundException e) {
                 throw new IOException(e);
             }
+
             zos.closeEntry();
         }
+
         zos.close();
         outputStream.close();
         return file;
@@ -72,8 +105,10 @@ public class ExportService {
     public File getAllSubmissionsParsed() throws IOException, SQLException, PDFException {
         List<SubmissionDB> submissions = submissionService.getSubmissions();
         File file = new File(System.getProperty("java.io.tmpdir") + "/download.zip");
+
         OutputStream outputStream = new FileOutputStream(file);
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+
         for(SubmissionDB submission : submissions) {
             Blob fileSubmission = submission.getFileSubmission();
             if(fileSubmission == null)
@@ -84,6 +119,7 @@ public class ExportService {
             OutputStream textOutputStream = new FileOutputStream(textFile);
             textOutputStream.write(submissionBytes);
             textOutputStream.close();
+
             PairUtils result;
             try {
                 result = parsingService.parsePDF(textFile);
@@ -95,10 +131,12 @@ public class ExportService {
                 + "\n----------Captions----------\n\n" + result.getCaptions();
             String fileName = result.removeFileExtension(submission.getFileName());
             fileName = submission.getId() + " - " + fileName + ".txt";
+
             zipOutputStream.putNextEntry(new ZipEntry(fileName));
             zipOutputStream.write(content.getBytes(), 0, content.getBytes().length);
             zipOutputStream.closeEntry();
         }
+
         zipOutputStream.close();
         outputStream.close();
 

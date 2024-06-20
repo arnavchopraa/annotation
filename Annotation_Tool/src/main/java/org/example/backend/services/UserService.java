@@ -1,7 +1,6 @@
 package org.example.backend.services;
 
 import org.example.backend.models.User;
-import org.example.backend.requestModels.LoginRequest;
 import org.example.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,49 +95,6 @@ public class UserService implements UserDetailsService {
         }
         repo.deleteById(id);
         return deleted;
-    }
-
-    /**
-     * Method for registering a new user
-     *
-     * @param loginRequest a login request entity, that contains the username and the password
-     */
-    public void registerUser(LoginRequest loginRequest) {
-        if (loginRequest == null) {
-            return;
-        }
-        if (repo.findById(loginRequest.getUsername()).isPresent()) {
-            return;
-        }
-        // TODO - must change role
-        repo.save(new User(loginRequest.getUsername(), loginRequest.getPassword(), "supervisor"));
-    }
-
-    /**
-     * Method for authenticating a user
-     *
-     * @param loginRequest a login request entity, that contains the username and the password
-     * @return true if the user is authenticated, false otherwise
-     */
-    public boolean authenticateUser(LoginRequest loginRequest) throws NoSuchAlgorithmException {
-        // System.out.println(loginRequest.getUsername());
-        User user = repo.findById(loginRequest.getUsername()).orElse(null);
-        System.out.println(user.getPassword());
-        System.out.println(PasswordHashingService.hashPassword(loginRequest.getPassword()));
-        if (user == null) {
-            return false;
-        }
-        // debug pass strings
-        /*
-        for(int i = 0;i < user.getPassword().length();i++)
-            System.out.print((int) user.getPassword().charAt(i) + " ");
-        System.out.println();
-        String hashedpass = PasswordHashingService.hashPassword(loginRequest.getPassword());
-        for(int i = 0;i < hashedpass.length();i++)
-            System.out.print((int) hashedpass.charAt(i) + " ");
-        System.out.println();*/
-
-        return user.getPassword().equals(PasswordHashingService.hashPassword(loginRequest.getPassword()));
     }
 
     /**

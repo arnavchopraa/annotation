@@ -26,10 +26,10 @@ function loadFile() {
             sessionFile = sub;
 
             if(sub.submitted === true) {
-                state.innerText = 'The file has been reviewed.'
+                state.innerText = 'Your submission has been reviewed.'
                 adobePreview(sub)
             } else {
-                state.innerText = 'The file has not been reviewed.'
+                state.innerText = 'Your submission has not been reviewed.'
             }
         }
 

@@ -150,6 +150,8 @@
 
 .step-row {
     display: flex;
+    justify-content: center;
+    align-items: center;
     padding-bottom: 100px;
 }
 
@@ -158,7 +160,7 @@
 }
 
 .step-image-wrap {
-    width: auto;
+    width: 50%;
     height: 100%;
     object-fit: contain;
     object-position: 50% 50%;
@@ -166,19 +168,29 @@
 }
 
 .step-image {
-    height: 300px;
-    width: 460px;
+    height: 350px;
+    width: min(580px, 90%);
 
     opacity: 0;
     transition: transform 0.5s ease-out, opacity 0.5s ease-out;
 }
 
+.step-image.last {
+    width: min(650px, 90%);
+}
+
+.step-image.wide {
+    width: 100%;
+}
+
 .step-image.left {
    transform: translateX(-5%);
+   margin-right: auto;
 }
 
 .step-image.right {
     transform: translateX(5%);
+    margin-left: auto;
 }
 
 .step-image.in-view {
