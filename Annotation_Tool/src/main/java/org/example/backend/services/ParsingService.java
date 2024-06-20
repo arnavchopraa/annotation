@@ -28,6 +28,8 @@ public class ParsingService {
 
     private AnnotationCodeService annotationCodeService;
 
+    private String removedCaptions = "";
+
     /**
      * This method creates a new instance of the ParsingService class
      *
@@ -101,6 +103,10 @@ public class ParsingService {
                 List<PDFObject> images = pdu.getImages();
                 List<Line> lines = mergeLines(pdu.getLines());
                 List<PDFObject> tables = processLines(lines, pageIndex);
+                if (frontX.isEmpty())
+                    frontX.add(0.0f);
+                if (endX.isEmpty())
+                    endX.add(page.getMediaBox().getWidth());
                 List<List<Float>> clustersFrontX = KMeans.clusterCoordinates(frontX);
                 List<List<Float>> clustersEndX = KMeans.clusterCoordinates(endX);
                 float oneColStart = Collections.min(clustersFrontX.get(0));
@@ -122,7 +128,7 @@ public class ParsingService {
 
             text = removeReferences(text, document);
 
-            return new PairUtils(text, annotations, file.getName());
+            return new PairUtils(text, annotations, file.getName(), removedCaptions);
 
         } catch (IOException e) {
             throw new PDFException(file.getName());
@@ -170,7 +176,7 @@ public class ParsingService {
                 while ((line = reader.readLine()) != null) {
                     modifiedText += line;
                 }
-                return new PairUtils(modifiedText, annotations, file.getName());
+                return new PairUtils(modifiedText, annotations, file.getName(), removedCaptions);
             } catch (IOException e) {
                 throw new PDFException(file.getName());
             }
@@ -666,7 +672,6 @@ public class ParsingService {
 
         float xStart = table.getTopLeftX();
         float yStart = table.getTopLeftY();
-        float widthMargin = 1f;
 
         PDRectangle pageSize = page.getMediaBox();
         yStart = pageSize.getHeight() - yStart;
@@ -727,7 +732,8 @@ public class ParsingService {
                 text = text.replace(lines[i], "");
                 i++;
             }
-            System.out.println("Removed: " + removedText);
+            removedCaptions += removedText;
+            //System.out.println("Removed: " + removedText);
         }
         //System.out.println(stripperByArea.getTextForRegion("table"));
         return text;

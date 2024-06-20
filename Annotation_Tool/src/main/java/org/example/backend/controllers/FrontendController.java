@@ -58,9 +58,9 @@ public class FrontendController {
             PairUtils result = parsingService.parsePDF(aPDFFile);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid", ""), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (PDFException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid", ""), HttpStatus.BAD_REQUEST);
         }
     }
 

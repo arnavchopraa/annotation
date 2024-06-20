@@ -25,7 +25,12 @@ public class KMeans {
                 cluster2.add(coordinate);
             }
         }
-
+        if (cluster1.isEmpty()) {
+            cluster1.add(centroid1);
+        }
+        if (cluster2.isEmpty()) {
+            cluster2.add(centroid2);
+        }
         return Arrays.asList(cluster1, cluster2);
     }
 }

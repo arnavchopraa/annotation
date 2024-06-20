@@ -113,7 +113,8 @@ document.getElementById('downloadTXT').addEventListener('click', function() {
     fetch(endpoint, {
         method: 'GET',
         headers: {
-            "Content-Type": "application/zip"
+            "Content-Type": "application/zip",
+            "Authorization": `Bearer ${token}`
         }
     })
     .then(response => {
@@ -160,18 +161,19 @@ document.getElementById('deleteALL').addEventListener('click', function() {
         if (result.isConfirmed) {
             var endpoint = "http://localhost:8080/admin/deleteall"
 
-        fetch(endpoint, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if(response.ok)
-                alert('All submissions have been deleted!')
-            else
-                throw new Error('Deleting failed')
-        })
-        .catch(error => console.error(error))
-    }
+            fetch(endpoint, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (response.ok)
+                        alert('All submissions have been deleted!')
+                    else
+                        throw new Error('Deleting failed')
+                })
+                .catch(error => console.error(error))
+        }
+    })
 })
