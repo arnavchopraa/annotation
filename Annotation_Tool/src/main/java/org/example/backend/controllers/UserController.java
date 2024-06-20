@@ -47,15 +47,15 @@ public class UserController {
      * @return a list of all the users in the database
      */
     @Operation(summary = "Get all users from the database",
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully retrieved all users",
-                        content = @Content(
-                                mediaType = "application/json",
-                                array = @ArraySchema(schema = @Schema(implementation = User.class))
-                        )
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved all users",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = User.class))
+                    )
                 )
-            }
+        }
     )
     @GetMapping("/")
     public ResponseEntity<List<User>> getUsers() {
@@ -70,19 +70,19 @@ public class UserController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "Get a user from the database",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the user to be retrieved", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully retrieved user",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = User.class)
-                        )
+        parameters = {
+            @Parameter(name = "id", description = "ID of the user to be retrieved", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved user",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    )
                 ),
-                @ApiResponse(responseCode = "404", description = "Could not find the specified user")
-            }
+            @ApiResponse(responseCode = "404", description = "Could not find the specified user")
+        }
     )
     public ResponseEntity<User> getUser(@PathVariable("id") String id) {
         User user = service.getUser(id);
@@ -111,7 +111,7 @@ public class UserController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = PageDetails.class)
                     )
-            )
+                )
         }
     )
     @GetMapping("/me")
@@ -129,24 +129,24 @@ public class UserController {
      * @return the user that was added
      */
     @Operation(summary = "Add a user to the database",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "User to be added to the database",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "User to be added to the database",
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = User.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully added a new user",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = User.class)
                     )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully added a new user",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = User.class)
-                        )
                 ),
-                @ApiResponse(responseCode = "400", description = "User could not be saved"),
-                @ApiResponse(responseCode = "500", description = "Password hashing failed")
-            }
+            @ApiResponse(responseCode = "400", description = "User could not be saved"),
+            @ApiResponse(responseCode = "500", description = "Password hashing failed")
+        }
     )
     @PostMapping("/")
     public ResponseEntity<User> addUser(@RequestBody User user) {
@@ -187,19 +187,19 @@ public class UserController {
      * @return the user that was deleted
      */
     @Operation(summary = "Delete a user from the database",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the user to be deleted", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully deleted the user",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = User.class)
-                        )
+        parameters = {
+            @Parameter(name = "id", description = "ID of the user to be deleted", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully deleted the user",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    )
                 ),
-                @ApiResponse(responseCode = "404", description = "User was not found")
-            }
+            @ApiResponse(responseCode = "404", description = "User was not found")
+        }
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable String id) {
@@ -217,29 +217,29 @@ public class UserController {
      * @return the new updated user
      */
     @Operation(summary = "Update a user's password",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the user whose password should be updated", required = true, in = ParameterIn.PATH)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Password request object",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the user whose password should be updated", required = true, in = ParameterIn.PATH)
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Password request object",
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = PasswordsRequest.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Password updated successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PasswordsRequest.class)
+                            schema = @Schema(implementation = User.class)
                     )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Password updated successfully",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = User.class)
-                        )
                 ),
-                @ApiResponse(responseCode = "400", description = "Some password field is empty"),
-                @ApiResponse(responseCode = "403", description = "Old password does not match"),
-                @ApiResponse(responseCode = "404", description = "User was not found in the database"),
-                @ApiResponse(responseCode = "500", description = "Password hashing failed")
-            }
+            @ApiResponse(responseCode = "400", description = "Some password field is empty"),
+            @ApiResponse(responseCode = "403", description = "Old password does not match"),
+            @ApiResponse(responseCode = "404", description = "User was not found in the database"),
+            @ApiResponse(responseCode = "500", description = "Password hashing failed")
+        }
     )
     @PutMapping("/updatePassword/{id}")
     public ResponseEntity<User> updatePassword(@PathVariable String id, @RequestBody PasswordsRequest pass) {

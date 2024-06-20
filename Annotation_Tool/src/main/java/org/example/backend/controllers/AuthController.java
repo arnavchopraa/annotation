@@ -47,16 +47,16 @@ public class AuthController {
      * @return A response entity with the user's role if the user is authenticated
      */
     @Operation(summary = "Login a user to its account",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                content = @Content(
-                        mediaType = "application/json",
-                        schema = @Schema(implementation = LoginRequest.class)
-                )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
-                @ApiResponse(responseCode = "400", description = "Request body is malformed, or combination is incorrect"),
-            }
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = LoginRequest.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
+            @ApiResponse(responseCode = "400", description = "Request body is malformed, or combination is incorrect"),
+        }
     )
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.backend.models.AnnotationCode;
 import org.example.backend.services.AnnotationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class AnnotationCodeController {
                 content = @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = AnnotationCode.class))
                 )
-            )
+                )
         })
     @GetMapping("/")
     public ResponseEntity<List<AnnotationCode>> getAnnotationCodes() {
@@ -84,23 +83,23 @@ public class AnnotationCodeController {
      * @return the annotation code that was added
      */
     @Operation(summary = "Add an annotation code to the database",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "The annotation code to be added",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "The annotation code to be added",
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = AnnotationCode.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully added a new annotation code to the database",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AnnotationCode.class)
                     )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully added a new annotation code to the database",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = AnnotationCode.class)
-                        )
                 ),
-                @ApiResponse(responseCode = "400", description = "Couldn't add the annotation code")
-            }
+            @ApiResponse(responseCode = "400", description = "Couldn't add the annotation code")
+        }
     )
     @PostMapping("/")
     public ResponseEntity<AnnotationCode> addAnnotationCode(@RequestBody AnnotationCode annotationCode) {
@@ -119,26 +118,26 @@ public class AnnotationCodeController {
      * @return the annotation code that was updated
      */
     @Operation(summary = "Update an existing annotation code from the database",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the annotation code to be retrieved", required = true, in = ParameterIn.PATH)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "The updated annotation code",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the annotation code to be retrieved", required = true, in = ParameterIn.PATH)
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "The updated annotation code",
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = AnnotationCode.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully updated annotation code",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AnnotationCode.class)
                     )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully updated annotation code",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = AnnotationCode.class)
-                        )
                 ),
-                @ApiResponse(responseCode = "400", description = "Couldn't update the annotation code")
-            }
+            @ApiResponse(responseCode = "400", description = "Couldn't update the annotation code")
+        }
     )
     @PutMapping("/{id}")
     public ResponseEntity<AnnotationCode> updateAnnotationCode(@PathVariable("id") String id, @RequestBody AnnotationCode annotationCode) {
@@ -157,19 +156,19 @@ public class AnnotationCodeController {
      * @return the annotation code that was deleted
      */
     @Operation(summary = "Delete an annotation code from the database",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the annotation code to be deleted", required = true)
-            },
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully deleted the annotation code",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = AnnotationCode.class)
-                        )
+        parameters = {
+            @Parameter(name = "id", description = "ID of the annotation code to be deleted", required = true)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully deleted the annotation code",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AnnotationCode.class)
+                    )
                 ),
-                @ApiResponse(responseCode = "404", description = "Couldn't delete the annotation code.")
-            }
+            @ApiResponse(responseCode = "404", description = "Couldn't delete the annotation code.")
+        }
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<AnnotationCode> deleteAnnotationCode(@PathVariable("id") String id) {

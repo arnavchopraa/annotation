@@ -35,9 +35,9 @@ public class SubmissionDB {
     private String groupName;
 
     @Schema(description = "Assigned coordinators", example = "[{\"email\": \"supervisor@tudelft.nl\"," +
-            "\"username\": \"supervisor1\"," +
-            "\"password\": \"superPass\"," +
-            "\"role\": \"supervisor\"}]")
+        "\"username\": \"supervisor1\"," +
+        "\"password\": \"superPass\"," +
+        "\"role\": \"supervisor\"}]")
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "coordinator_assignments",

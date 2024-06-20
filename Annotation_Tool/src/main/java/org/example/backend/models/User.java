@@ -35,12 +35,12 @@ public class User implements UserDetails{
     private String role;
 
     @Schema(description = "Associated submissions", example = "[{\"email\": \"student@tudelft.nl\"," +
-            "\"file_submission\": \"<file>\"," +
-            "\"group_name\": \"Test Group\"," +
-            "\"file_name\": \"test.pdf\"," +
-            "\"last_submitted\": \"Never\"," +
-            "\"last_edited\": \"Never\"," +
-            "\"is_submitted\": \"false\"}]")
+        "\"file_submission\": \"<file>\"," +
+        "\"group_name\": \"Test Group\"," +
+        "\"file_name\": \"test.pdf\"," +
+        "\"last_submitted\": \"Never\"," +
+        "\"last_edited\": \"Never\"," +
+        "\"is_submitted\": \"false\"}]")
     @ManyToMany(mappedBy = "assignedCoordinators", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<SubmissionDB> correspondingSubmissions;
 

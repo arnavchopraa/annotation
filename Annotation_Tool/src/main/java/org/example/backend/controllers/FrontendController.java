@@ -3,7 +3,6 @@ package org.example.backend.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.example.backend.exceptions.PDFException;
 import org.example.backend.models.AnnotationCode;
@@ -87,14 +86,15 @@ public class FrontendController {
      *         404 NOT FOUND - if there was a problem upon creating the zip file.
      */
     @Operation(summary = "Export all pdf files assigned to a coordinator, compressed into a zip file",
-            parameters = {
-                @Parameter(name = "id", description = "Coordinator's email, whose assigned files should be retrieved", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                @ApiResponse(responseCode = "200", description = "Successfully exported all files"),
-                @ApiResponse(responseCode = "404", description = "Could not find the zip file"),
-                @ApiResponse(responseCode = "500", description = "Could not retrieve all submissions")
-            }
+        parameters = {
+            @Parameter(name = "id", description = "Coordinator's email, whose assigned files should be retrieved",
+                    required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully exported all files"),
+            @ApiResponse(responseCode = "404", description = "Could not find the zip file"),
+            @ApiResponse(responseCode = "500", description = "Could not retrieve all submissions")
+        }
     )
     @GetMapping("/frontend/allsubmissions/{id}")
     public ResponseEntity<byte[]> exportAllFiles(@PathVariable("id") String id) {
