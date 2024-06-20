@@ -168,26 +168,9 @@ public class UserController {
      *
      * @param user the user to be updated
      * @return the user that was updated
+     *
+     * This is wrong again. No path parameter is specified. I will not be including this in the API spec.
      */
-    @Operation(summary = "Update a user",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "New User details",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)
-                    )
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "Successfully updated the user",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = User.class)
-                            )
-                    ),
-                    @ApiResponse(responseCode = "400", description = "User could not be saved")
-            }
-    )
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User user1 = service.updateUser(user);

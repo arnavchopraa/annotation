@@ -1,0 +1,699 @@
+openapi: '3.0.2'
+info:
+  title: "Annotation tool"
+  description: "The YAML API specification of the Annotation Tool, developed as part of the Software Project course."
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:8080
+    description: Local server
+
+tags:
+  - name: Admin
+    description: Operations that can only be performed by admins
+  - name: Supervisor
+    description: Operations that can only be performed by supervisors
+  - name: User
+    description: Operations that can be performed by all users
+  - name: Annotation Codes
+    description: Operations performed on AnnotationCode entities
+  - name: Submissions
+    description: Operations performed on Submission entities
+  - name: Users
+    description: Operations performed on User entities
+
+paths:
+  /admin/files:
+    post:
+      summary: Upload and import files
+      description: Uploads a zip file, a CSV file, and an XLSX file and imports their data.
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                zipFile:
+                  type: string
+                  format: binary
+                  description: The zip file containing assignment submission
+                csvFile:
+                  type: string
+                  format: binary
+                  description: The CSV file containing the students list
+                xlsxFile:
+                  type: string
+                  format: binary
+                  description: The XLSX file containing project-professors associations
+              required:
+                - zipFile
+                - csvFile
+                - xlsxFile
+      responses:
+        '200':
+          description: Files imported successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Files imported successfully
+        '400':
+          description: Malformed request body or import error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Request body is malformed
+  /admin/bulkdownload:
+    get:
+      summary: Download all parsed submissions
+      description: Downloads all parsed submissions as a zip file.
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Zip file containing all parsed submissions
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request - Error while parsing a PDF file
+        '500':
+          description: Internal server error - Error while creating the zip file
+  /admin/deleteall:
+    delete:
+      summary: Delete all submissions
+      description: Deletes all submissions stored in the database.
+      tags:
+        - Submissions
+        - Admin
+      responses:
+        '200':
+          description: Submissions deleted successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Submission database has been cleared!
+        '500':
+          description: Could not delete submissions
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Something went wrong while trying to delete all submissions
+  /annotations:
+    get:
+      summary: Get all codes
+      description: Retrieves all annotation codes stored in the database.
+      tags:
+        - Annotation Codes
+        - Admin
+      responses:
+        '200':
+          description: Annotation codes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnnotationCode"
+    post:
+      summary: Add a new code
+      description: Adds a new annotation code to the database
+      tags:
+        - Annotation Codes
+        - Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnotationCode"
+      responses:
+        '200':
+          description: Annotation code added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnotationCode"
+        '400':
+          description: Could not save annotation code
+  /annotations/{id}:
+    get:
+      summary: Get a code
+      description: Retrieves an annotation code with the specified id
+      tags:
+        - Annotation Codes
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the annotation code to be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "WD1"
+      responses:
+        '200':
+          description: Annotation code retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnotationCode"
+        '404':
+          description: Code not found
+    put:
+      summary: Update a code
+      description: Updates an annotation code with the specified id
+      tags:
+        - Annotation Codes
+        - Admin
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the annotation code to be updated"
+          required: true
+          schema:
+            type: string
+            example: "WD1"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnotationCode"
+      responses:
+        '200':
+          description: Annotation code updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnotationCode"
+        '400':
+          description: Could not update the annotation code
+    delete:
+      summary: Delete a code
+      description: Deletes an annotation code with the specified id
+      tags:
+        - Annotation Codes
+        - Admin
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the annotation code to be updated"
+          required: true
+          schema:
+            type: string
+            example: "WD1"
+      responses:
+        '200':
+          description: Annotation code deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnnotationCode"
+        '404':
+          description: Could not find the code to be deleted
+  /login:
+    post:
+      summary: Log in
+      description: Given a username-password combination, logs the user in
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "supervisor@tudelft.nl"
+                password:
+                  type: string
+                  example: "superPass"
+      responses:
+        '200':
+          description: "User authenticated successfully"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "User token"
+        '400':
+          description: "Wrong data format retrieved, or combination is incorrect"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Username and password combination are incorrect. Please try again."
+  /frontend/allsubmissions/{id}:
+    get:
+      summary: Download assigned submissions
+      description: Download all assigned submissions of one coordinator in a zip file
+      tags:
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the coordinator whose assigned files should be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully exported all files"
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: "Could not find the zip file in temp storage"
+        '500':
+          description: "Could not retrieve all submissions"
+  /submissions:
+    get:
+      summary: Get all submissions
+      description: Retrieve all submissions stored in the database
+      tags:
+        - Submissions
+      responses:
+        '200':
+          description: "Successfully retrieved all submissions"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubmissionDTO"
+  /submissions/{id}:
+    get:
+      summary: Get a submission
+      description: Retrieve a submission from the database
+      tags:
+        - Submissions
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the submission to be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved submission"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionDTO"
+        '404':
+          description: "Could not find the specified submission in the database"
+    put:
+      summary: Update submission
+      description: Update a submission in the database
+      tags:
+        - Submissions
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the submission to be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmissionDTO"
+      responses:
+        '200':
+          description: "Successfully updated submission"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionDTO"
+        '400':
+          description: "Could not update submission"
+    delete:
+      summary: Delete submission
+      description: Delete a submission from the database
+      tags:
+        - Submissions
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the submission to be deleted"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully deleted submission"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionDB"
+        '404':
+          description: "Could not find submission"
+  /submissions/export/{id}:
+    get:
+      summary: Download a submission
+      description: Download a submission with the specified id
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the submission to be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved submission"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: "Could not find the specified submission in the database"
+        '500':
+          description: "Could not convert submission to byte array"
+  /submissions/coordinator/{id}:
+    get:
+      summary: Retrieve coordinator's submissions
+      description: Retrieve all submissions associated to the coordinator with the specified id
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the coordinator"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved submissions"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubmissionDTO"
+        '500':
+          description: "Could not retrieve all submissions"
+  /submissions/search/{text}/{coordinator}:
+    get:
+      summary: Search submissions
+      description: Search for all submissions that contain a piece of text and are assigned to some coordinator
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "text"
+          description: "Text that the submission's email must contain"
+          required: true
+          schema:
+            type: string
+            example: "stud"
+        - in: path
+          name: "coordinator"
+          description: "ID of the coordinator who is responsible for the submission"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved submissions"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubmissionDTO"
+  /users:
+    get:
+      summary: Get all users
+      description: Retrieve all users from the database
+      tags:
+        - Users
+      responses:
+        '200':
+          description: "Successfully retrieved users"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      summary: Add a user
+      description: Add a user to the database
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: "Successfully added the new user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: "Could not save user"
+        '500':
+          description: "Could not hash user's password"
+  /users/{id}:
+    get:
+      summary: Get user
+      description: Retrieve a user from the database
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the user to be retrieved"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '404':
+          description: "Could not find the specified user"
+    delete:
+      summary: Delete user
+      description: Delete a user from the database
+      tags:
+        - Users
+        - User
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the user to be deleted"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully deleted user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '404':
+          description: "Could not find user"
+  /users/me:
+    get:
+      summary: Get page details
+      description: Retrieve the page details of an authenticated user, and his permissions
+      tags:
+        - Users
+      responses:
+        '200':
+          description: "Successfully retrieved page details"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: "supervisor@tudelft.nl"
+                  role:
+                    type: string
+                    example: "supervisor"
+  /users/updatePassword/{id}:
+    put:
+      summary: Update password
+      description: Updates the specified user's password, in hashed form.
+      tags:
+        - Users
+        - User
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the user whose password should be updated"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully updated user's password"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: "Some field is empty"
+        '403':
+          description: "Old password does not match"
+        '404':
+          description: "User not found"
+        '500':
+          description: "Password hashing failed"
+      
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "supervisor@tudelft.nl"
+        name:
+          type: string
+          example: "Supervisor One"
+        password:
+          type: string
+          example: "superPass"
+        role:
+          type: string
+          example: "supervisor"
+        correspondingSubmissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubmissionDB"
+    SubmissionDB:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "student@tudelft.nl"
+        file_submission:
+          type: string
+          format: binary
+        group_name:
+          type: string
+          example: "test group"
+        assignedCoordinators:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        file_name:
+          type: string
+          example: "submission.pdf"
+        last_submitted:
+          type: string
+          example: "Tue, 10 Jan 2007 16:42:00 GMT"
+        last_edited:
+          type: string
+          example: "Wed, 10 Mar 2006 08:12:22 GMT"
+        is_submitted:
+          type: boolean
+          example: true
+        is_locked:
+          type: boolean
+          example: false
+    AnnotationCode:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "ID of the annotation code"
+          example: "WD1"
+        code_content:
+          type: string
+          description: "Content of the annotation code"
+          example: "Spelling mistake. Please check your spelling."
+  
+  #Request Bodies
+    SubmissionDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "student@tudelft.nl"
+        file_submission:
+          type: string
+          format: byte
+        group_name:
+          type: string
+          example: "test group"
+        assignedCoordinators:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        file_name:
+          type: string
+          example: "submission.pdf"
+        last_submitted:
+          type: string
+          example: "Tue, 10 Jan 2007 16:42:00 GMT"
+        last_edited:
+          type: string
+          example: "Wed, 10 Mar 2006 08:12:22 GMT"
+        is_submitted:
+          type: boolean
+          example: true
+        is_locked:
+          type: boolean
+          example: false
+    PasswordsRequest:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          example: "oldPass"
+        newPassword:
+          type: string
+          example: "newPass"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

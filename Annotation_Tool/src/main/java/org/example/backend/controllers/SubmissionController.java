@@ -176,26 +176,9 @@ public class SubmissionController {
      *
      * @param submissionDTO the submission to be added
      * @return the submission that was added
+     *
+     * This is just wrong. Maybe you wanted the path without {id}? I will not be including this in the API specification.
      */
-    @Operation(summary = "Add a submission to the database",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "The submission to be added to the database",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = SubmissionDTO.class)
-                    )
-            ),
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully saved submission",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = SubmissionDB.class)
-                        )
-                ),
-                @ApiResponse(responseCode = "400", description = "Could not add the submission to the database")
-            }
-    )
     @PostMapping("/{id}")
     public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDTO submissionDTO) {
         SubmissionDB sub1 = service.addSubmission(SubmissionDB.convertToBlob(submissionDTO));

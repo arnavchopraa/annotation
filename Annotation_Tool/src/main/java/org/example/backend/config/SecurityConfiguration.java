@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/auth/login").permitAll();
                     registry.requestMatchers("/frontend/codes").permitAll();
-                    registry.requestMatchers("/swagger-ui/**").permitAll();
+                    registry.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     registry.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
