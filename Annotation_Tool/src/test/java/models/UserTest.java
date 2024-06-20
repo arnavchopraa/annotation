@@ -43,4 +43,48 @@ class UserTest {
         user.setRole("supervisor");
         assertEquals("supervisor", user.getRole());
     }
+
+    @Test
+    void allArgsContructor() {
+        User user = new User("email@email.com", "username", "password123", "supervisor");
+        PasswordHashingService passwordHashingService = new PasswordHashingService();
+        String newPass = null;
+        try {
+            newPass = passwordHashingService.hashPassword("password123");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("email@email.com", user.getId());
+        assertEquals("username", user.getName());
+        assertEquals(newPass, user.getPassword());
+        assertEquals("supervisor", user.getRole());
+    }
+
+    @Test
+    void noArgsContructor() {
+        User user = new User();
+        assertNull(user.getName());
+        assertNull(user.getPassword());
+        assertNull(user.getRole());
+    }
+
+    @Test
+    void idGetterAndSetter() {
+        User user = new User();
+        user.setId("username");
+        assertEquals("username", user.getId());
+    }
+
+    @Test
+    void toStringTest() {
+        User user = new User("username", "password123", "supervisor");
+        PasswordHashingService passwordHashingService = new PasswordHashingService();
+        String newPass = null;
+        try {
+            newPass = passwordHashingService.hashPassword("password123");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals("User(id=null, name=username, password=" + newPass + ", role=supervisor)", user.toString());
+    }
 }
