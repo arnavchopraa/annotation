@@ -30,6 +30,7 @@ public class ParsingService {
 
     private String removedCaptions = "";
 
+    private Map<String, Boolean> captionsMap = new HashMap<>();
     /**
      * This method creates a new instance of the ParsingService class
      *
@@ -127,8 +128,10 @@ public class ParsingService {
             }
 
             text = removeReferences(text, document);
-
-            return new PairUtils(text, annotations, file.getName(), removedCaptions);
+            return new PairUtils(text, annotations, file.getName(),
+                    captionsMap.keySet().stream()
+                    .sorted(Comparator.naturalOrder())
+                    .collect(Collectors.joining("")));
 
         } catch (IOException e) {
             throw new PDFException(file.getName());
@@ -732,6 +735,7 @@ public class ParsingService {
                 text = text.replace(lines[i], "");
                 i++;
             }
+            captionsMap.put(removedText, true);
             removedCaptions += removedText;
             //System.out.println("Removed: " + removedText);
         }

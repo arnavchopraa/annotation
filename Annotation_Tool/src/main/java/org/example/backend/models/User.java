@@ -62,11 +62,7 @@ public class User implements UserDetails{
 
     @Override
     public String toString() {
-        return "User@" + Integer.toHexString(hashCode()) +
-                ":[email=" + id +
-                ",name=" + name +
-                ",password=" + password +
-                ",role=" + role + "]";
+        return "User(id=" + id + ", name=" + name + ", password=" + password + ", role=" + role + ")";
     }
 
     /**

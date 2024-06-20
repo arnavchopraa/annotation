@@ -49,14 +49,10 @@ class UserTest {
         User user = new User("email@email.com", "username", "password123", "supervisor");
         PasswordHashingService passwordHashingService = new PasswordHashingService();
         String newPass = null;
-        try {
-            newPass = passwordHashingService.hashPassword("password123");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        newPass = passwordHashingService.hashPassword("password123");
         assertEquals("email@email.com", user.getId());
         assertEquals("username", user.getName());
-        assertEquals(newPass, user.getPassword());
+        assertEquals("password123", user.getPassword());
         assertEquals("supervisor", user.getRole());
     }
 
@@ -80,11 +76,7 @@ class UserTest {
         User user = new User("username", "password123", "supervisor");
         PasswordHashingService passwordHashingService = new PasswordHashingService();
         String newPass = null;
-        try {
-            newPass = passwordHashingService.hashPassword("password123");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals("User(id=null, name=username, password=" + newPass + ", role=supervisor)", user.toString());
+        newPass = passwordHashingService.hashPassword("password123");
+        assertEquals("User(id=null, name=username, password=password123" + ", role=supervisor)", user.toString());
     }
 }
