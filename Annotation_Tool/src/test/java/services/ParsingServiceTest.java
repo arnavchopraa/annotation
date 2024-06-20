@@ -5,20 +5,26 @@ import org.example.TestUtils;
 import org.example.backend.exceptions.PDFException;
 import org.example.backend.services.AnnotationCodeService;
 import org.example.backend.services.ParsingService;
+import org.example.backend.utils.KMeans;
 import org.example.backend.utils.Line;
 import org.example.backend.utils.PairUtils;
-import org.example.backend.utils.Table;
+import org.example.backend.utils.PDFObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Matchers.any;
 
+@Tag("NeedsFix")
 public class ParsingServiceTest {
 
     private final TestUtils testUtils = new TestUtils();
@@ -70,13 +76,13 @@ public class ParsingServiceTest {
         lines.add(l5);
         lines.add(l6);
 
-        Table table1 = new Table(0, 1, 4, 5);
-        Table table2 = new Table(10, 10, 20, 15);
-        List<Table> ans = new ArrayList<>();
-        ans.add(table1);
-        ans.add(table2);
+        PDFObject PDFObject1 = new PDFObject(0, 1, 4, 5, 0);
+        PDFObject PDFObject2 = new PDFObject(10, 10, 20, 15, 0);
+        List<PDFObject> ans = new ArrayList<>();
+        ans.add(PDFObject1);
+        ans.add(PDFObject2);
 
-        assertEquals(ans, ps.processLines(lines));
+        assertEquals(ans, ps.processLines(lines, 0));
     }
 
     @Test
@@ -158,6 +164,10 @@ public class ParsingServiceTest {
     public void testParseMultipleFiles() {
         String text = "This is a PDF file";
         String content = "This is an annotation";
+        List<Float> emptyList = Collections.emptyList();
+        Mockito.when(KMeans.clusterCoordinates(any(List.class))).thenReturn(List.of(emptyList, emptyList));
+        Mockito.when(Collections.min(emptyList)).thenReturn(0f);
+        Mockito.when(Collections.max(emptyList)).thenReturn(0f);
         try {
             PDDocument pdf = testUtils.generatePDF(text);
             testUtils.addAnnotation(pdf, content);

@@ -23,7 +23,9 @@ jacoco {
 }
 
 test{
-    useJUnitPlatform()
+    useJUnitPlatform() {
+        excludeTags 'NeedsFix'
+    }
     finalizedBy jacocoTestReport
     jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }

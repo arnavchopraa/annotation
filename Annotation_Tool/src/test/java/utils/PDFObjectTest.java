@@ -1,28 +1,29 @@
 package utils;
 
 import org.example.backend.utils.Line;
-import org.example.backend.utils.Table;
+import org.example.backend.utils.PDFObject;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class TableTest {
+public class PDFObjectTest {
 
     @Test
-    void combineTableTest() {
-        Table t = new Table(0, 0, 0, 0);
+    void combinePDFObjectTest() {
+        PDFObject t = new PDFObject(0, 0, 0, 0, 0);
         Line l = new Line(-1, -1, 2, 2);
 
         t.combineTable(l);
 
-        Table ans = new Table(-1, -1, 2, 2);
+        PDFObject ans = new PDFObject(-1, -1, 2, 2, 0);
 
         assertEquals(ans, t);
     }
 
     @Test
     void toStringTest() {
-        Table t = new Table(0, 0, 0, 0);
+        PDFObject t = new PDFObject(0, 0, 0, 0, 0);
         assertEquals("Top Left: (0.0, 0.0) Bottom right: (0.0, 0.0)", t.toString());
     }
 }

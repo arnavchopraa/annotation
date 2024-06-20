@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ParsingService {
@@ -36,6 +39,7 @@ public class ParsingService {
 
     /**
      * Parses a pdf file including text and annotations
+     *
      * @param file the file that needs to be parsed
      * @return the parsed text
      * @throws PDFException if the file is not of type pdf
@@ -45,18 +49,32 @@ public class ParsingService {
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
-            // this gets rid of the references
-            //CaptionExtractionService.imageCoordinates(file);
-            // what about abstract??
-            text = removeAbstract(text);
-            // still need to separate references and appendices
-            // remove bad hyphenation of the text (EOL)
             text = preprocess(text);
+            text = removeAbstract(text);
+
             String annotations = "";
-            for(PDPage page : document.getPages()) {
+            int pageIndex = 0;
+            for (PDPage page : document.getPages()) {
+                // Calculate column coordinates for the current page
+                List<CoordPairs> map = parseWordCoordinates(document, page);
+                TriplePair pair = averageDistance(map);
+
+                List<Float> frontX = pair.getFrontX();
+                List<Float> endX = pair.getEndX();
+
+                List<Map.Entry<Float, Long>> frontXList = frontX.stream()
+                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                    .entrySet().stream()
+                    .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
+                    .toList();
+                List<Map.Entry<Float, Long>> endXList = endX.stream()
+                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                    .entrySet().stream()
+                    .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
+                    .toList();
                 List<PDAnnotation> annotationList = page.getAnnotations();
-                for(PDAnnotation a : annotationList) {
-                    if(a.getSubtype().equals("Highlight")) {
+                for (PDAnnotation a : annotationList) {
+                    if (a.getSubtype().equals("Highlight")) {
                         //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
@@ -71,19 +89,35 @@ public class ParsingService {
                             annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
                                     + preprocess(a.getContents()) + "\n";
                         }
-                    }
-                    else if(a.getSubtype().equals("Text")) {
+                    } else if (a.getSubtype().equals("Text")) {
                         if (!annotations.equals(""))
                             annotations = annotations + "\n";
                         annotations = annotations + a.getContents() + "\n";
                     }
                 }
 
-                PageDrawerUtils pdu = new PageDrawerUtils(page);
+                PageDrawerUtils pdu = new PageDrawerUtils(page, pageIndex);
                 pdu.processPage(page);
+                List<PDFObject> images = pdu.getImages();
                 List<Line> lines = mergeLines(pdu.getLines());
-                List<Table> tables = processLines(lines);
-                text = removeTables(text, tables, page);
+                List<PDFObject> tables = processLines(lines, pageIndex);
+                List<List<Float>> clustersFrontX = KMeans.clusterCoordinates(frontX);
+                List<List<Float>> clustersEndX = KMeans.clusterCoordinates(endX);
+                float oneColStart = Collections.min(clustersFrontX.get(0));
+                float twoColStart = Collections.min(clustersFrontX.get(1));
+                float oneColEnd = Collections.max(clustersEndX.get(0));
+                float twoColEnd = Collections.max(clustersEndX.get(1));
+                float columnThreshold = 50.0f;
+                boolean isTwoColumns = (twoColStart - oneColStart) > columnThreshold;
+
+                //text = removeTextUnderTable(tables, document, oneColStart, oneColEnd, twoColStart, twoColEnd, text);
+                text = removeTables(text, tables, page, oneColStart, twoColStart, oneColEnd, twoColEnd, isTwoColumns);
+                for (PDFObject t : images) {
+                    text = removeTextUnderObject(t, page, oneColStart, oneColEnd, twoColStart, twoColEnd, text, isTwoColumns);
+                }
+                // Identify images and remove their captions
+
+                pageIndex++;
             }
 
             text = removeReferences(text, document);
@@ -94,6 +128,7 @@ public class ParsingService {
             throw new PDFException(file.getName());
         }
     }
+
 
     /**
      * Parses a pdf file including text and annotations and applyes the NER model
@@ -110,7 +145,7 @@ public class ParsingService {
             String text = pdfStripper.getText(document);
 
             String annotations = "";
-            for(PDPage page : document.getPages()) {
+            for (PDPage page : document.getPages()) {
                 List<PDAnnotation> annotationList = page.getAnnotations();
                 for (PDAnnotation a : annotationList) {
                     if (a.getSubtype().equals("Highlight")) {
@@ -146,13 +181,14 @@ public class ParsingService {
 
     /**
      * Recursively parses all pdfs in a given folder
+     *
      * @param file the folder from which to parse the files
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
      */
     public List<PairUtils> parseFilesFromFolder(File file) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             for (File f : Objects.requireNonNull(file.listFiles())) {
                 if (f.isDirectory())
                     parsed.addAll(parseFilesFromFolder(f));
@@ -168,6 +204,7 @@ public class ParsingService {
 
     /**
      * Parses all given pdfs
+     *
      * @param files the files to parse
      * @return the list of parsed texts from each file in the folder
      * @throws PDFException if one of the files is not of type pdf
@@ -175,10 +212,10 @@ public class ParsingService {
     public List<PairUtils> parseFilesList(File... files) throws PDFException, IOException {
         List<PairUtils> parsed = new LinkedList<>();
 
-        for(File f : files) {
-            if(f.isDirectory())
+        for (File f : files) {
+            if (f.isDirectory())
                 parsed.addAll(parseFilesFromFolder(f));
-            else if(f.isFile())
+            else if (f.isFile())
                 parsed.add(parsePDF(f));
         }
 
@@ -187,7 +224,8 @@ public class ParsingService {
 
     /**
      * Retrieves the highlighted text from an annotation
-     * @param a the annotation from which to retrieve the highlighted text
+     *
+     * @param a    the annotation from which to retrieve the highlighted text
      * @param page the page on which the annotation is situated
      * @return the highlighted text
      * @throws IOException if the text can't be read
@@ -199,15 +237,15 @@ public class ParsingService {
         String annot = "";
 
         int rectangle = 0;
-        while(rectangle < quads.size()) {
+        while (rectangle < quads.size()) {
 
             //getting the coordinates of the rectangle
             COSNumber ulx = (COSNumber) quads.get(rectangle);       //upper left x coordinate
-            COSNumber uly = (COSNumber) quads.get(1+rectangle);       //upper left y coordinate
-            COSNumber urx = (COSNumber) quads.get(2+rectangle);       //upper right x coordinate
-            COSNumber ury = (COSNumber) quads.get(3+rectangle);       //upper right y coordinate
-            COSNumber llx = (COSNumber) quads.get(4+rectangle);       //lower left x coordinate
-            COSNumber lly = (COSNumber) quads.get(5+rectangle);       //lower left y coordinate
+            COSNumber uly = (COSNumber) quads.get(1 + rectangle);       //upper left y coordinate
+            COSNumber urx = (COSNumber) quads.get(2 + rectangle);       //upper right x coordinate
+            COSNumber ury = (COSNumber) quads.get(3 + rectangle);       //upper right y coordinate
+            COSNumber llx = (COSNumber) quads.get(4 + rectangle);       //lower left x coordinate
+            COSNumber lly = (COSNumber) quads.get(5 + rectangle);       //lower left y coordinate
 
             float xStart = ulx.floatValue() - 1;                    //x coordinate at the top left of the rectangle
             float yStart = uly.floatValue();                        //y coordinate at the top left of the rectangle
@@ -240,20 +278,20 @@ public class ParsingService {
     public String preprocess(String text) {
         int i = 0;
         StringBuilder sb = new StringBuilder();
-        while(i < text.length()) {
+        while (i < text.length()) {
             try {
-                if(text.charAt(i) == '-' && text.charAt(i - 1) != ' ') {
-                    if(text.charAt(i + 1) == '\r' && text.charAt(i + 2) == '\n') {
+                if (text.charAt(i) == '-' && text.charAt(i - 1) != ' ') {
+                    if (text.charAt(i + 1) == '\r' && text.charAt(i + 2) == '\n') {
                         // skip over the indices containing EOL characters
                         i += 3;
-                        while(text.charAt(i) != ' ') {
+                        while (text.charAt(i) != ' ') {
                             // check if the next characters are EOL such that to not search next space
-                            if(text.charAt(i) == '\r') {
-                                i ++;
+                            if (text.charAt(i) == '\r') {
+                                i++;
                                 break;
                             }
                             sb.append(text.charAt(i));
-                            i ++;
+                            i++;
                         }
                         // after the word is finished add EOL
                         sb.append("\r\n");
@@ -267,7 +305,7 @@ public class ParsingService {
                 else {
                     sb.append(text.charAt(i));
                 }
-                i ++;
+                i++;
             }
             // if the hyphen goes past the last character of the file
             catch (IndexOutOfBoundsException e) {
@@ -286,57 +324,57 @@ public class ParsingService {
     public String removeAbstract(String text) {
         int index = text.indexOf("Abstract\r\n");
         // skip over the Abstract\r\n characters (Abstract\r\n is 10 characters)
-        if(index != -1)
+        if (index != -1)
             return text.substring(index + 10);
         return text;
     }
 
     /**
      * Given a list of lines, separates tables
+     *
      * @param lines list of identified lines
+     * @param pageIndex the index of the page
      * @return list of identified table coordinates
      */
-    public List<Table> processLines(List<Line> lines) {
+    public List<PDFObject> processLines(List<Line> lines, int pageIndex) {
         List<Line> horizontalLines = new ArrayList<>();
         List<Line> verticalLines = new ArrayList<>();
-        List<Table> tables = new ArrayList<>();
+        List<PDFObject> tables = new ArrayList<>();
         Map<Line, Integer> correspondingTable = new HashMap<>();
 
-        for(Line l : lines) {           //splitting vertical and horizontal lines
-            if(l.isVertical())
+        for (Line l : lines) {           //splitting vertical and horizontal lines
+            if (l.isVertical())
                 verticalLines.add(l);
             else
                 horizontalLines.add(l);
         }
 
-        for(Line horizontal : horizontalLines) {
-            Table table = new Table(horizontal.getStartX(), horizontal.getStartY(), horizontal.getEndX(), horizontal.getEndY());
+        for (Line horizontal : horizontalLines) {
+            PDFObject table = new PDFObject(horizontal.getStartX(), horizontal.getStartY(), horizontal.getEndX(), horizontal.getEndY(), pageIndex);
             List<Line> addedLines = new ArrayList<>();
             int pos = -1;
 
-            for(Line vertical : verticalLines) {
-                if(horizontal.intersectsWith(vertical)) {
-                    if(correspondingTable.containsKey(vertical)) {
+            for (Line vertical : verticalLines) {
+                if (horizontal.intersectsWith(vertical)) {
+                    if (correspondingTable.containsKey(vertical)) {
                         pos = correspondingTable.get(vertical);
                         table = tables.get(pos);
 
                         table.combineTable(horizontal);         //what if we need to combine 2 tables?
-                    }
-                    else {
+                    } else {
                         table.combineTable(vertical);
                         addedLines.add(vertical);
                     }
                 }
             }
 
-            if(pos == -1) {
+            if (pos == -1) {
                 tables.add(table);
-                for(Line l : addedLines) {
+                for (Line l : addedLines) {
                     correspondingTable.put(l, tables.size() - 1);
                 }
-            }
-            else {
-                for(Line l : addedLines) {
+            } else {
+                for (Line l : addedLines) {
                     correspondingTable.put(l, pos);
                 }
             }
@@ -346,6 +384,7 @@ public class ParsingService {
 
     /**
      * Given a list of Lines, merge lines that are close to each other
+     *
      * @param lines list of lines extracted
      * @return list of lines after executing the merges
      */
@@ -354,13 +393,13 @@ public class ParsingService {
 
         Collections.sort(lines);
         boolean changes = true;
-        while(changes) {
+        while (changes) {
             changes = false;
-            for(int i = 0;i < lines.size();i++) {
+            for (int i = 0; i < lines.size(); i++) {
                 Line current = lines.get(i);
-                for(int j = i + 1;j < lines.size();j++) {
+                for (int j = i + 1; j < lines.size(); j++) {
                     Line other = lines.get(j);
-                    if(current.mergeWith(other, error)) {
+                    if (current.mergeWith(other, error)) {
                         changes = true;
                         lines.remove(j);
                     }
@@ -372,20 +411,28 @@ public class ParsingService {
 
     /**
      * Remove the text present in the given tables from the specified text
-     * @param text Text to remove from
+     *
+     * @param text   Text to remove from
      * @param tables Tables which contain the text that needs to be removed
-     * @param page Page in which the tables are located
+     * @param page   Page in which the tables are located
+     * @param colOneStart X coordinate of the start of the first column
+     * @param colOneEnd X coordinate of the end of the first column
+     * @param colTwoStart X coordinate of the start of the second column
+     * @param colTwoEnd X coordinate of the end of the second column
+     * @param isTwoColumn boolean value that tells us if the document has two columns
      * @return The initial text without the text in the tables
      * @throws IOException if the text can't be read
      */
-    public String removeTables(String text, List<Table> tables, PDPage page) throws IOException {
+    public String removeTables(String text, List<PDFObject> tables, PDPage page, float colOneStart, float colOneEnd,
+        float colTwoStart, float colTwoEnd, boolean isTwoColumn) throws IOException {
+
         PDFTextStripperByArea stripperByArea = new PDFTextStripperByArea();
-        for(Table t : tables) {
+        for (PDFObject t : tables) {
             float xStart = t.getTopLeftX();
             float yStart = t.getBottomRightY();
             float width = t.getBottomRightX() - xStart;
             float height = t.getBottomRightY() - t.getTopLeftY();
-
+            text = removeTextUnderObject(t, page, colOneStart, colOneEnd, colTwoStart, colTwoEnd, text, isTwoColumn);
             PDRectangle pageSize = page.getMediaBox();
             yStart = pageSize.getHeight() - yStart;
 
@@ -400,9 +447,11 @@ public class ParsingService {
         return text;
     }
 
+
     /**
      * Removes the references in the document from the given text
-     * @param text Text that needs references removed
+     *
+     * @param text     Text that needs references removed
      * @param document Document which we are parsing
      * @return Updated text with references removed
      * @throws IOException When parsing the document fails
@@ -414,15 +463,15 @@ public class ParsingService {
 
         String lastLine = findLastLineFromReferences(ptsu.getAllLines());
 
-        if(lastLine == null)
+        if (lastLine == null)
             return text;
 
         String[] cut1 = text.split("\r\nReferences\r\n");
 
-        if(cut1.length == 1)
+        if (cut1.length == 1)
             cut1 = text.split("\r\nreferences\r\n");
 
-        if(cut1.length == 1)
+        if (cut1.length == 1)
             return text;
 
         String[] cut2 = cut1[1].split(lastLine);
@@ -434,6 +483,7 @@ public class ParsingService {
 
     /**
      * Finds the text from the last line in the references subsection
+     *
      * @param allLines All lines contained in the document
      * @return Text from the last line in the references
      */
@@ -458,34 +508,34 @@ public class ParsingService {
         float height = 0;
 
 
-        while(lineNumber < allLines.size() && !found) {
+        while (lineNumber < allLines.size() && !found) {
             List<List<TextPosition>> line = allLines.get(lineNumber);
 
-            if(line.size() > 1) {                             //if it's more than 1 word it can't be references
+            if (line.size() > 1) {                             //if it's more than 1 word it can't be references
                 lineNumber++;
                 continue;
             }
 
             List<TextPosition> word = line.get(0);
 
-            if(word.size() != referencesUnicode.size()) {   //if the word is not of the same size it can't be references
+            if (word.size() != referencesUnicode.size()) {   //if the word is not of the same size it can't be references
                 lineNumber++;
                 continue;
             }
 
             //if it doesn't start with r/R it can't be references
             //we check the first letter manually in case it is not capitalised
-            if(!Objects.equals(word.get(0).toString(), "r") && !Objects.equals(word.get(0).toString(), "R")) {
+            if (!Objects.equals(word.get(0).toString(), "r") && !Objects.equals(word.get(0).toString(), "R")) {
                 lineNumber++;
                 continue;
             }
 
             int i = 1;
 
-            while(i < word.size() && Objects.equals(word.get(i).toString(), referencesUnicode.get(i)))
+            while (i < word.size() && Objects.equals(word.get(i).toString(), referencesUnicode.get(i)))
                 i++;
 
-            if(i == word.size()) {                               //if we reached the end it's the same word
+            if (i == word.size()) {                               //if we reached the end it's the same word
                 found = true;
                 font = word.get(0).getFont().getName();
                 height = word.get(0).getHeightDir();
@@ -495,7 +545,7 @@ public class ParsingService {
             lineNumber++;
         }
 
-        if(!found)              //there are no references
+        if (!found)              //there are no references
             return null;
 
         lineNumber = findNextSubsectionTitleLine(lineNumber, allLines, font, height);
@@ -505,7 +555,7 @@ public class ParsingService {
         String lastLine = "\r\n";
         List<List<TextPosition>> line = allLines.get(lineNumber);
 
-        for(List<TextPosition> word : line) {
+        for (List<TextPosition> word : line) {
             for (TextPosition letter : word) {
                 String currentFont = letter.getFont().getName();
                 float currentHeight = letter.getHeightDir();
@@ -522,20 +572,21 @@ public class ParsingService {
 
     /**
      * Finds the line number of the next subsection title
+     *
      * @param lineNumber Line number of the current subsection title
-     * @param allLines All lines in the document
-     * @param font The font of the title
-     * @param height The size of the title
+     * @param allLines   All lines in the document
+     * @param font       The font of the title
+     * @param height     The size of the title
      * @return Line number of the next subsection title
      */
     public int findNextSubsectionTitleLine(int lineNumber, List<List<List<TextPosition>>> allLines, String font, float height) {
         //finding the next subsection title
 
         boolean found = false;
-        while(lineNumber < allLines.size() && !found) {
+        while (lineNumber < allLines.size() && !found) {
             List<List<TextPosition>> line = allLines.get(lineNumber);
-            for(List<TextPosition> word : line)
-                for(TextPosition letter : word) {
+            for (List<TextPosition> word : line)
+                for (TextPosition letter : word) {
                     String currentFont = letter.getFont().getName();
                     float currentHeight = letter.getHeightDir();
 
@@ -549,4 +600,137 @@ public class ParsingService {
 
         return lineNumber;
     }
+
+    /**
+     * This method creates for each word a pair containing itself and it's coordinates in the page.
+     *
+     * @param doc the pdf file
+     * @param page the page on which the words are located
+     * @return a list of (coordinate, word) pairs
+     * @throws IOException
+     */
+
+    public List<CoordPairs> parseWordCoordinates(PDDocument doc, PDPage page) throws IOException {
+        PositionalTextUtils posTextStripper = new PositionalTextUtils();
+        posTextStripper.setStartPage(doc.getPages().indexOf(page));
+        posTextStripper.setEndPage(doc.getPages().indexOf(page) + 1);
+        List<CoordPairs> chunks = posTextStripper.getTextBlocks(doc);
+        return chunks;
+    }
+
+    /**
+     * This method calculates the distance between lines of text in the document.
+     *
+     * @param wordMap list of (coordinate, word) pairs
+     * @return list of float numbers representing distances between lines
+     */
+    public TriplePair averageDistance(List<CoordPairs> wordMap) {
+        boolean first = true;
+        Rectangle2D.Float prev = wordMap.get(0).getRect();
+        List<Float> firstOfLineX = new ArrayList<>();
+        List<Float> lastOfLineX = new ArrayList<>();
+        List<Float> distancesY = new ArrayList<>();
+        for(CoordPairs c : wordMap) {
+            if(first) {
+                prev = c.getRect();
+                first = false;
+            }
+            else {
+                float diff = c.getRect().y - prev.y;
+                if(diff > 0) {
+                    distancesY.add(diff);
+                    firstOfLineX.add(c.getRect().x);
+                    lastOfLineX.add(prev.x + prev.width);
+                }
+                prev = c.getRect();
+            }
+        }
+        return new TriplePair(firstOfLineX, lastOfLineX, distancesY);
+    }
+
+    /**
+     *
+     * @param table list of page elements: images and tables
+     * @param page the page on document were the element is
+     * @param colOneStart X coordinate of the start of the first column
+     * @param colOneEnd X coordinate of the end of the first column
+     * @param colTwoStart X coordinate of the start of the second column
+     * @param colTwoEnd X coordinate of the end of the second column
+     * @param text the text from which we want to remove the text under the table
+     * @param isTwoColumn boolean value that tells us if the document has two columns
+     * @return the text without the text under the table
+     * @throws IOException
+     */
+    public String removeTextUnderObject(PDFObject table, PDPage page, float colOneStart, float colOneEnd,
+        float colTwoStart, float colTwoEnd, String text, boolean isTwoColumn) throws IOException {
+
+        float xStart = table.getTopLeftX();
+        float yStart = table.getTopLeftY();
+        float widthMargin = 1f;
+
+        PDRectangle pageSize = page.getMediaBox();
+        yStart = pageSize.getHeight() - yStart;
+
+        Rectangle2D.Float box = null;
+        if (!isTwoColumn) {
+            box = new Rectangle2D.Float(colOneStart, yStart, colOneEnd - colOneStart, 300);
+            System.out.println("case 0");
+        } else if (xStart >= colTwoStart) {
+            box = new Rectangle2D.Float(colTwoStart, yStart, colTwoEnd - colTwoStart, 300);
+            System.out.println("case 1");
+        } else if (table.getBottomRightX() <= colOneEnd) {
+            System.out.println(colOneStart + " " + colOneEnd);
+            box = new Rectangle2D.Float(colOneStart, yStart, colOneEnd - colOneStart, 300);
+            System.out.println("case 2");
+        } else {
+            System.out.println("case 3");
+            box = new Rectangle2D.Float(colOneStart, yStart, colTwoEnd - colOneStart, 300);
+        }
+        CustomPDFTextStripperByArea stripperByArea = new CustomPDFTextStripperByArea();
+        PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+        stripperByArea.addRegion("table", box);
+        stripper.addRegion("table", box);
+        stripperByArea.extractRegions(page);
+        stripper.extractRegions(page);
+        List<Float> yCoordinates = new ArrayList<>(new HashSet<>(stripperByArea.getYCoordinates()));
+        Collections.sort(yCoordinates);
+        int index = 2;
+        if (yCoordinates.size() < 2) {
+            index = 1;
+        } else {
+            float distance = yCoordinates.get(0) - yCoordinates.get(1);
+            //System.out.println("Distance=" + distance);
+            distance = Math.abs(distance);
+            if ( distance > 15.f) {
+                index = 1;
+            } else {
+                while (index < yCoordinates.size() &&
+                        Math.abs(yCoordinates.get(index) - yCoordinates.get(index - 1) - distance) < 2.f) {
+                    index++;
+                }
+            }
+        }
+        int counter = index;
+        String textUnderTable = stripper.getTextForRegion("table");
+        //  System.out.println(textUnderTable);
+        //System.out.println("table end");
+        String captionPattern = "^(Figure|Table|Chart) \\d+[.:].*";
+        Pattern pattern = Pattern.compile(captionPattern);
+        Matcher matcher = pattern.matcher(textUnderTable);
+        if ( matcher.find() ) {
+            //System.out.println("Counter=" + counter);
+            String lines[] = textUnderTable.split("\\r?\\n");
+            int i = 0;
+            String removedText = "";
+            while (i < counter && i < lines.length) {
+                removedText = removedText + lines[i] + "\n";
+                text = text.replace(lines[i], "");
+                i++;
+            }
+            System.out.println("Removed: " + removedText);
+        }
+        //System.out.println(stripperByArea.getTextForRegion("table"));
+        return text;
+    }
 }
+
