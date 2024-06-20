@@ -24,6 +24,7 @@ public class SubmissionDTOTest {
         submissionDTO.setFileName(fileName);
         submissionDTO.setLastSubmitted(now);
         submissionDTO.setLastEdited(now);
+        submissionDTO.setLocked(false);
 
         assertEquals(id, submissionDTO.getId());
         assertEquals(fileSubmission, submissionDTO.getFileSubmission());
@@ -31,6 +32,7 @@ public class SubmissionDTOTest {
         assertEquals(fileName, submissionDTO.getFileName());
         assertEquals(now, submissionDTO.getLastSubmitted());
         assertEquals(now, submissionDTO.getLastEdited());
+        assertFalse(submissionDTO.isLocked());
     }
 
     @Test
@@ -41,7 +43,7 @@ public class SubmissionDTOTest {
         String fileName = "test.txt";
         String now = String.valueOf(System.currentTimeMillis());
 
-        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, groupName, new HashSet<>(), fileName, now, now, false);
+        SubmissionDTO submissionDTO = new SubmissionDTO(id, fileSubmission, groupName, new HashSet<>(), fileName, now, now, false, false);
 
         assertEquals(id, submissionDTO.getId());
         assertEquals(fileSubmission, submissionDTO.getFileSubmission());

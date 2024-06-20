@@ -18,4 +18,5 @@ public class SubmissionDTO {
     private String lastSubmitted;
     private String lastEdited;
     private boolean isSubmitted;
+    private boolean isLocked;
 }

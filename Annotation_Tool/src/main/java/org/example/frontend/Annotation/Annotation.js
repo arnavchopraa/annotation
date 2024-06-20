@@ -8,9 +8,22 @@ let newFile;
 const prevButton = document.getElementById('prevFile')
 const nextButton = document.getElementById('nextFile')
 let token = localStorage.getItem('token')
+let locked = false
+let noSave = false
 
 prevButton.addEventListener('click', function() {
-    
+
+    if(locked === true) {
+        if(confirm("You have unsaved changes. Are you sure you want to leave?")) {
+            prev()
+            locked = false
+        }
+    } else {
+        prev()
+    }
+})
+
+function prev() {
     let length
     if(localStorage.getItem('whichList') === 'center')
         length = localStorage.getItem('sublength')
@@ -28,10 +41,22 @@ prevButton.addEventListener('click', function() {
         localStorage.setItem('file', prevDoc)
         fetchSub(prevDoc)
     }
-})
+}
 
 nextButton.addEventListener('click', function() {
-    
+
+    if(locked === true) {
+        if(confirm("You have unsaved changes. Are you sure you want to leave?")) {
+            next()
+            locked = false
+        }
+    }
+    else {
+        next()
+    }
+})
+
+function next() {
     let length
     if(localStorage.getItem('whichList') === 'center')
         length = localStorage.getItem('sublength')
@@ -49,7 +74,7 @@ nextButton.addEventListener('click', function() {
         localStorage.setItem('file', nextDoc)
         fetchSub(nextDoc)
     }
-})
+}
 
 function fetchSub(name) {
     var endpoint = `http://localhost:8080/submissions/${name}`
@@ -217,6 +242,8 @@ function adobePreview(passedFile) {
     adobeDCView.registerCallback(
         AdobeDC.View.Enum.CallbackType.SAVE_API,
         function(metaData, content, options) {
+            locked = false
+
             let uint8Array = new Uint8Array(content)
             let blob = new Blob([uint8Array], { type: 'application/pdf' })
 
@@ -239,7 +266,9 @@ function adobePreview(passedFile) {
                 body: JSON.stringify(newFile)
             }).then(
                 function (response) {
-                    if(response.status == 200) console.log('GOOD JOB PAUL')
+                    if(response.status == 200) {
+                        console.log('GOOD JOB PAUL')
+                    }
                 }
             ).catch(e => {
                 console.log(e)
@@ -293,11 +322,17 @@ function adobePreview(passedFile) {
                             console.log(event.type, event.data)
                             if (event.type === 'ANNOTATION_ADDED') {
                                 console.log("Annotation added\nAll annotations: ", annotationManager.getAnnotations())
+                                if(locked != true)
+                                    verifyLock()
                                 replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_UPDATED') {
+                                if(locked != true)
+                                    verifyLock()
                                 console.log("Annotation updated\nAll annotations: ", annotationManager.getAnnotations())
                                 replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_DELETED') {
+                                if(locked != true)
+                                    verifyLock()
                                 console.log("Annotation deleted\nAll annotations: ", annotationManager.getAnnotations())
                             }
                         },
@@ -328,4 +363,101 @@ function replaceCodes(annotationManager, data) {
             .catch(error => console.log("Error when updating annotations: ", error));
         }
     });
+}
+
+
+function verifyLock() {
+    const endpoint = `http://localhost:8080/submissions/${getName}/getLock`
+
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+    }
+    }).then(response => {
+        if(response.ok) {
+            return response.json()
+        }
+        else {
+            throw new Error("Failed to retrieve current submission lock")
+        }
+    }).then(lock => {
+        if(lock === true) {
+            alert("The file is locked by someone else! Your changes were NOT saved!")
+            noSave = true
+            window.location.href = "../Dashboard/Dashboard.html"
+        }
+        else {
+            lockFile()
+        }
+    })
+}
+
+function lockFile() {
+    locked = true
+
+    const endpoint = `http://localhost:8080/submissions/${getName}/lock`
+
+    fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        if(response.ok) {
+            return response.json()
+        }
+        else {
+            throw new Error("Failed to lock current submission")
+        }
+    }).then(sub => {
+        console.log("successfully locked file")
+    })
+}
+
+window.onunload = function(e) {
+    if(noSave === true) {       //if the user tried to change a file that is already locked, we should not unlock it
+        return undefined
+    }
+
+    locked = false
+
+    unlockFile()
+
+    return undefined
+}
+
+function unlockFile() {
+
+    locked = false
+
+    const endpoint = `http://localhost:8080/submissions/${getName}/unlock`
+
+    fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then(response => {
+        if(response.ok) {
+            return response.json()
+        }
+        else {
+            throw new Error("Failed to unlock current submission. Please contact an admin if this persists!")
+        }
+    }).then(sub => {
+        console.log("successfully unlocked file")
+    })
+
+    //we need to make sure code is synchronous in order to be sure that the endpoint gets executed
+    sleep(500)
+}
+
+//helper sleep function used to ensure synchronous execution
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
 }

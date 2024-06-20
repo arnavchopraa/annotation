@@ -165,4 +165,49 @@ public class SubmissionController {
             .toList();
         return new ResponseEntity<>(submissions, HttpStatus.OK);
     }
+
+    /**
+     * Locks the file with the given id
+     * @param id id of the file to be locked
+     * @return value of the lock
+     */
+    @PutMapping("/{id}/lock")
+    public ResponseEntity<Boolean> lockFile(@PathVariable("id") String id) {
+        SubmissionDB updated = service.setIsLocked(id, true);
+
+        if(updated == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(updated.isLocked());
+    }
+
+    /**
+     * Unlocks the file with the given id
+     * @param id id of the file to be unlocked
+     * @return value of the lock
+     */
+    @PutMapping("/{id}/unlock")
+    public ResponseEntity<Boolean> unlockFile(@PathVariable("id") String id) {
+        SubmissionDB updated = service.setIsLocked(id, false);
+
+        if(updated == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(updated.isLocked());
+    }
+
+    /**
+     * Method that returns the value of the lock of the given file
+     * @param id id of the file to check
+     * @return value of the lock field - either true or false
+     */
+    @GetMapping("/{id}/getLock")
+    public ResponseEntity<Boolean> getLock(@PathVariable("id") String id) {
+        SubmissionDB sub = service.getSubmission(id);
+
+        if(sub == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(sub.isLocked());
+    }
 }

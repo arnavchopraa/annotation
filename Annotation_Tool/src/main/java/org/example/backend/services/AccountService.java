@@ -114,7 +114,7 @@ public class AccountService {
                 Set<User> userSet = new HashSet<>();
                 userSet.add(user);
                 SubmissionDB submissionDB = new SubmissionDB(
-                    student.getEmail(), file, coordinator.getEmail(), userSet, submission.getFileName(), null, null, false);
+                    student.getEmail(), file, coordinator.getEmail(), userSet, submission.getFileName(), null, null, false, false);
                 submissionService.addSubmission(submissionDB);
             } else {
                 existingSubmission.addUser(user);

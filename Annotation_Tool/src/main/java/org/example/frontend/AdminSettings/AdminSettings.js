@@ -175,3 +175,4 @@ document.getElementById('deleteALL').addEventListener('click', function() {
         .catch(error => console.error(error))
     }
 })
+})
