@@ -26,13 +26,9 @@ class UserTest {
 
     @Test
     void correctPassword() {
-        try {
-            User user = new User("username", PasswordHashingService.hashPassword("password123"), "supervisor");
-            String hashed = PasswordHashingService.hashPassword("password123");
-            assertTrue(user.checkPassword(hashed));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        User user = new User("username", PasswordHashingService.hashPassword("password123"), "supervisor");
+        String hashed = PasswordHashingService.hashPassword("password123");
+        assertTrue(user.checkPassword(hashed));
     }
 
     @Test

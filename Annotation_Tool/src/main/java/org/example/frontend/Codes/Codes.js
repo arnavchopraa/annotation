@@ -25,28 +25,6 @@ function fetchCodes() {
     .then(codes => {
         const codesContainer = document.getElementById('codes-wrapper');
 
-        /*
-        .codes-wrapper {
-            .code-wrapper {
-                .code-container {
-                    .code-button
-                    .code-controls {
-                        .icon-wrapper {
-                            .icon {
-                                #edit-icon (svg)
-                            }
-                        }
-                        .icon-wrapper {
-                            .icon {
-                                #delete-icon (svg)
-                            }
-                        }
-                    }
-                }
-                code-description
-            }
-        }*/
-
         codes.forEach(code => {
             /* Should contain the code ID and the 2 icons for edit and delete */
             const codeContainer = document.createElement('div');
@@ -194,12 +172,6 @@ function addCode(id, text) {
     .then(addedCode => {
         console.log('Code added successfully:', addedCode);
 
-//        const wrapper = document.getElementById('codes-wrapper');
-//        while(wrapper.firstChild) {
-//            wrapper.removeChild(wrapper.lastChild);
-//        }
-//        fetchCodes()
-
         location.reload();
 
         //we could either rewrite all the codes or directly refresh the page
@@ -229,7 +201,7 @@ function showEditForm(codeId, button) {
         saveButton.className = 'save-button icon'
         saveButton.addEventListener('click', function() {
             editCode(codeId, textArea.value);
-            codeDescription.textContent = textArea.value; //update visualization
+            codeDescription.innerHTML = boldTitle(textArea.value); //update visualization
             codeWrapper.removeChild(editForm); //remove the form after saving
             button.setAttribute('formVisible', false) //make it possible to edit again
         });

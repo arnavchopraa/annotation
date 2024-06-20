@@ -1,6 +1,8 @@
 package org.example.backend.controllers;
 
 import org.example.backend.models.SubmissionDTO;
+import org.example.backend.services.AnnotationCodeService;
+import org.example.backend.services.ExportService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,11 @@ import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +26,22 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 @RequestMapping("/submissions")
 public class SubmissionController {
-    private SubmissionService service;
+    private final SubmissionService service;
+    private final AnnotationCodeService annotationCodeService;
+    private final ExportService exportService;
 
     /**
      * Constructor for the SubmissionController
      *
      * @param repo the repository for the submission
      * @param service the service for the submission
+     * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service) {
+    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService){
         this.service = service;
+        this.annotationCodeService = annotationCodeService;
+        this.exportService = new ExportService(service, annotationCodeService);
     }
 
     /**
@@ -59,6 +71,30 @@ public class SubmissionController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(SubmissionDB.convertToBinary(sub));
+    }
+
+    /**
+     * This method exports the submission with the given id as a pdf
+     *
+     * @param id the id of the submission
+     * @return a pdf of the submission with the given id
+     */
+    @GetMapping("/export/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> downloadSubmission(@PathVariable("id") String id) {
+        File pdfFile;
+        try {
+            pdfFile = exportService.getSubmission(id);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        try (InputStream inputStream = new FileInputStream(pdfFile)) {
+            byte[] bytes = inputStream.readAllBytes();
+            return new ResponseEntity<>(bytes, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**

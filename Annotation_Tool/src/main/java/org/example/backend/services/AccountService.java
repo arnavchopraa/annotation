@@ -10,7 +10,6 @@ import org.example.backend.importmodels.Coordinator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -45,12 +44,7 @@ public class AccountService {
             String password = emailService.generateRandomCode();
             User optionalUser = userService.getUser(coordinator.getEmail());
             if(optionalUser == null) {
-                User user;
-                try {
-                    user = new User(coordinator.getEmail(), coordinator.getFullName(), PasswordHashingService.hashPassword(password), "supervisor");
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
+                User user = new User(coordinator.getEmail(), coordinator.getFullName(), PasswordHashingService.hashPassword(password), "supervisor");
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(coordinator.getEmail(), password);
                 try {
@@ -77,12 +71,7 @@ public class AccountService {
             String password = emailService.generateRandomCode();
             User optionalUser = userService.getUser(student.getEmail());
             if(optionalUser == null) {
-                User user;
-                try {
-                    user = new User(student.getEmail(), student.getStudentName(), PasswordHashingService.hashPassword(password), "student");
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
+                User user = new User(student.getEmail(), student.getStudentName(), PasswordHashingService.hashPassword(password), "student");
                 String emailSubject = "Your account has been created!";
                 String emailContent = generateContent(student.getEmail(), password);
                 try {
@@ -114,7 +103,7 @@ public class AccountService {
                 Set<User> userSet = new HashSet<>();
                 userSet.add(user);
                 SubmissionDB submissionDB = new SubmissionDB(
-                    student.getEmail(), file, coordinator.getEmail(), userSet, submission.getFileName(), null, null, false, false);
+                    student.getEmail(), file, submission.getGroupName(), userSet, submission.getFileName(), null, null, false, false);
                 submissionService.addSubmission(submissionDB);
             } else {
                 existingSubmission.addUser(user);

@@ -1,7 +1,6 @@
 .content-right {
     width: 100%;
     height: 100vh;
-    max-width: 1920px;
 
     margin-left: 20px;
     margin-right: 20px;
@@ -15,16 +14,31 @@
     height: 5vh;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+}
+
+.middle-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: calc(70% - 550px);
 }
 
 .control-button {
     display: flex;
     align-items: center;
     height: 100%;
+
+    margin-right: 20px;
 }
 
-.control-buttons .last {
+.control-button.first {
+    margin-right: auto;
+}
+
+.control-button.last {
     margin-left: auto;
 }
 
@@ -154,7 +168,7 @@ iframe {
 .code-description {
     display: none;
     position: fixed;
-    min-width: 100px;
+    min-width: 200px;
 
     background-color: #3e3e3e;
     color: #fff;
@@ -177,5 +191,12 @@ iframe {
     display: block;
     top: 100%;
     left: 0;
+    transform: translateY(10px);
+}
+
+.code:hover .code-description.even {
+    display: block;
+    top: 100%;
+    left: -100%;
     transform: translateY(10px);
 }

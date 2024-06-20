@@ -2,7 +2,6 @@ const role = localStorage.getItem('role')
 let getName = localStorage.getItem('file')
 var allCodes
 const subBtn = document.querySelector('#submitFile')
-const parseBtn = document.querySelector('#parseFile')
 const arr = document.querySelectorAll('.admin')
 let newFile;
 const prevButton = document.getElementById('prevFile')
@@ -132,12 +131,6 @@ subBtn.addEventListener('click', () => {
     })
 })
 
-parseBtn.addEventListener('click', () => {
-    window.location.href = "../Parsing/Parsing.html";
-})
-
-
-
 /**
     * Add the codes from the backend to the container and display them as buttons.
 **/
@@ -159,6 +152,7 @@ function fetchCodes() {
     })
     .then(codes => {
         allCodes = codes
+        var even = false;
 
         const codesContainer = document.getElementById('codes');
 
@@ -170,6 +164,13 @@ function fetchCodes() {
             const codeDescription = document.createElement('div');
             codeDescription.className = 'code-description';
             codeDescription.textContent = code.codeContent;
+
+            if (even == true) {
+                codeDescription.classList.add('even');
+            } else {
+                codeDescription.classList.remove('even');
+            }
+            even = !even;
 
             codeButton.appendChild(codeDescription);
 
@@ -192,21 +193,19 @@ function loadPassedFile() {
             'Authorization': `Bearer ${token}`
         }
     })
-        .then(response => {
-            if(response.ok) {
-                //sessionFile = response.json()
-                return response.json()
-            } else {
-                throw new Error('Failed to fetch');
-            }
-        }).then(sub => {
-            newFile = sub;
-            newFile.submitted = false
-            adobePreview(sub)
+    .then(response => {
+        if(response.ok) {
+            //sessionFile = response.json()
+            return response.json()
+        } else {
+            throw new Error('Failed to fetch');
         }
-
-    )
-        .catch(error => console.error('Error fetching codes: ', error));
+    }).then(sub => {
+        newFile = sub;
+        newFile.submitted = false
+        adobePreview(sub)
+    })
+    .catch(error => console.error('Error fetching codes: ', error));
 }
 
 function adobePreview(passedFile) {
@@ -365,7 +364,6 @@ function replaceCodes(annotationManager, data) {
     });
 }
 
-
 function verifyLock() {
     const endpoint = `http://localhost:8080/submissions/${getName}/getLock`
 
@@ -461,3 +459,38 @@ function sleep(delay) {
     var start = new Date().getTime();
     while (new Date().getTime() < start + delay);
 }
+
+/*
+    Method that exports the annotated file as a PDF.
+*/
+document.getElementById('exportButton').addEventListener('click', function() {
+    var endpoint = `http://localhost:8080/submissions/export/${newFile.id}`
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/pdf",
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if(response.ok) {
+            displaySavedPopUp("Your submission has been downloaded successfully!");
+            return response.blob()
+        }
+        else
+            throw new Error("Couldn't fetch downloads")
+    })
+    .then(bytes => {
+        var blob = new Blob([bytes], {type: 'application/pdf'})
+        var a = document.createElement('a')
+
+        a.download = `${newFile.id} - ${newFile.fileName}`
+        a.style = 'display: none'
+        let url = window.URL.createObjectURL(blob)
+        a.href = url
+        a.click()
+        a.remove()
+        window.URL.revokeObjectURL(url)
+    })
+    .catch(error => console.error(error))
+});

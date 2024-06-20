@@ -102,8 +102,8 @@
 .code-details {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: flex-start;
 
     margin: 10px;
     padding-left: 10px;
@@ -181,8 +181,8 @@
     font-weight: 700;
 
     width: 90%;
-    background-color: #636363;
-    color: #c9c9c9;
+    background-color: #3e3e3e;
+    color: #f5f5f5;
 
     border-radius: 10px;
     border-color: transparent;
@@ -197,8 +197,8 @@
 }
 
 .add-code-button:hover {
-    background-color: #e6e6e6;
-    color: #000;
+    background-color: #f5f5f5;
+    color: #3e3e3e;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
 
     cursor: pointer;
