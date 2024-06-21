@@ -1,9 +1,12 @@
 package org.example.backend.controllers;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.ImportException;
 import org.example.backend.exceptions.NoSubmissionException;
 import org.example.backend.exceptions.PDFException;
+import org.example.backend.models.User;
 import org.example.backend.services.*;
 import org.example.backend.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import java.util.zip.ZipException;
 
 @RestController
 @CrossOrigin(origins = "*")
+@Getter
 public class AdminController {
     private final ImportService importService;
     private final ExportService exportService;
@@ -34,10 +38,25 @@ public class AdminController {
      * @param annotationCodeService Service that manages annotation codes
      */
     @Autowired
-    public AdminController(UserService userService, SubmissionService submissionService, AnnotationCodeService annotationCodeService) {
+    public AdminController(UserService userService, SubmissionService submissionService,
+        AnnotationCodeService annotationCodeService) {
         this.submissionService = submissionService;
         this.importService = new ImportService(userService, submissionService);
         this.exportService = new ExportService(submissionService, annotationCodeService);
+    }
+
+    /**
+     * Constructor for AdminController, with predefined importService
+     *
+     * @param importService Service that manages imports
+     * @param submissionService Service that manages submissions
+     * @param annotationCodeService Service that manages annotation codes
+     */
+    public AdminController(ImportService importService,
+        SubmissionService submissionService, AnnotationCodeService annotationCodeService) {
+        this.importService = importService;
+        this.exportService = new ExportService(submissionService, annotationCodeService);
+        this.submissionService = submissionService;
     }
 
     /**
@@ -114,4 +133,5 @@ public class AdminController {
         }
         return new ResponseEntity<>("Submission database has been cleared!", HttpStatus.OK);
     }
+
 }
