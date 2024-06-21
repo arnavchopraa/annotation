@@ -126,7 +126,7 @@ function displaySubmissions(submissions) {
             localStorage.setItem('whichList', 'center')
             localStorage.setItem('file', sub.id)
             localStorage.setItem('curidx', index)
-            window.location.href = "../Annotation/Annotation.html"
+            verifyLock(sub.id)
         });
 
         table.appendChild(line)
@@ -435,4 +435,30 @@ function sortSubmitted(order) {
         return 1;
     })
     displaySubmissions(sortedSubmissions)
+}
+
+function verifyLock(check) {
+    const endpoint = `http://localhost:8080/submissions/${check}/getLock`
+
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+    }
+    }).then(response => {
+        if(response.ok) {
+            return response.json()
+        }
+        else {
+            throw new Error("Failed to retrieve current submission lock")
+        }
+    }).then(lock => {
+        if(lock === true) {
+            alert("This file is being edited by someone else")
+        }
+        else {
+            window.location.href = "../Annotation/Annotation.html"
+        }
+    })
 }

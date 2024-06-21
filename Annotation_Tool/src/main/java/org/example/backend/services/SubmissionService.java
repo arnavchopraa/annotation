@@ -141,4 +141,23 @@ public class SubmissionService {
         Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
         return Timestamp.from(instant);
     }
+
+
+    /**
+     * Sets the lock value of the given file
+     * @param id id of the file to be changed
+     * @param state the new value of the lock
+     * @return the new updated file
+     */
+    public SubmissionDB setIsLocked(String id, boolean state) {
+        SubmissionDB submission = getSubmission(id);
+
+        if(submission == null)
+            return null;
+
+        submission.setLocked(state);
+
+        return repo.save(submission);
+    }
+
 }
