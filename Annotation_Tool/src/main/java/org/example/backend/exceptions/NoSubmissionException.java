@@ -1,6 +1,11 @@
 package org.example.backend.exceptions;
 
+import java.io.Serial;
+
 public class NoSubmissionException extends Exception {
+    @Serial
+    private static final long serialVersionUID = 3556320213203120977L;
+
     /**
      * Default constructor for NoSubmissionException - NoArgsConstructor
      */

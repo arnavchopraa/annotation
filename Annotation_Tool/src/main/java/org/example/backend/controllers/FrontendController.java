@@ -1,5 +1,9 @@
 package org.example.backend.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.example.backend.exceptions.PDFException;
 import org.example.backend.models.AnnotationCode;
 import org.example.backend.services.*;
@@ -46,6 +50,8 @@ public class FrontendController {
      * @return 200 OK - Parsed text from the file
      *         400 Bad Request - Conversion to PDF fails
      *         400 Bad Request - Parsing PDF fails
+     *
+     *         ??? - IS THIS UNUSED? if yes, please comment in the MR so I can delete it.
      */
     @PostMapping("/frontend")
     public ResponseEntity<PairUtils> retrieveFile(@RequestParam("file") MultipartFile file) {
@@ -63,6 +69,8 @@ public class FrontendController {
     /**
      * GET - Endpoint for retrieving the list of codes from the database
      * @return 200 OK - List of codes
+     *
+     * ??? - IS THIS REPEATED with getAnnotationCodes() from AnnotationCodeController? if yes, please comment in the MR.
      */
     @GetMapping("/frontend/codes")
     public ResponseEntity<List<AnnotationCode>> getCodes() {
@@ -77,6 +85,17 @@ public class FrontendController {
      *         500 INTERNAL SERVER ERROR - if there was a problem with temporary files.
      *         404 NOT FOUND - if there was a problem upon creating the zip file.
      */
+    @Operation(summary = "Export all pdf files assigned to a coordinator, compressed into a zip file",
+        parameters = {
+            @Parameter(name = "id", description = "Coordinator's email, whose assigned files should be retrieved",
+                    required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully exported all files"),
+            @ApiResponse(responseCode = "404", description = "Could not find the zip file"),
+            @ApiResponse(responseCode = "500", description = "Could not retrieve all submissions")
+        }
+    )
     @GetMapping("/frontend/allsubmissions/{id}")
     public ResponseEntity<byte[]> exportAllFiles(@PathVariable("id") String id) {
         File zipFile;
