@@ -149,4 +149,16 @@ public class SubmissionServiceTest {
         List<SubmissionDB> results = service.searchSubmissions("12", "coordinator1");
         assertEquals(2, results.size());
     }
+
+    @Test
+    public void testSetIsLocked() {
+        SubmissionDB sub = new SubmissionDB();
+
+        when(repo.findById("1")).thenReturn(Optional.of(sub));
+        sub.setLocked(true);
+        when(repo.save(any(SubmissionDB.class))).thenReturn(sub);
+
+        SubmissionDB resp = service.setIsLocked("1", true);
+        assertEquals(sub, resp);
+    }
 }
