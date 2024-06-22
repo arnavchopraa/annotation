@@ -1,17 +1,18 @@
 package services;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.example.TestUtils;
 import org.example.backend.exceptions.PDFException;
 import org.example.backend.services.AnnotationCodeService;
 import org.example.backend.services.ParsingService;
-import org.example.backend.utils.KMeans;
-import org.example.backend.utils.Line;
-import org.example.backend.utils.PairUtils;
-import org.example.backend.utils.PDFObject;
+import org.example.backend.utils.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -187,6 +188,31 @@ public class ParsingServiceTest {
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
+    }
+
+    @Test
+    public void testRemoveTextUnderTable() throws Exception {
+        // Arrange
+        ParsingService parsingService = new ParsingService(null);
+        PDPage mockPage = Mockito.mock(PDPage.class);
+        CustomPDFTextStripperByArea mockCustomStripper = Mockito.mock(CustomPDFTextStripperByArea.class);
+        PDFTextStripperByArea mockStripper = Mockito.mock(PDFTextStripperByArea.class);
+        Mockito.when(mockPage.getMediaBox()).thenReturn(new PDRectangle(0, 0, 500, 500));
+        PDFObject table = new PDFObject(100, 100, 200, 200, 0);
+        String text = "Figure 0: This is a caption.\nThis is some text.";
+        float colOneStart = 50;
+        float colOneEnd = 150;
+        float colTwoStart = 250;
+        float colTwoEnd = 350;
+        boolean isTwoColumn = false;
+
+        Mockito.when(mockCustomStripper.getYCoordinates()).thenReturn(new ArrayList<>(List.of(0f, 500f)));
+        Mockito.when(mockStripper.getTextForRegion(any())).thenReturn(text);
+        String result = parsingService.removeTextUnderObject(table, mockPage, colOneStart, colOneEnd,
+            colTwoStart, colTwoEnd, text, isTwoColumn, mockCustomStripper, mockStripper);
+
+        String expectedResult = "\nThis is some text.";
+        assertEquals(expectedResult, result);
     }
 
     /*@Test

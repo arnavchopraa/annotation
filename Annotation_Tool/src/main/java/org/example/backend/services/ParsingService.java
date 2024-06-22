@@ -31,6 +31,7 @@ public class ParsingService {
     private String removedCaptions = "";
 
     private Map<String, Boolean> captionsMap = new HashMap<>();
+    private Map<String, String> annotationsMap = new HashMap<>();
     /**
      * This method creates a new instance of the ParsingService class
      *
@@ -41,7 +42,7 @@ public class ParsingService {
     }
 
     /**
-     * Parses a pdf file including text and annotations
+     * This method parses a pdf file and returns the text, annotations and captions
      *
      * @param file the file that needs to be parsed
      * @return the parsed text
@@ -58,86 +59,159 @@ public class ParsingService {
             String annotations = "";
             int pageIndex = 0;
             for (PDPage page : document.getPages()) {
-                // Calculate column coordinates for the current page
-                List<CoordPairs> map = parseWordCoordinates(document, page);
-                TriplePair pair = averageDistance(map);
-
-                List<Float> frontX = pair.getFrontX();
-                List<Float> endX = pair.getEndX();
-
-                List<Map.Entry<Float, Long>> frontXList = frontX.stream()
-                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                    .entrySet().stream()
-                    .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
-                    .toList();
-                List<Map.Entry<Float, Long>> endXList = endX.stream()
-                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                    .entrySet().stream()
-                    .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
-                    .toList();
-                List<PDAnnotation> annotationList = page.getAnnotations();
-                for (PDAnnotation a : annotationList) {
-                    if (a.getSubtype().equals("Highlight")) {
-                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                        if(a.getContents() == null)
-                            continue;
-                        AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
-                        if(ac != null) {
-                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
-                                    + preprocess(annotationCodeService.getAnnotationCode(a.getContents()).getCodeContent()) + "\n";
-                        } else {
-                            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
-                                    + preprocess(a.getContents()) + "\n";
-                        }
-                    } else if (a.getSubtype().equals("Text")) {
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        annotations = annotations + a.getContents() + "\n";
-                    }
-                }
-
-                PageDrawerUtils pdu = new PageDrawerUtils(page, pageIndex);
-                pdu.processPage(page);
-                List<PDFObject> images = pdu.getImages();
-                List<Line> lines = mergeLines(pdu.getLines());
-                List<PDFObject> tables = processLines(lines, pageIndex);
-                if (frontX.isEmpty())
-                    frontX.add(0.0f);
-                if (endX.isEmpty())
-                    endX.add(page.getMediaBox().getWidth());
-                List<List<Float>> clustersFrontX = KMeans.clusterCoordinates(frontX);
-                List<List<Float>> clustersEndX = KMeans.clusterCoordinates(endX);
-                float oneColStart = Collections.min(clustersFrontX.get(0));
-                float twoColStart = Collections.min(clustersFrontX.get(1));
-                float oneColEnd = Collections.max(clustersEndX.get(0));
-                float twoColEnd = Collections.max(clustersEndX.get(1));
-                float columnThreshold = 50.0f;
-                boolean isTwoColumns = (twoColStart - oneColStart) > columnThreshold;
-
-                //text = removeTextUnderTable(tables, document, oneColStart, oneColEnd, twoColStart, twoColEnd, text);
-                text = removeTables(text, tables, page, oneColStart, twoColStart, oneColEnd, twoColEnd, isTwoColumns);
-                for (PDFObject t : images) {
-                    text = removeTextUnderObject(t, page, oneColStart, oneColEnd, twoColStart, twoColEnd, text, isTwoColumns);
-                }
-                // Identify images and remove their captions
-
+                annotations = processPageAnnotations(page, annotations);
+                text = processPageText(document, page, text, pageIndex);
                 pageIndex++;
             }
-
+            Iterator<String> iterator = annotationsMap.keySet().iterator();
+            String captions = captionsMap.keySet().stream()
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.joining("@"));
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                String value = annotationsMap.get(key);
+                key = key.replaceAll("\r\n", "\n");
+                int i = 0;
+                List<String> captionsList = Arrays.asList(captions.split("@"));
+                while ( i < captionsList.size() && !captionsList.get(i).contains(key)) {
+                    i++;
+                }
+                if ( i < captionsList.size()) { // we found a match
+                    annotations = annotations.replace(key.replaceAll("\n", "\r\n") + " - " + value, "");
+                    captions = captions.replace(captionsList.get(i), captionsList.get(i) + " - " + value);
+                }
+                iterator.remove();
+            }
             text = removeReferences(text, document);
-            return new PairUtils(text, annotations, file.getName(),
-                    captionsMap.keySet().stream()
-                    .sorted(Comparator.naturalOrder())
-                    .collect(Collectors.joining("")));
+            captions = captions.replaceAll("@", "\n");
 
+            return new PairUtils(text, annotations, file.getName(), captions);
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
     }
+    /**
+     * This method processes the annotations on a page
+     *
+     * @param page the page on which the annotations are located
+     * @param annotations the annotations that have been processed so far
+     * @return the processed annotations
+     * @throws IOException if the annotations can't be read
+     */
+    private String processPageAnnotations(PDPage page, String annotations) throws IOException {
+        List<PDAnnotation> annotationList = page.getAnnotations();
+        for (PDAnnotation a : annotationList) {
+            annotations = processAnnotation(page, a, annotations);
+        }
+        return annotations;
+    }
+    /**
+     * This method processes an annotation
+     *
+     * @param page the page on which the annotation is located
+     * @param a the annotation that needs to be processed
+     * @param annotations the annotations that have been processed so far
+     * @return the processed annotations
+     * @throws IOException if the annotation can't be read
+     */
+    private String processAnnotation(PDPage page, PDAnnotation a, String annotations) throws IOException {
+        if (a.getSubtype().equals("Highlight")) {
+            annotations = processHighlightAnnotation(page, a, annotations);
+        } else if (a.getSubtype().equals("Text")) {
+            annotations = processTextAnnotation(a, annotations);
+        }
+        return annotations;
+    }
+    /**
+     * This method processes a highlight annotation
+     *
+     * @param page the page on which the annotation is located
+     * @param a the annotation that needs to be processed
+     * @param annotations the annotations that have been processed so far
+     * @return the processed annotations
+     * @throws IOException if the annotation can't be read
+     */
+    private String processHighlightAnnotation(PDPage page, PDAnnotation a, String annotations) throws IOException {
+        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
+        if (!annotations.equals(""))
+            annotations = annotations + "\n";
+        annotationsMap.put(getHighlightedText(a, page), a.getContents());
+        //annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
+        if(a.getContents() == null)
+            return annotations;
+        AnnotationCode ac = annotationCodeService.getAnnotationCode(a.getContents());
+        if(ac != null) {
+            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                    + preprocess(annotationCodeService.getAnnotationCode(a.getContents()).getCodeContent()) + "\n";
+        } else {
+            annotations = annotations + "\n" + getHighlightedText(a, page) + " - "
+                    + preprocess(a.getContents()) + "\n";
+        }
+        return annotations;
+    }
+    /**
+     * This method processes a text annotation
+     *
+     * @param a the annotation that needs to be processed
+     * @param annotations the annotations that have been processed so far
+     * @return the processed annotations
+     */
+    private String processTextAnnotation(PDAnnotation a, String annotations) {
+        if (!annotations.equals(""))
+            annotations = annotations + "\n";
+        annotations = annotations + a.getContents() + "\n";
+        return annotations;
+    }
+    /**
+     * This method processes the text on a page
+     *
+     * @param document the document that contains the page
+     * @param page the page that needs to be processed
+     * @param text the text that needs to be processed
+     * @param pageIndex the index of the page
+     * @return the processed text
+     * @throws IOException if the text can't be read
+     */
+    private String processPageText(PDDocument document, PDPage page, String text, int pageIndex) throws IOException {
+        List<CoordPairs> map = parseWordCoordinates(document, page);
+        TriplePair pair = averageDistance(map);
 
+        List<Float> frontX = pair.getFrontX();
+        List<Float> endX = pair.getEndX();
+
+        List<Map.Entry<Float, Long>> frontXList = frontX.stream()
+            .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
+            .toList();
+        List<Map.Entry<Float, Long>> endXList = endX.stream()
+            .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<Float, Long>comparingByValue().reversed())
+            .toList();
+        PageDrawerUtils pdu = new PageDrawerUtils(page, pageIndex);
+        pdu.processPage(page);
+        List<PDFObject> images = pdu.getImages();
+        List<Line> lines = mergeLines(pdu.getLines());
+        List<PDFObject> tables = processLines(lines, pageIndex);
+        if (frontX.isEmpty())
+            frontX.add(0.0f);
+        if (endX.isEmpty())
+            endX.add(page.getMediaBox().getWidth());
+        List<List<Float>> clustersFrontX = KMeans.clusterCoordinates(frontX);
+        List<List<Float>> clustersEndX = KMeans.clusterCoordinates(endX);
+        float colOneStart = Collections.min(clustersFrontX.get(0));
+        float colTwoStart = Collections.min(clustersFrontX.get(1));
+        float colOneEnd = Collections.max(clustersEndX.get(0));
+        float colTwoEnd = Collections.max(clustersEndX.get(1));
+        float columnThreshold = 50.0f;
+        boolean isTwoColumns = (colTwoStart - colOneStart) > columnThreshold;
+        text = removeTables(text, tables, page, colOneStart, colOneEnd, colTwoStart, colTwoEnd, isTwoColumns);
+        for (PDFObject t : images) {
+            text = removeTextUnderObject(t, page, colOneStart, colOneEnd, colTwoStart, colTwoEnd, text, isTwoColumns, null, null);
+        }
+        return text;
+    }
 
     /**
      * Parses a pdf file including text and annotations and applyes the NER model
@@ -441,7 +515,8 @@ public class ParsingService {
             float yStart = t.getBottomRightY();
             float width = t.getBottomRightX() - xStart;
             float height = t.getBottomRightY() - t.getTopLeftY();
-            text = removeTextUnderObject(t, page, colOneStart, colOneEnd, colTwoStart, colTwoEnd, text, isTwoColumn);
+            text = removeTextUnderObject(t, page, colOneStart, colOneEnd, colTwoStart, colTwoEnd,
+                text, isTwoColumn, null, null);
             PDRectangle pageSize = page.getMediaBox();
             yStart = pageSize.getHeight() - yStart;
 
@@ -667,11 +742,14 @@ public class ParsingService {
      * @param colTwoEnd X coordinate of the end of the second column
      * @param text the text from which we want to remove the text under the table
      * @param isTwoColumn boolean value that tells us if the document has two columns
+     * @param stripperByArea Custom instance of stripper that extracts text from a specific area
+     * @param stripper stripper that extracts text from a specific area
      * @return the text without the text under the table
-     * @throws IOException
+     * @throws IOException if the text can't be read
      */
     public String removeTextUnderObject(PDFObject table, PDPage page, float colOneStart, float colOneEnd,
-        float colTwoStart, float colTwoEnd, String text, boolean isTwoColumn) throws IOException {
+        float colTwoStart, float colTwoEnd, String text, boolean isTwoColumn,
+        CustomPDFTextStripperByArea stripperByArea, PDFTextStripperByArea stripper) throws IOException {
 
         float xStart = table.getTopLeftX();
         float yStart = table.getTopLeftY();
@@ -694,8 +772,10 @@ public class ParsingService {
             System.out.println("case 3");
             box = new Rectangle2D.Float(colOneStart, yStart, colTwoEnd - colOneStart, 300);
         }
-        CustomPDFTextStripperByArea stripperByArea = new CustomPDFTextStripperByArea();
-        PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+        if (stripperByArea == null)
+            stripperByArea = new CustomPDFTextStripperByArea();
+        if (stripper == null)
+            stripper = new PDFTextStripperByArea();
         stripperByArea.addRegion("table", box);
         stripper.addRegion("table", box);
         stripperByArea.extractRegions(page);

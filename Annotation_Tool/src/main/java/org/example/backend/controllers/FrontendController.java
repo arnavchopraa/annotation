@@ -53,7 +53,7 @@ public class FrontendController {
      * @param exportService the export service
      */
     public FrontendController(ParsingService parsingService, AnnotationCodeService annotationCodeService,
-                              SubmissionService submissionService, ExportService exportService) {
+        SubmissionService submissionService, ExportService exportService) {
         this.parsingService = parsingService;
         this.annotationCodeService = annotationCodeService;
         this.submissionService = submissionService;
