@@ -45,6 +45,22 @@ public class FrontendController {
     }
 
     /**
+     * This method creates a new instance of the FrontendController class
+     *
+     * @param parsingService the parsing service
+     * @param annotationCodeService the annotation service
+     * @param submissionService the submission service
+     * @param exportService the export service
+     */
+    public FrontendController(ParsingService parsingService, AnnotationCodeService annotationCodeService,
+                              SubmissionService submissionService, ExportService exportService) {
+        this.parsingService = parsingService;
+        this.annotationCodeService = annotationCodeService;
+        this.submissionService = submissionService;
+        this.exportService = exportService;
+    }
+
+    /**
      * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
      * @param file received file from frontend
      * @return 200 OK - Parsed text from the file

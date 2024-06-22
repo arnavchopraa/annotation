@@ -12,7 +12,6 @@ import org.example.backend.utils.PDFObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 
-@Tag("NeedsFix")
 public class ParsingServiceTest {
 
     private final TestUtils testUtils = new TestUtils();
@@ -160,14 +158,15 @@ public class ParsingServiceTest {
         }
     }
 
+    @Tag("NeedsFix")
     @Test
     public void testParseMultipleFiles() {
         String text = "This is a PDF file";
         String content = "This is an annotation";
-        List<Float> emptyList = Collections.emptyList();
+        List<Float> emptyList = Collections.singletonList(0f);
         Mockito.when(KMeans.clusterCoordinates(any(List.class))).thenReturn(List.of(emptyList, emptyList));
-        Mockito.when(Collections.min(emptyList)).thenReturn(0f);
-        Mockito.when(Collections.max(emptyList)).thenReturn(0f);
+        Mockito.when(Collections.min(any(List.class))).thenReturn(0f);
+        Mockito.when(Collections.max(any(List.class))).thenReturn(0f);
         try {
             PDDocument pdf = testUtils.generatePDF(text);
             testUtils.addAnnotation(pdf, content);
