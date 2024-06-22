@@ -2,6 +2,8 @@ package org.example.backend.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,6 +14,8 @@ import java.util.Set;
 @Schema(description = "User entity")
 @Entity
 @Table(name="coordinators")
+@Getter
+@Setter
 public class User implements UserDetails{
 
     @Schema(description = "ID of the user, which also represents his email", example = "supervisor@tudelft.nl")
