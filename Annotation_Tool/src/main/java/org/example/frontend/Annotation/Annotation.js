@@ -309,6 +309,7 @@ function adobePreview(passedFile) {
                     if(response.status == 200) {
                         console.log('GOOD JOB PAUL')
                         unlockFile()
+                        newFile.locked = false
                         locked = false
                     }
                 }
@@ -411,6 +412,7 @@ function replaceCodes(annotationManager, data) {
 }
 
 function verifyLock() {
+    console.log("verificam lock?")
     const endpoint = `http://localhost:8080/submissions/${getName}/getLock`
 
     fetch(endpoint, {

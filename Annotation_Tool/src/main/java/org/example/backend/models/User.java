@@ -14,8 +14,6 @@ import java.util.Set;
 @Schema(description = "User entity")
 @Entity
 @Table(name="coordinators")
-@Getter
-@Setter
 public class User implements UserDetails{
 
     @Schema(description = "ID of the user, which also represents his email", example = "supervisor@tudelft.nl")

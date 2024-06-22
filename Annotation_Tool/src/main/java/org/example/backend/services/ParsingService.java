@@ -50,6 +50,8 @@ public class ParsingService {
      */
     public PairUtils parsePDF(File file) throws PDFException {
         try {
+            annotationsMap.clear();
+            captionsMap.clear();
             PDDocument document = Loader.loadPDF(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);

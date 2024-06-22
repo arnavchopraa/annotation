@@ -98,7 +98,7 @@ public class SubmissionDB {
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getGroupName()
                     , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted()
-                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted(), submissionDTO.isSubmitted());
+                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted(), submissionDTO.isLocked());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

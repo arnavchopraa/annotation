@@ -217,7 +217,7 @@ public class SubmissionController {
     public ResponseEntity<SubmissionDTO> updateSubmission(@PathVariable("id") String id, @RequestBody SubmissionDTO submissionDTO) {
         // TODO: check if id is same in both
 
-
+        System.out.println(submissionDTO);
         SubmissionDB sub1 = service.updateSubmission(SubmissionDB.convertToBlob(submissionDTO));
         if (sub1 == null) {
             return ResponseEntity.badRequest().build();
