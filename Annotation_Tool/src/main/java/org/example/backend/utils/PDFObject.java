@@ -6,11 +6,12 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Table {
+public class PDFObject {
     private float topLeftX;
     private float topLeftY;
     private float bottomRightX;
     private float bottomRightY;
+    private int pageNumber;
 
     /**
      * Extends the coordinates of the table with the given line

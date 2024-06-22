@@ -24,7 +24,7 @@ class PageDrawerUtilsTest {
     @BeforeEach
     void setUp() {
         pdPage = new PDPage();
-        pageDrawerUtils = new PageDrawerUtils(pdPage);
+        pageDrawerUtils = new PageDrawerUtils(pdPage, 0);
     }
 
     @Test
@@ -80,13 +80,6 @@ class PageDrawerUtilsTest {
         Point2D p2 = new Point2D.Float(1, 1);
         Point2D p3 = new Point2D.Float(0, 1);
         pageDrawerUtils.appendRectangle(p0, p1, p2, p3);
-        // Nothing to assert as method is not implemented
-    }
-
-    @Test
-    void testDrawImage() throws IOException {
-        PDImage pdImage = mock(PDImage.class);
-        pageDrawerUtils.drawImage(pdImage);
         // Nothing to assert as method is not implemented
     }
 

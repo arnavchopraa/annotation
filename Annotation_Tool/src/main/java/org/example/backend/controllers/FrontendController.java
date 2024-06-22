@@ -38,6 +38,22 @@ public class FrontendController {
     }
 
     /**
+     * This method creates a new instance of the FrontendController class
+     *
+     * @param parsingService the parsing service
+     * @param annotationCodeService the annotation service
+     * @param submissionService the submission service
+     * @param exportService the export service
+     */
+    public FrontendController(ParsingService parsingService, AnnotationCodeService annotationCodeService,
+        SubmissionService submissionService, ExportService exportService) {
+        this.parsingService = parsingService;
+        this.annotationCodeService = annotationCodeService;
+        this.submissionService = submissionService;
+        this.exportService = exportService;
+    }
+
+    /**
      * Endpoint used to download all files, for a coordinator, containing all modifications done on the frontend.
      *
      * @param id Email of the coordinator for which to download all assigned files.

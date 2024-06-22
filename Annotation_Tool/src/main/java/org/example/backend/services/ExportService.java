@@ -127,8 +127,8 @@ public class ExportService {
                 throw new PDFException("Something went wrong while parsing file: " + submission.getFileName() + ", submitted by: " +
                         submission.getId() + ". The error encountered is: " + e.getMessage());
             }
-
-            String content = result.getText() + "\n----------Annotations----------\n\n" + result.getAnnotations();
+            String content = result.getText() + "\n----------Annotations----------\n\n" + result.getAnnotations()
+                + "\n----------Captions----------\n\n" + result.getCaptions();
             String fileName = result.removeFileExtension(submission.getFileName());
             fileName = submission.getId() + " - " + fileName + ".txt";
 

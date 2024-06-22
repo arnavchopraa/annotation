@@ -117,7 +117,7 @@ public class ExportServiceTest {
         when(submissionService.getSubmissions()).thenReturn(mockSubmissions);
 
         // Mock parsingService behavior
-        PairUtils mockPairUtils = new PairUtils("Parsed text", "Annotations" , "");
+        PairUtils mockPairUtils = new PairUtils("Parsed text", "Annotations" , "", "caption");
         ParsingService mockParsingService = mock(ParsingService.class);
         when(mockParsingService.parsePDF(any(File.class))).thenReturn(mockPairUtils);
 

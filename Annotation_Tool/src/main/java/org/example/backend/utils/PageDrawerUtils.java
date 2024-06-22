@@ -5,6 +5,7 @@ import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.util.Matrix;
 
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
@@ -19,14 +20,19 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
     private List<Line> lines = new ArrayList<>();
     private float lastx;
     private float lasty;
+    private List<PDFObject> images;
+    private int pageNumber;
 
     /**
      * Constructor.
      *
      * @param page the page the content stream belongs to
+     * @param pageNumber the page number
      */
-    public PageDrawerUtils(PDPage page) {
+    public PageDrawerUtils(PDPage page, int pageNumber) {
         super(page);
+        this.pageNumber = pageNumber;
+        images = new ArrayList<>();
     }
 
     /**
@@ -36,7 +42,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      * @param p2 third coordinate of the rectangle
      * @param p3 last coordinate of the rectangle
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void appendRectangle(Point2D p0, Point2D p1, Point2D p2, Point2D p3) throws IOException {
@@ -47,18 +53,24 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      *
      * @param pdImage The image to draw.
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void drawImage(PDImage pdImage) throws IOException {
-
+        Matrix ctmNew = getGraphicsState().getCurrentTransformationMatrix();
+        float imageXScale = ctmNew.getScalingFactorX();
+        float imageYScale = ctmNew.getScalingFactorY();
+        float imageXPosition = ctmNew.getTranslateX();
+        float imageYPosition = ctmNew.getTranslateY();
+        PDFObject image = new PDFObject(imageXPosition, imageYPosition, imageXPosition + imageXScale, imageYPosition + imageYScale, pageNumber);
+        images.add(image);
     }
 
     /**
      *
      * @param windingRule The winding rule which will be used for clipping.
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void clip(int windingRule) throws IOException {
@@ -70,7 +82,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      * @param x the x-coordinate to move to
      * @param y the y-coordinate to move to
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void moveTo(float x, float y) throws IOException {
@@ -84,7 +96,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      * @param x the X-coordinate of the ending-point of the line to be drawn
      * @param y the Y-coordinate of the ending-point of the line to be drawn
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void lineTo(float x, float y) throws IOException {
@@ -102,7 +114,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      * @param x3 the X coordinate of the final end point
      * @param y3 the Y coordinate of the final end point
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void curveTo(float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
@@ -111,8 +123,8 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
 
     /**
      *
-     * @return the current point
-     * @throws IOException if the content stream cannot be processed
+     * @return
+     * @throws IOException
      */
     @Override
     public Point2D getCurrentPoint() throws IOException {
@@ -121,7 +133,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
 
     /**
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void closePath() throws IOException {
@@ -130,7 +142,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
 
     /**
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void endPath() throws IOException {
@@ -139,7 +151,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
 
     /**
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void strokePath() throws IOException {
@@ -150,7 +162,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      *
      * @param windingRule The winding rule this path will use.
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void fillPath(int windingRule) throws IOException {
@@ -161,7 +173,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      *
      * @param windingRule The winding rule this path will use.
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void fillAndStrokePath(int windingRule) throws IOException {
@@ -172,7 +184,7 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
      *
      * @param shadingName The name of the Shading Dictionary to use for this fill instruction.
      *
-     * @throws IOException if the content stream cannot be processed
+     * @throws IOException
      */
     @Override
     public void shadingFill(COSName shadingName) throws IOException {
@@ -186,4 +198,13 @@ public class PageDrawerUtils extends PDFGraphicsStreamEngine {
     public List<Line> getLines() {
         return lines;
     }
+
+    /**
+     * Method to return all tables extracted on page.
+     * @return list of tables
+     */
+    public List<PDFObject> getImages() {
+        return images;
+    }
 }
+

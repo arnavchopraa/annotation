@@ -1,0 +1,33 @@
+Catch up:
+Stefan - search functionality, delete account and database fixing
+Radu - prev + next button, mass downloads and database fix
+Calin - selenium + unit tests, helped with security
+Paul - Security + database fix
+Rebecca - Bulk delete and download on frontend
+
+What we need to do next:
+- Captions
+- Clean up the code
+- Save the form inputs
+- Implement the feedback we received on the report
+- Upload button for admin
+
+Plan:
+- Finish all functionality by thursday
+- After thursday, check for bugs and work on the report
+- Add another security section to the report
+
+Report feedback:
+- We are really disorganized
+- Introduction, summary and conclusion are different
+- Future Recommandations need to be rewritten
+- Ethics section wrongly placed
+- Summary is too short, needs more content and not reference any other sections of the report
+
+Work distribution:
+- Big differences in last retrospective in terms of hours of work
+
+Question round:
+- Process grade is colective, not individual
+- Q&A works the same as midterm presentation
+

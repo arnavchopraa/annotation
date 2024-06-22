@@ -41,10 +41,25 @@ public class AdminController {
      * @param annotationCodeService Service that manages annotation codes
      */
     @Autowired
-    public AdminController(UserService userService, SubmissionService submissionService, AnnotationCodeService annotationCodeService) {
+    public AdminController(UserService userService, SubmissionService submissionService,
+        AnnotationCodeService annotationCodeService) {
         this.submissionService = submissionService;
         this.importService = new ImportService(userService, submissionService);
         this.exportService = new ExportService(submissionService, annotationCodeService);
+    }
+
+    /**
+     * Constructor for AdminController, with predefined importService
+     *
+     * @param importService Service that manages imports
+     * @param submissionService Service that manages submissions
+     * @param exportService Service that manages exports
+     */
+    public AdminController(ImportService importService,
+        SubmissionService submissionService, ExportService exportService) {
+        this.importService = importService;
+        this.exportService = exportService;
+        this.submissionService = submissionService;
     }
 
     /**
@@ -154,4 +169,5 @@ public class AdminController {
         }
         return new ResponseEntity<>("Submission database has been cleared!", HttpStatus.OK);
     }
+
 }

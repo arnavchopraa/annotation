@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Service
 public class AccountService {
-    private final EmailService emailService = new EmailService();
+    private EmailService emailService = new EmailService();
     private final UserService userService;
     private final SubmissionService submissionService;
 
@@ -33,6 +33,19 @@ public class AccountService {
     public AccountService(UserService userService, SubmissionService submissionService) {
         this.userService = userService;
         this.submissionService = submissionService;
+    }
+
+    /**
+     * Constructor for Account service with all fields
+     *
+     * @param userService Repository used to save users.
+     * @param submissionService Repository used to save submissions.
+     * @param emailService Repository used to send emails.
+     */
+    public AccountService(UserService userService, SubmissionService submissionService, EmailService emailService) {
+        this.userService = userService;
+        this.submissionService = submissionService;
+        this.emailService = emailService;
     }
 
     /**
@@ -111,7 +124,6 @@ public class AccountService {
                 existingSubmission.addUser(user);
                 submissionService.updateSubmission(existingSubmission);
             }
-
         }
     }
 
