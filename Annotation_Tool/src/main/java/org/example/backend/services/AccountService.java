@@ -8,6 +8,7 @@ import org.example.backend.models.SubmissionDB;
 import org.example.backend.models.User;
 import org.example.backend.importmodels.Coordinator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@Service
 public class AccountService {
     private final EmailService emailService = new EmailService();
     private final UserService userService;
