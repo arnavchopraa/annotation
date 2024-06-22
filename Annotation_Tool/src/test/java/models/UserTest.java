@@ -47,11 +47,10 @@ class UserTest {
     @Test
     void allArgsContructor() {
         User user = new User("email@email.com", "username", PasswordHashingService.hashPassword("password123"), "supervisor");
-        String newPass = null;
-        newPass = passwordHashingService.hashPassword("password123");
+        String newHashed = PasswordHashingService.hashPassword("password123");
         assertEquals("email@email.com", user.getId());
         assertEquals("username", user.getName());
-        assertEquals("password123", user.getPassword());
+        assertEquals(newHashed, user.getPassword());
         assertEquals("supervisor", user.getRole());
     }
 
@@ -73,8 +72,7 @@ class UserTest {
     @Test
     void toStringTest() {
         User user = new User("username", PasswordHashingService.hashPassword("password123"), "supervisor");
-        String newPass = null;
-        newPass = passwordHashingService.hashPassword("password123");
-        assertEquals("User(id=null, name=username, password=password123" + ", role=supervisor)", user.toString());
+        String hashed = PasswordHashingService.hashPassword("password123");
+        assertEquals("User(id=null, name=username, password=" + hashed + ", role=supervisor)", user.toString());
     }
 }

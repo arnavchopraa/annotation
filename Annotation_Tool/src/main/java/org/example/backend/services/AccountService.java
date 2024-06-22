@@ -110,7 +110,6 @@ public class AccountService {
                 existingSubmission.addUser(user);
                 submissionService.updateSubmission(existingSubmission);
             }
-
         }
     }
 

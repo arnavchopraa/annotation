@@ -169,6 +169,8 @@ public class ParsingServiceTest {
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
+    }
+    @Test
     public void testHyphenWindowsEOL() {
         String input = "This is a test -\r\nstring";
         String expected = "This is a test -\r\nstring";

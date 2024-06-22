@@ -14,7 +14,7 @@ public class PairUtilsTest {
 
     @Test
     public void testRemoveExtension2() {
-        PairUtils pair = new PairUtils("", "", "");
+        PairUtils pair = new PairUtils("", "", "", "");
         pair.setText("This is a PDF file");
         pair.setAnnotations("");
         pair.setFileName("test");

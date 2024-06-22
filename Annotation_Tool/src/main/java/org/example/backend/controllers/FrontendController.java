@@ -4,14 +4,21 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.example.backend.exceptions.PDFException;
+import org.example.backend.models.AnnotationCode;
 import org.example.backend.services.*;
+import org.example.backend.utils.FileUtils;
+import org.example.backend.utils.PairUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
