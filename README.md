@@ -53,10 +53,10 @@ When you're ready to make this README your own, just edit this file and use the 
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
 ## Name
-Choose a self-explaining name for your project.
+Developing an Annotation Tool, used by professors to provide feedback to students' theses and utilize this feedback to train a LLM in order to provide automatic feedback.
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+This application should provide professors with a way to annotate PDF files, which represent students' theses. They can make use of feedback codes, which are short, predefined codes associated to some standard feedback. The professors have a dashboard, in which they can see all their assigned submissions, the last edited date of the document, the group name in which the student who uploaded the respective submission is part of, and whether the file was already submitted by the professors. Once they are done, an admin can use the parsing functionality, which retrieves the text from PDF files and applies some preprocessing techniques, in order to create an appropriate input for a Large Language Model, which will be trained in the future.
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
@@ -65,23 +65,29 @@ On some READMEs, you may see small images that convey metadata, such as whether 
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Our application does not require any local installation, since all functionality is featured on a website. The backend logic of the application should be ran on a remote server, while the frontend of the application should be uploaded to some domain.
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+If you require any help using our website, please try accessing the pages related to instructions on the website, which feature detailed instructions on how to use the Annotation Tool. If you still require additional help, you can access the support page, which features a contact form and a section containing Frequently Answered Questions. We will ensure that we respond as soon as possible to your requests. If you require additional help, please feel free to reach out to us at annotationtool.sp@gmail.com. \
+
+If, at any point, you feel that something is not running as expected, or it takes too long to register some operations, or perhaps you have any suggestions for improvement, please use the feedback form in order to reach out to us. We will make sure to provide some responses to your requests.
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+In the future, there are some important things which should be addressed. The first of them is using the TU Delft SSO for logging in to the application, which provides another secure way to access our application, using the credentials that you are familiar with from your other accounts associated to TU Delft. \
+
+The second thing to be done is integrating the tool with Brightspace, which would provide much easier access for professors, due to the fact that they won't have to navigate to an external tool to annotate students' theses, and would have everything accessible in one place.
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+This project is open for future contribution and should be done by developers affiliated with TU Delft. The most important future contributions have been stated above, in the Roadmap section. \
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Our codebase consists of multiple packages, which contain classes responsible for some part of the logic of the whole project. If you want to contribute on the way we parse files, the first place you should check out is the ParsingService class, which is in the services package, which contains most of the logic used for extracting information out of PDF files and further processing it. \
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+If, instead, you want to contribute towards adding new features to the frontend of our application, all pages accessible from our tool have been defined in the frontend package. Each page contains a html file, defining the elements on the page, a css file, responsible for styling the page and a js file, connecting the elements with appropriate functionality. If you want to create new pages, consider respecting the structure of the codebase we have worked on. \
+
+If you want to add new features to the application, which may involve altering the database, consider checking out the models package, which contains the entities from our database. Moreover, there are services responsible for modifying entities within the database, so use that functionality if you want to perform similar operations. If you decide to add new entities to the database, please follow the code structure from the repository, in order to keep it clean.
 
 ## Authors and acknowledgment
 Show your appreciation to those who have contributed to the project.
