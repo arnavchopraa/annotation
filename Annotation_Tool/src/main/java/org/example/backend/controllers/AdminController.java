@@ -53,12 +53,12 @@ public class AdminController {
      *
      * @param importService Service that manages imports
      * @param submissionService Service that manages submissions
-     * @param annotationCodeService Service that manages annotation codes
+     * @param exportService Service that manages exports
      */
     public AdminController(ImportService importService,
-        SubmissionService submissionService, AnnotationCodeService annotationCodeService) {
+        SubmissionService submissionService, ExportService exportService) {
         this.importService = importService;
-        this.exportService = new ExportService(submissionService, annotationCodeService);
+        this.exportService = exportService;
         this.submissionService = submissionService;
     }
 
