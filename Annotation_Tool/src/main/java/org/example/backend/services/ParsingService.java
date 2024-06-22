@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 public class ParsingService {
 
-    private AnnotationCodeService annotationCodeService;
+    private final AnnotationCodeService annotationCodeService;
 
     /**
      * This method creates a new instance of the ParsingService class
@@ -93,96 +93,6 @@ public class ParsingService {
         } catch (IOException e) {
             throw new PDFException(file.getName());
         }
-    }
-
-    /**
-     * Parses a pdf file including text and annotations and applyes the NER model
-     *
-     * @param file the file that needs to be parsed
-     * @return the parsed text
-     * @throws PDFException if the file is not of type pdf
-     */
-
-    public PairUtils parsePDFwithNer(File file) throws PDFException {
-        try {
-            PDDocument document = Loader.loadPDF(file);
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String text = pdfStripper.getText(document);
-
-            String annotations = "";
-            for(PDPage page : document.getPages()) {
-                List<PDAnnotation> annotationList = page.getAnnotations();
-                for (PDAnnotation a : annotationList) {
-                    if (a.getSubtype().equals("Highlight")) {
-                        //annotations = annotations + "\n" + getHighlightedText(a, page) + " - " + queryService.queryResults(a.getContents()) + "\n";
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        annotations = annotations + getHighlightedText(a, page) + " - " + a.getContents() + "\n";
-                    } else if (a.getSubtype().equals("Text")) {
-                        if (!annotations.equals(""))
-                            annotations = annotations + "\n";
-                        annotations = annotations + a.getContents() + "\n";
-                    }
-                }
-            }
-            try {
-                String nerScriptPath = "../../python/org/example/ner.py";
-                ProcessBuilder pb = new ProcessBuilder("python3", nerScriptPath);
-                Process process = pb.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                String modifiedText = "";
-                while ((line = reader.readLine()) != null) {
-                    modifiedText += line;
-                }
-                return new PairUtils(modifiedText, annotations, file.getName());
-            } catch (IOException e) {
-                throw new PDFException(file.getName());
-            }
-        } catch (IOException e) {
-            throw new PDFException(file.getName());
-        }
-    }
-
-    /**
-     * Recursively parses all pdfs in a given folder
-     * @param file the folder from which to parse the files
-     * @return the list of parsed texts from each file in the folder
-     * @throws PDFException if one of the files is not of type pdf
-     */
-    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException, IOException {
-        List<PairUtils> parsed = new LinkedList<>();
-        if(file.isDirectory()) {
-            for (File f : Objects.requireNonNull(file.listFiles())) {
-                if (f.isDirectory())
-                    parsed.addAll(parseFilesFromFolder(f));
-                else if (f.isFile())
-                    parsed.add(parsePDF(f));
-            }
-        } else {
-            throw new IOException("Uploaded file is not a folder");
-        }
-
-        return parsed;
-    }
-
-    /**
-     * Parses all given pdfs
-     * @param files the files to parse
-     * @return the list of parsed texts from each file in the folder
-     * @throws PDFException if one of the files is not of type pdf
-     */
-    public List<PairUtils> parseFilesList(File... files) throws PDFException, IOException {
-        List<PairUtils> parsed = new LinkedList<>();
-
-        for(File f : files) {
-            if(f.isDirectory())
-                parsed.addAll(parseFilesFromFolder(f));
-            else if(f.isFile())
-                parsed.add(parsePDF(f));
-        }
-
-        return parsed;
     }
 
     /**

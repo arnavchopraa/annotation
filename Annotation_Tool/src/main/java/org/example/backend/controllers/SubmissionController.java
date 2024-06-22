@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.example.database.SubmissionRepository;
+import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,14 +48,13 @@ public class SubmissionController {
     /**
      * Constructor for the SubmissionController
      *
-     * @param repo the repository for the submission
      * @param service the service for the submission
      * @param userService the service for users
      * @param accountService the service to accounts
      * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService,
+    public SubmissionController(SubmissionService service, AnnotationCodeService annotationCodeService,
         UserService userService, AccountService accountService) {
         this.service = service;
         this.annotationCodeService = annotationCodeService;

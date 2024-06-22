@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.Getter;
 import org.example.backend.exceptions.FileException;
 import org.example.backend.exceptions.ImportException;
 import org.example.backend.exceptions.NoSubmissionException;
@@ -26,6 +27,7 @@ import java.util.zip.ZipException;
 
 @RestController
 @CrossOrigin(origins = "*")
+@Getter
 public class AdminController {
     private final ImportService importService;
     private final ExportService exportService;

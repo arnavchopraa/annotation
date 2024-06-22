@@ -1,5 +1,4 @@
 package org.example.backend.services;
-
 import org.example.backend.exceptions.EmailException;
 
 import javax.mail.*;

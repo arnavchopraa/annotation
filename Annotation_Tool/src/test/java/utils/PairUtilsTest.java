@@ -11,4 +11,13 @@ public class PairUtilsTest {
         PairUtils pair = new PairUtils("This is a PDF file", "", "test.pdf");
         assertEquals("test", pair.getFileName());
     }
+
+    @Test
+    public void testRemoveExtension2() {
+        PairUtils pair = new PairUtils("", "", "");
+        pair.setText("This is a PDF file");
+        pair.setAnnotations("");
+        pair.setFileName("test");
+        assertEquals("test", pair.getFileName());
+    }
 }
