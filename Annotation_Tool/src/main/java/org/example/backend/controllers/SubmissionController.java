@@ -11,7 +11,6 @@ import org.example.backend.importmodels.Student;
 import org.example.backend.models.SubmissionDTO;
 import org.example.backend.models.User;
 import org.example.backend.services.*;
-import org.example.backend.utils.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,10 +50,13 @@ public class SubmissionController {
      *
      * @param repo the repository for the submission
      * @param service the service for the submission
+     * @param userService the service for users
+     * @param accountService the service to accounts
      * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService, UserService userService, AccountService accountService) {
+    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService,
+        UserService userService, AccountService accountService) {
         this.service = service;
         this.annotationCodeService = annotationCodeService;
         this.exportService = new ExportService(service, annotationCodeService);
@@ -417,7 +419,8 @@ public class SubmissionController {
      * @return ok if everything went well
      */
     @PostMapping("/{studentId}/{groupName}/{coordinatorId}")
-    public ResponseEntity<String> addSubmission(@RequestParam("file") MultipartFile file, @PathVariable("studentId") String studentId, @PathVariable("groupName") String groupName, @PathVariable("coordinatorId") String coordinatorId) {
+    public ResponseEntity<String> addSubmission(@RequestParam("file") MultipartFile file, @PathVariable("studentId") String studentId,
+        @PathVariable("groupName") String groupName, @PathVariable("coordinatorId") String coordinatorId) {
         Blob blob = null;
         try {
             blob = new SerialBlob(file.getBytes());
