@@ -84,21 +84,6 @@ public class User implements UserDetails{
     }
 
     /**
-        * Json Constructor for User with all arguments
-        *
-        * @param id the id of the user
-        * @param name the name of the user
-        * @param password the password of the user
-        * @param role the role of the user
-        * @return the user with all the arguments
-        */
-    @JsonCreator
-    public static User create(@JsonProperty("email") String id, @JsonProperty("username") String name,
-        @JsonProperty("password") String password, @JsonProperty("role") String role) {
-        return new User(id, name, password, role);
-    }
-
-    /**
      * Basic constructor for User
      */
     public User() { }
@@ -108,7 +93,6 @@ public class User implements UserDetails{
      *
      * @return the id of the user
      */
-    @JsonProperty("email")
     public String getId() {
         return id;
     }
@@ -127,7 +111,6 @@ public class User implements UserDetails{
      *
      * @return the name of the user
      */
-    @JsonProperty("username")
     public String getName() {
         return name;
     }
@@ -152,7 +135,7 @@ public class User implements UserDetails{
      *
      * @return the password of the user
      */
-    @JsonProperty("password")
+    @Override
     public String getPassword() {
         return password;
     }
@@ -197,7 +180,6 @@ public class User implements UserDetails{
      *
      * @return the role of the user
      */
-    @JsonProperty("role")
     public String getRole() {
         return role;
     }

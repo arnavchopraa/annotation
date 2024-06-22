@@ -40,12 +40,11 @@ public class SubmissionController {
     /**
      * Constructor for the SubmissionController
      *
-     * @param repo the repository for the submission
      * @param service the service for the submission
      * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService){
+    public SubmissionController(SubmissionService service, AnnotationCodeService annotationCodeService){
         this.service = service;
         this.annotationCodeService = annotationCodeService;
         this.exportService = new ExportService(service, annotationCodeService);
