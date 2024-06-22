@@ -472,3 +472,45 @@ function verifyLock(check) {
         }
     })
 }
+
+document.getElementById("add-submission-button").addEventListener("click", (e) => {
+    e.preventDefault()
+
+    let student = document.getElementById("studentId").value
+    let group = document.getElementById("groupName").value
+    let submission = document.getElementById("newSubmissionInput")
+
+    console.log(student)
+    console.log(group)
+    console.log(submission.files[0])
+
+    if(student === "" || group === "" || submission.files.length === 0) {
+        displayWarningPopUp("Please complete all of the required fields!")
+        return
+    }
+
+    const formData = new FormData();
+    formData.append("file", submission.files[0]);
+
+    const endpoint = `http://localhost:8080/submissions/${student}/${group}/${sessionEmail}`
+
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    })
+    .then(response => {
+        if(response.ok) {
+            displaySavedPopUp("Your file was added!")
+        } else if(response.status === 500) {
+            displayErrorPopUp("Something went wrong!")
+        } else if(response.status === 404) {
+            displayErrorPopUp("This coordinator does not exist!")
+        } else if(response.status === 409) {
+            displayErrorPopUp("This file already exists!")
+        }
+
+    })
+});

@@ -7,25 +7,32 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.example.backend.importmodels.Student;
 import org.example.backend.models.SubmissionDTO;
-import org.example.backend.services.AnnotationCodeService;
-import org.example.backend.services.ExportService;
+import org.example.backend.models.User;
+import org.example.backend.services.*;
+import org.example.backend.utils.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.example.database.SubmissionRepository;
-import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -36,6 +43,8 @@ public class SubmissionController {
     private final SubmissionService service;
     private final AnnotationCodeService annotationCodeService;
     private final ExportService exportService;
+    private final UserService userService;
+    private final AccountService accountService;
 
     /**
      * Constructor for the SubmissionController
@@ -45,10 +54,12 @@ public class SubmissionController {
      * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService){
+    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService, UserService userService, AccountService accountService) {
         this.service = service;
         this.annotationCodeService = annotationCodeService;
         this.exportService = new ExportService(service, annotationCodeService);
+        this.userService = userService;
+        this.accountService = accountService;
     }
 
     /**
@@ -395,5 +406,49 @@ public class SubmissionController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(sub.isLocked());
+    }
+
+    /**
+     * Method that adds a new submission to the database. If the student does not already have an account, it also creates one for him.
+     * @param file The file to be added to the database
+     * @param studentId Email of the student who should view the file
+     * @param groupName Name of the group of the student
+     * @param coordinatorId ID of the coordinator that added the file
+     * @return ok if everything went well
+     */
+    @PostMapping("/{studentId}/{groupName}/{coordinatorId}")
+    public ResponseEntity<String> addSubmission(@RequestParam("file") MultipartFile file, @PathVariable("studentId") String studentId, @PathVariable("groupName") String groupName, @PathVariable("coordinatorId") String coordinatorId) {
+        Blob blob = null;
+        try {
+            blob = new SerialBlob(file.getBytes());
+        } catch (SQLException | IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        User coordinator = userService.getUser(coordinatorId);
+
+        if(coordinator == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<User> userSet = new HashSet<>();
+        userSet.add(coordinator);
+
+        User student = userService.getUser(studentId);
+        if(student == null) {
+            Student s = new Student(null, null, studentId, studentId, null, groupName);
+            List<Student> students = new ArrayList<>();
+            students.add(s);
+
+            accountService.createStudentAccounts(students);
+        }
+
+        SubmissionDB toAdd = new SubmissionDB(studentId, blob, groupName, userSet, file.getOriginalFilename(), null, null, false, false);
+
+        SubmissionDB added = service.addSubmission(toAdd);
+
+        if(added == null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

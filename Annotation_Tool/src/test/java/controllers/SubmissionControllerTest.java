@@ -3,7 +3,10 @@ package controllers;
 import org.example.backend.controllers.SubmissionController;
 import org.example.backend.models.SubmissionDB;
 import org.example.backend.models.SubmissionDTO;
+import org.example.backend.models.User;
+import org.example.backend.services.AccountService;
 import org.example.backend.services.SubmissionService;
+import org.example.backend.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -26,12 +31,17 @@ class SubmissionControllerTest {
 
     @Mock
     private SubmissionService service;
+    @Mock
+    private UserService userService;
+    @Mock
+    private AccountService accountService;
 
     @InjectMocks
     private SubmissionController controller;
 
     private SubmissionDB submissionDB;
     private SubmissionDTO submissionDTO;
+    private MultipartFile multipartFile;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -42,6 +52,9 @@ class SubmissionControllerTest {
 
         String base64File = Base64.getEncoder().encodeToString("dummy content".getBytes());
         submissionDTO = new SubmissionDTO("test@example.com", base64File, "groupName", new HashSet<>(), "file.pdf", String.valueOf(System.currentTimeMillis()), String.valueOf(System.currentTimeMillis()), false, false);
+
+        String file = "abc";
+        multipartFile = new MockMultipartFile("name", "name", "text/plain", file.getBytes());
     }
 
     @Test
@@ -220,5 +233,48 @@ class SubmissionControllerTest {
         ResponseEntity<Boolean> response = controller.unlockFile("1");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testSubmissionControllerNotFound() {
+        when(userService.getUser("1")).thenReturn(null);
+
+        ResponseEntity<String> response = controller.addSubmission(multipartFile, "test@test.com", "group", "1");
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testSubmissionControllerConflict() {
+        when(userService.getUser("1")).thenReturn(new User());
+        when(userService.getUser("test@test.com")).thenReturn(new User());
+        when(service.getSubmission(any())).thenReturn(null);
+
+        ResponseEntity<String> response = controller.addSubmission(multipartFile, "test@test.com", "group", "1");
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    void testSubmissionControllerGood() {
+        when(userService.getUser("1")).thenReturn(new User());
+        when(userService.getUser("test@test.com")).thenReturn(new User());
+        when(service.addSubmission(any())).thenReturn(new SubmissionDB());
+
+        ResponseEntity<String> response = controller.addSubmission(multipartFile, "test@test.com", "group", "1");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void testSubmissionControllerCreateAccount() {
+        when(userService.getUser("1")).thenReturn(new User());
+        when(userService.getUser("test@test.com")).thenReturn(null);
+        when(service.addSubmission(any())).thenReturn(new SubmissionDB());
+
+        ResponseEntity<String> response = controller.addSubmission(multipartFile, "test@test.com", "group", "1");
+
+        verify(accountService).createStudentAccounts(any());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
