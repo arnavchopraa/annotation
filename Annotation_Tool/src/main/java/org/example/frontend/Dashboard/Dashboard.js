@@ -480,10 +480,6 @@ document.getElementById("add-submission-button").addEventListener("click", (e) =
     let group = document.getElementById("groupName").value
     let submission = document.getElementById("newSubmissionInput")
 
-    console.log(student)
-    console.log(group)
-    console.log(submission.files[0])
-
     if(student === "" || group === "" || submission.files.length === 0) {
         displayWarningPopUp("Please complete all of the required fields!")
         return
