@@ -1,0 +1,29 @@
+Demo feedback:
+- Possible questionon final presentation: why not just use Brightspace?
+	=> predefined codes, not on brightspace
+	=> the purpose of the tool is to also collect the data
+	=> On brightspace, annotation seems less intuitive    
+                                           
+- What to do when we have late submissions, making the teacher reupload the files:
+	=> We don't have a solution to this, we need think about it and put in the paper
+	=> Documenting this will help the grade
+	=> Currently, the students that already have submissions will be ignored and will not be overwritten
+	=> Idea: ignore the file if the file contains annotations, overwrite otherwise
+	=> Put it in the report, even if we dont find a solution
+
+- Purpose of the report?
+	=> Analysing development process or analyzing the feasibality
+	=> Focus on development process
+
+- How long should each user session last?
+	=> not important, will be SSO either way
+	=> 30 minutes is ok for now, maybe an hour
+
+- What should happen if 2 professors annotate the same file at the same time?
+	=> Idea1: lock the file when is edited, unlock when the save button is pressed
+	=> Idea2: Keep version of file, if save is clicked make new version
+		=> keep changes from one, but work will be lost
+		=> keep changes from both professors, notify both
+	=> Client prefers idea1, temporary lock the file
+
+- We can send the slides for the presentation on mattermost for feedback
