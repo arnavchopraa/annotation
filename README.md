@@ -1,74 +1,46 @@
 # Developing an Annotation Tool to train an LLM to provide automatic feedback on students theses
 
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.ewi.tudelft.nl/cse2000-software-project/2023-2024/cluster-f/05c/developing-an-annotation-tool-to-train-an-llm-to-provide-automatic-feedback-on-students-theses.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.ewi.tudelft.nl/cse2000-software-project/2023-2024/cluster-f/05c/developing-an-annotation-tool-to-train-an-llm-to-provide-automatic-feedback-on-students-theses/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
 ## Name
 Developing an Annotation Tool, used by professors to provide feedback to students' theses and utilize this feedback to train a LLM in order to provide automatic feedback.
 
 ## Description
 This application should provide professors with a way to annotate PDF files, which represent students' theses. They can make use of feedback codes, which are short, predefined codes associated to some standard feedback. The professors have a dashboard, in which they can see all their assigned submissions, the last edited date of the document, the group name in which the student who uploaded the respective submission is part of, and whether the file was already submitted by the professors. Once they are done, an admin can use the parsing functionality, which retrieves the text from PDF files and applies some preprocessing techniques, in order to create an appropriate input for a Large Language Model, which will be trained in the future.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
 ## Installation
 Our application does not require any local installation, since all functionality is featured on a website. The backend logic of the application should be ran on a remote server, while the frontend of the application should be uploaded to some domain.
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+The first step of the tool involves logging in to your account. Since this is a private tool, which should be only used with the scope of providing feedback to Research Project students, you cannot create your own account on the tool. Instead, you will have an account automatically created once theses have been imported to the tool. 
+
+#### For supervisors
+
+The supervisors will have access to a dashboard, which should showcase all reports associated to them. The supervisor can click on any of them, in which case they will be taken to the "Annotating page". There, they can freely modify the file and make use of feedback codes, which will always be displayed on the right. After they are done, they can choose to submit the file by clicking on the "Submit" button at the top of the page.
+
+Navigation between files can be done either through the dashboard, by selecting the desired file, or through the annotation page, by clicking on either the "previous", or "next" buttons, which will show the next file on the list.
+
+Supervisors also have access to an account settings page, in which they can do multiple things:
+- Firstly, they can change the password to their account. Since the accounts are automatically generated, the initial password may be hard to remember, thus someone would like to set an easier one to remember.
+- Secondly, thay can choose to download all associated submissions. This allows them to receive a zip file containing all submissions that they are responsible for annotating. With this feature, we ensure that they are all accessible in one place, and can easily be uploaded back to Brightspace, if necessary.
+- Lastly, if they want to erase their personal data from our tool, or if they do not want to be associated with it any more, they can choose to delete their accounts.
+
+#### For admins
+
+Administrators have access to two more pages. First one represents the course managing settings, in which an administrator will be allowed to upload three files: A file containing all student submissions, generated by Brightspace, a file containing a list of students, and the groups they are enrolled in, and a file containing a list of supervisors, and the groups they are responsible for. After uploading these three files, if they are in an appropriate format, they should be recognized by our tool, and all data should be imported accordingly.
+
+On this page, they can also download all parsed files. Once clicked, this button provides a zip file, containing all files in the database, after parsing them using the parsing tool. This can be used to generate the data for the Large Language Model, which should be developed in the future.
+
+Lastly, on this page, they can also choose to delete all submissions from the database. We recommend clearing them after every course edition, such that the supervisors's dashboards don't get too crowded.
+
+The other page they have access to is the annotation codes page. Here, they can add/edit/delete feedback codes, which are the short codes associated to some predefined feedback, and also available to annotators at all times. This allows for more situations for predefined feedback.
+
+#### For students
+
+Students only have access to a restricted version of the tool, which only contains the annotation page. However, they cannot access any files other than their own submissions, and they can only see them once they have been submitted by a supervisor, on our tool. Moreover, they do not have access to the feedback codes either and cannot further modify the document, as the viewer is locked into a read-only mode while a student is logged in.
+
+However, they have access to functionality regarding changing passwords and deleting accounts.
+
+#### General usage
+In case any help is required from users, regardless of their role, all have access to a help page, which contains a contact form, answers to frequently asked questions, as well as a feedback form. After completing these, the requests will be sent to an email address, which should be checked regularly. An answer should then be provided to the email address with which the form was completed.
 
 ## Support
 If you require any help using our website, please try accessing the pages related to instructions on the website, which feature detailed instructions on how to use the Annotation Tool. If you still require additional help, you can access the support page, which features a contact form and a section containing Frequently Answered Questions. We will ensure that we respond as soon as possible to your requests. If you require additional help, please feel free to reach out to us at annotationtool.sp@gmail.com. \
@@ -81,19 +53,16 @@ In the future, there are some important things which should be addressed. The fi
 The second thing to be done is integrating the tool with Brightspace, which would provide much easier access for professors, due to the fact that they won't have to navigate to an external tool to annotate students' theses, and would have everything accessible in one place.
 
 ## Contributing
-This project is open for future contribution and should be done by developers affiliated with TU Delft. The most important future contributions have been stated above, in the Roadmap section. \
+This project is open for future contribution and should be done by developers affiliated with TU Delft. The most important future contributions have been stated above, in the Roadmap section.
 
-Our codebase consists of multiple packages, which contain classes responsible for some part of the logic of the whole project. If you want to contribute on the way we parse files, the first place you should check out is the ParsingService class, which is in the services package, which contains most of the logic used for extracting information out of PDF files and further processing it. \
+Our codebase consists of multiple packages, which contain classes responsible for some part of the logic of the whole project. If you want to contribute on the way we parse files, the first place you should check out is the ParsingService class, which is in the services package, which contains most of the logic used for extracting information out of PDF files and further processing it.
 
-If, instead, you want to contribute towards adding new features to the frontend of our application, all pages accessible from our tool have been defined in the frontend package. Each page contains a html file, defining the elements on the page, a css file, responsible for styling the page and a js file, connecting the elements with appropriate functionality. If you want to create new pages, consider respecting the structure of the codebase we have worked on. \
+If, instead, you want to contribute towards adding new features to the frontend of our application, all pages accessible from our tool have been defined in the frontend package. Each page contains a html file, defining the elements on the page, a css file, responsible for styling the page and a js file, connecting the elements with appropriate functionality. If you want to create new pages, consider respecting the structure of the codebase we have worked on.
 
 If you want to add new features to the application, which may involve altering the database, consider checking out the models package, which contains the entities from our database. Moreover, there are services responsible for modifying entities within the database, so use that functionality if you want to perform similar operations. If you decide to add new entities to the database, please follow the code structure from the repository, in order to keep it clean.
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
+This project has been started as part of the Software Project course, from TU Delft. It has been developed over the course of 10 weeks, by a team of 5 developers, namely: Radu Vasile, Stefan Bud, Paul Stan, Rebecca Andrei, Calin Georgescu.
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The development process has stopped completely, as of 23rd June 2024.
