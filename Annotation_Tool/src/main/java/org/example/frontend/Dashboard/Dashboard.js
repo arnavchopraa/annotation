@@ -278,7 +278,7 @@ topSection.addEventListener('click', (e) => {
         localStorage.setItem('whichList', 'right')
         localStorage.setItem('file', e.target.firstElementChild.firstElementChild.innerText)
         localStorage.setItem('curidx', Array.from(topSection.children).indexOf(e.target))
-        window.location.href = '../Annotation/Annotation.html'
+        verifyLock(e.target.firstElementChild.firstElementChild.innerText)
     }
 })
 
@@ -465,7 +465,7 @@ function verifyLock(check) {
         }
     }).then(lock => {
         if(lock === true) {
-            alert("This file is being edited by someone else")
+            displayWarningPopUp("This file is being edited by someone else!")
         }
         else {
             window.location.href = "../Annotation/Annotation.html"
