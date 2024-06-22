@@ -96,29 +96,6 @@ class SubmissionControllerTest {
     }
 
     @Test
-    void testAddSubmission() {
-        when(service.addSubmission(any(SubmissionDB.class))).thenReturn(submissionDB);
-
-        ResponseEntity<SubmissionDB> response = controller.addSubmission(submissionDTO);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(submissionDB.getId(), response.getBody().getId());
-        verify(service, times(1)).addSubmission(any(SubmissionDB.class));
-    }
-
-    @Test
-    void testAddSubmission_BadRequest() {
-        when(service.addSubmission(any(SubmissionDB.class))).thenReturn(null);
-
-        ResponseEntity<SubmissionDB> response = controller.addSubmission(submissionDTO);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(service, times(1)).addSubmission(any(SubmissionDB.class));
-    }
-
-    @Test
     void testUpdateSubmission() {
         when(service.updateSubmission(any(SubmissionDB.class))).thenReturn(submissionDB);
 

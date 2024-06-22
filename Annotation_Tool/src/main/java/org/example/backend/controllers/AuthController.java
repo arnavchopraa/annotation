@@ -1,5 +1,9 @@
 package org.example.backend.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.example.backend.requestModels.LoginRequest;
 import org.example.backend.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.example.backend.services.UserService;
 
 @RestController
@@ -46,6 +46,18 @@ public class AuthController {
      * @param loginRequest the login request
      * @return A response entity with the user's role if the user is authenticated
      */
+    @Operation(summary = "Login a user to its account",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        content = @Content(
+        mediaType = "application/json",
+        schema = @Schema(implementation = LoginRequest.class)
+        )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
+            @ApiResponse(responseCode = "400", description = "Request body is malformed, or combination is incorrect"),
+        }
+    )
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         if(loginRequest == null || loginRequest.getUsername() == null || loginRequest.getPassword() == null)
@@ -67,4 +79,5 @@ public class AuthController {
             return new ResponseEntity<>("Username and password combination are incorrect. Please try again.", HttpStatus.BAD_REQUEST);
         }
     }
+
 }

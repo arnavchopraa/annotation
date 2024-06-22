@@ -1,6 +1,11 @@
 package org.example.backend.exceptions;
 
+import java.io.Serial;
+
 public class ImportException extends Exception{
+
+    @Serial
+    private static final long serialVersionUID = -3759525805074320742L;
 
     /**
      * Default constructor for ImportException - NoArgsConstructor

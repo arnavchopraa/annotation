@@ -1,6 +1,11 @@
 package org.example.backend.exceptions;
 
+import java.io.Serial;
+
 public class PDFException extends Exception {
+
+    @Serial
+    private static final long serialVersionUID = 6461788465605399002L;
 
     /**
      * No argument exception

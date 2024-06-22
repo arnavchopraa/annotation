@@ -44,8 +44,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/auth/login").permitAll();
-                    registry.requestMatchers("/frontend/codes").permitAll();
-                    registry.anyRequest().authenticated(); })
+                    registry.requestMatchers("/annotations/").permitAll();
+                    registry.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                    registry.anyRequest().authenticated();
+                })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -46,14 +46,9 @@ class UserTest {
 
     @Test
     void allArgsContructor() {
-        User user = new User("email@email.com", "username", "password123", "supervisor");
-        PasswordHashingService passwordHashingService = new PasswordHashingService();
+        User user = new User("email@email.com", "username", PasswordHashingService.hashPassword("password123"), "supervisor");
         String newPass = null;
-        try {
-            newPass = passwordHashingService.hashPassword("password123");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        newPass = PasswordHashingService.hashPassword("password123");
         assertEquals("email@email.com", user.getId());
         assertEquals("username", user.getName());
         assertEquals(newPass, user.getPassword());
@@ -77,14 +72,10 @@ class UserTest {
 
     @Test
     void toStringTest() {
-        User user = new User("username", "password123", "supervisor");
-        PasswordHashingService passwordHashingService = new PasswordHashingService();
+        User user = new User("username", PasswordHashingService.hashPassword("password123"), "supervisor");
         String newPass = null;
-        try {
-            newPass = passwordHashingService.hashPassword("password123");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        assertEquals("User(id=null, name=username, password=" + newPass + ", role=supervisor)", user.toString());
+        newPass = PasswordHashingService.hashPassword("password123");
+        assertEquals("User@" + Integer.toHexString(user.hashCode()) +
+                ":[email=null,name=username,password=" + newPass + ",role=supervisor]", user.toString());
     }
 }

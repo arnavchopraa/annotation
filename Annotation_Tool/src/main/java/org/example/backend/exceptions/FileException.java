@@ -1,6 +1,11 @@
 package org.example.backend.exceptions;
 
+import java.io.Serial;
+
 public class FileException extends Exception {
+    @Serial
+    private static final long serialVersionUID = 519287854147010182L;
+
     /**
      * Default constructor for FileException - NoArgsConstructor
      */
