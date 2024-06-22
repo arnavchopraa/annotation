@@ -31,7 +31,7 @@ public class ExportServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
         // Initialize the ExportService with mocked SubmissionService
         exportService = new ExportService(submissionService, null); // pass null for AnnotationCodeService for this test
     }
