@@ -46,6 +46,29 @@ function displayErrorPopUp (textContent, shouldRedirect) {
     });
 }
 
+function displayWarningPopUp (textContent, shouldRedirect) {
+    Swal.fire({
+        title: 'Warning!',
+        text: textContent,
+        icon: 'warning',
+        color: '#a6a6a6',
+        customClass: {
+            popup: 'popup-container',
+            title: 'popup-title',
+            confirmButton: 'popup-confirm-button'
+        },
+        buttonsStyling: false,
+        showConfirmButton: true,
+        confirmButtonText: 'OK',
+        confirmButtonAriaLabel: 'OK button',
+        willClose: () => {
+            if (shouldRedirect) {
+                window.history.go(-1); // Redirect to the last accessed page
+            }
+        }
+    });
+}
+
 function displayCancelPopUp (textContent) {
     Swal.fire({
         title: 'CANCELLED',

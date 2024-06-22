@@ -13,10 +13,29 @@ let noSave = false
 prevButton.addEventListener('click', function() {
 
     if(locked === true) {
-        if(confirm("You have unsaved changes. Are you sure you want to leave?")) {
-            prev()
-            locked = false
-        }
+          Swal.fire({
+              title: 'Are you sure?',
+              text: 'You have unsaved changes. Are you sure you want to leave?',
+              icon: 'warning',
+              iconColor: '#bd3233',
+              color: '#a6a6a6',
+              showCancelButton: true,
+              confirmButtonText: 'Yes',
+              cancelButtonText: 'Cancel',
+              customClass: {
+                  popup: 'popup-container',
+                  title: 'popup-title',
+                  confirmButton: 'popup-confirm-delete-button',
+                  cancelButton: 'popup-cancel-button'
+              },
+              buttonsStyling: false,
+          }).then(result => {
+              if(result.isConfirmed) {
+                  unlockFile()
+                  prev()
+                  locked = false
+              }
+          })
     } else {
         prev()
     }
@@ -37,6 +56,7 @@ function prev() {
             prevDoc = localStorage.getItem('submission'+index)
         else
             prevDoc = localStorage.getItem('rightsub'+index)
+        getName = prevDoc
         localStorage.setItem('file', prevDoc)
         fetchSub(prevDoc)
     }
@@ -45,10 +65,29 @@ function prev() {
 nextButton.addEventListener('click', function() {
 
     if(locked === true) {
-        if(confirm("You have unsaved changes. Are you sure you want to leave?")) {
-            next()
-            locked = false
-        }
+        Swal.fire({
+              title: 'Are you sure?',
+              text: 'You have unsaved changes. Are you sure you want to leave?',
+              icon: 'warning',
+              iconColor: '#bd3233',
+              color: '#a6a6a6',
+              showCancelButton: true,
+              confirmButtonText: 'Yes',
+              cancelButtonText: 'Cancel',
+              customClass: {
+                  popup: 'popup-container',
+                  title: 'popup-title',
+                  confirmButton: 'popup-confirm-delete-button',
+                  cancelButton: 'popup-cancel-button'
+              },
+              buttonsStyling: false,
+          }).then(result => {
+              if(result.isConfirmed) {
+                  unlockFile()
+                  next()
+                  locked = false
+              }
+          })
     }
     else {
         next()
@@ -70,6 +109,7 @@ function next() {
             nextDoc = localStorage.getItem('submission'+index)
         else
             nextDoc = localStorage.getItem('rightsub'+index)
+        getName = nextDoc
         localStorage.setItem('file', nextDoc)
         fetchSub(nextDoc)
     }
@@ -382,7 +422,7 @@ function verifyLock() {
         }
     }).then(lock => {
         if(lock === true) {
-            alert("The file is locked by someone else! Your changes were NOT saved!")
+            displayErrorPopUp("The file is locked by someone else! Your changes were NOT saved! Please leave the page!")
             noSave = true
             window.location.href = "../Dashboard/Dashboard.html"
         }
