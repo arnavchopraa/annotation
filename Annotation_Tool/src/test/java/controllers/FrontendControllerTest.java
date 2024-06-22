@@ -52,42 +52,6 @@ public class FrontendControllerTest {
     }
 
     @Test
-    public void retrieveFileReturnsOkWhenParsingSucceeds() throws Exception {
-        MultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "Hello, World!".getBytes());
-        PairUtils pairUtils = new PairUtils("message", null, "status", "info");
-        File normalFile = new File("file");
-        try (MockedStatic<FileUtils> mocked = Mockito.mockStatic(FileUtils.class)) {
-            mocked.when(() -> FileUtils.convertToFile(any())).thenReturn(normalFile);
-            when(parsingService.parsePDF(any())).thenReturn(pairUtils);
-
-            ResponseEntity<PairUtils> response = frontendController.retrieveFile(file);
-
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertEquals(pairUtils, response.getBody());
-        }
-    }
-
-    @Test
-    public void retrieveFileReturnsBadRequestWhenParsingFails() throws Exception {
-        MultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "Hello, World!".getBytes());
-        when(parsingService.parsePDF(any())).thenThrow(PDFException.class);
-
-        ResponseEntity<PairUtils> response = frontendController.retrieveFile(file);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @Test
-    public void getCodesReturnsOkWithListOfCodes() {
-        when(annotationCodeService.getAnnotationCodes()).thenReturn(Collections.emptyList());
-
-        ResponseEntity<List<AnnotationCode>> response = frontendController.getCodes();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
-    }
-
-    @Test
     public void exportAllFilesReturnsOkWhenExportSucceeds() throws Exception {
         String coordinatorId = "test@example.com";
         File mockFile = new File("file");

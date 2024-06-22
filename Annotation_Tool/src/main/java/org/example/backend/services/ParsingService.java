@@ -214,49 +214,6 @@ public class ParsingService {
     }
 
     /**
-     * Recursively parses all pdfs in a given folder
-     *
-     * @param file the folder from which to parse the files
-     * @return the list of parsed texts from each file in the folder
-     * @throws PDFException if one of the files is not of type pdf
-     */
-    public List<PairUtils> parseFilesFromFolder(File file) throws PDFException, IOException {
-        List<PairUtils> parsed = new LinkedList<>();
-        if (file.isDirectory()) {
-            for (File f : Objects.requireNonNull(file.listFiles())) {
-                if (f.isDirectory())
-                    parsed.addAll(parseFilesFromFolder(f));
-                else if (f.isFile())
-                    parsed.add(parsePDF(f));
-            }
-        } else {
-            throw new IOException("Uploaded file is not a folder");
-        }
-
-        return parsed;
-    }
-
-    /**
-     * Parses all given pdfs
-     *
-     * @param files the files to parse
-     * @return the list of parsed texts from each file in the folder
-     * @throws PDFException if one of the files is not of type pdf
-     */
-    public List<PairUtils> parseFilesList(File... files) throws PDFException, IOException {
-        List<PairUtils> parsed = new LinkedList<>();
-
-        for (File f : files) {
-            if (f.isDirectory())
-                parsed.addAll(parseFilesFromFolder(f));
-            else if (f.isFile())
-                parsed.add(parsePDF(f));
-        }
-
-        return parsed;
-    }
-
-    /**
      * Retrieves the highlighted text from an annotation
      *
      * @param a    the annotation from which to retrieve the highlighted text
@@ -711,16 +668,11 @@ public class ParsingService {
         Rectangle2D.Float box = null;
         if (!isTwoColumn) {
             box = new Rectangle2D.Float(colOneStart, yStart, colOneEnd - colOneStart, 300);
-            System.out.println("case 0");
         } else if (xStart >= colTwoStart) {
             box = new Rectangle2D.Float(colTwoStart, yStart, colTwoEnd - colTwoStart, 300);
-            System.out.println("case 1");
         } else if (table.getBottomRightX() <= colOneEnd) {
-            System.out.println(colOneStart + " " + colOneEnd);
             box = new Rectangle2D.Float(colOneStart, yStart, colOneEnd - colOneStart, 300);
-            System.out.println("case 2");
         } else {
-            System.out.println("case 3");
             box = new Rectangle2D.Float(colOneStart, yStart, colTwoEnd - colOneStart, 300);
         }
         if (stripperByArea == null)

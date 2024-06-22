@@ -140,36 +140,6 @@ public class ParsingServiceTest {
         assertEquals(expected, ps.preprocess(input));
     }
 
-    @Tag("NeedsFix")
-    @Test
-    public void testParseMultipleFiles() {
-        String text = "This is a PDF file";
-        String content = "This is an annotation";
-        List<Float> emptyList = Collections.singletonList(0f);
-        Mockito.when(KMeans.clusterCoordinates(any(List.class))).thenReturn(List.of(emptyList, emptyList));
-        Mockito.when(Collections.min(any(List.class))).thenReturn(0f);
-        Mockito.when(Collections.max(any(List.class))).thenReturn(0f);
-        try {
-            PDDocument pdf = testUtils.generatePDF(text);
-            testUtils.addAnnotation(pdf, content);
-            File pdfFile = testUtils.convertPDFtoFile(pdf);
-            List<PairUtils> pairList = ps.parseFilesList(pdfFile, pdfFile);
-            PairUtils pair = pairList.get(0);
-            assertEquals(pair, pairList.get(1));
-            String res = pair.getText();
-            res = res.replaceAll("\r", "");
-            res = res.replaceAll("\n", "");
-            assertEquals(text, res);
-            String annot = pair.getAnnotations();
-            annot = annot.replaceAll("\r", "");
-            annot = annot.replaceAll("\n", "");
-            assertEquals("This is - " + content, annot);
-            assertEquals(pair.removeFileExtension(pdfFile.getName()), pair.getFileName());
-            pdfFile.deleteOnExit();
-        } catch (IOException | PDFException e) {
-            throw new RuntimeException("Test failed - Could not generate PDF");
-        }
-    }
     @Test
     public void testHyphenWindowsEOL() {
         String input = "This is a test -\r\nstring";
