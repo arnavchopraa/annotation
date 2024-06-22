@@ -3,7 +3,7 @@ let getName = localStorage.getItem('file')
 var allCodes
 const subBtn = document.querySelector('#submitFile')
 const arr = document.querySelectorAll('.admin')
-let newFile;
+var newFile;
 const prevButton = document.getElementById('prevFile')
 const nextButton = document.getElementById('nextFile')
 let token = localStorage.getItem('token')
@@ -11,6 +11,8 @@ let locked = false
 let noSave = false
 
 prevButton.addEventListener('click', function() {
+
+    updateDBFile()
 
     if(locked === true) {
           Swal.fire({
@@ -31,7 +33,6 @@ prevButton.addEventListener('click', function() {
               buttonsStyling: false,
           }).then(result => {
               if(result.isConfirmed) {
-                  unlockFile()
                   prev()
                   locked = false
               }
@@ -63,6 +64,7 @@ function prev() {
 }
 
 nextButton.addEventListener('click', function() {
+    updateDBFile()
 
     if(locked === true) {
         Swal.fire({
@@ -83,7 +85,6 @@ nextButton.addEventListener('click', function() {
               buttonsStyling: false,
           }).then(result => {
               if(result.isConfirmed) {
-                  unlockFile()
                   next()
                   locked = false
               }
@@ -131,6 +132,7 @@ function fetchSub(name) {
             throw new Error("Failed to retrieve current submission")
     })
     .then(submission => {
+        newFile = submission
         adobePreview(submission)
     })
     .catch(error => console.error(error))
@@ -242,7 +244,6 @@ function loadPassedFile() {
         }
     }).then(sub => {
         newFile = sub;
-        newFile.submitted = false
         adobePreview(sub)
     })
     .catch(error => console.error('Error fetching codes: ', error));
@@ -307,6 +308,8 @@ function adobePreview(passedFile) {
                 function (response) {
                     if(response.status == 200) {
                         console.log('GOOD JOB PAUL')
+                        unlockFile()
+                        locked = false
                     }
                 }
             ).catch(e => {
@@ -360,16 +363,19 @@ function adobePreview(passedFile) {
                         function (event) {
                             console.log(event.type, event.data)
                             if (event.type === 'ANNOTATION_ADDED') {
+                                newFile.submitted = false
                                 console.log("Annotation added\nAll annotations: ", annotationManager.getAnnotations())
                                 if(locked != true)
                                     verifyLock()
                                 replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_UPDATED') {
+                                newFile.submitted = false
                                 if(locked != true)
                                     verifyLock()
                                 console.log("Annotation updated\nAll annotations: ", annotationManager.getAnnotations())
                                 replaceCodes(annotationManager, event.data)
                             } else if (event.type === 'ANNOTATION_DELETED') {
+                                newFile.submitted = false
                                 if(locked != true)
                                     verifyLock()
                                 console.log("Annotation deleted\nAll annotations: ", annotationManager.getAnnotations())
@@ -534,3 +540,22 @@ document.getElementById('exportButton').addEventListener('click', function() {
     })
     .catch(error => console.error(error))
 });
+
+function updateDBFile() {
+    fetch(`http://localhost:8080/submissions/${getName}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newFile)
+    }).then(
+        function (response) {
+            if(response.status == 200) {
+                console.log("updated file")
+            }
+        }
+    ).catch(e => {
+        console.log(e)
+    })
+}
