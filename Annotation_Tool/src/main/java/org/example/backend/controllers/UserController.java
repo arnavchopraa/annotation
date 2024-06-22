@@ -250,7 +250,13 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        User updated = service.updateUser(user);
+        User updated;
+
+        try {
+            updated = service.updateUser(user);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(updated);
     }
 
