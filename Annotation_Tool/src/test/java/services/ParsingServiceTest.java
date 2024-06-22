@@ -127,4 +127,46 @@ public class ParsingServiceTest {
         assertEquals("text", ps.removeAbstract(text));
         assertEquals("text", ps.removeAbstract("text"));
     }
+
+    @Test
+    public void testNoHyphens() {
+        String input = "This is a test string";
+        String expected = "This is a test string";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenWindowsEOL() {
+        String input = "This is a test -\r\nstring";
+        String expected = "This is a test -\r\nstring";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenUnixEOL() {
+        String input = "This is a test -\nstring";
+        String expected = "This is a test -\nstring";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenMiddleOfText() {
+        String input = "This is a test -string";
+        String expected = "This is a test -string";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenAtEndOfText() {
+        String input = "This is a test -";
+        String expected = "This is a test -";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testMultipleHyphens() {
+        String input = "This -is -a -test -string\r\nand -another\r\ntest";
+        String expected = "This -is -a -test -string\r\nand -another\r\ntest";
+        assertEquals(expected, ps.preprocess(input));
+    }
 }

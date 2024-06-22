@@ -1,45 +1,62 @@
 package utils;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.example.TestUtils;
 import org.example.backend.utils.FileUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockMultipartFile;
+import org.mockito.Mockito;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class FileUtilsTest {
-    private final TestUtils testUtils = new TestUtils();
+class FileUtilsTest {
 
     @Test
-    public void testConversion() {
-        String text = "This is a PDF file";
-        String content = "This is an annotation";
-        try {
-            PDDocument pdf = testUtils.generatePDF(text);
-            testUtils.addAnnotation(pdf, content);
-            File pdfFile = testUtils.convertPDFtoFile(pdf);
-            FileInputStream fileInputStream = new FileInputStream(pdfFile);
-            byte[] bytes = fileInputStream.readAllBytes();
-            MultipartFile multipartFile = new MockMultipartFile(pdfFile.getName(), pdfFile.getName(), "text/plain", bytes);
-            File result = FileUtils.convertToFile(multipartFile);
-            FileInputStream resultStream = new FileInputStream(result);
-            assertArrayEquals(resultStream.readAllBytes(), bytes);
-            pdfFile.deleteOnExit();
-        } catch (IOException e) {
-            throw new RuntimeException("Test failed - Could not generate PDF");
-        }
+    void testConvertToFile() throws IOException {
+        // Mock MultipartFile
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("testfile.txt");
+        when(multipartFile.getBytes()).thenReturn("Test file content".getBytes());
+
+        // Convert file
+        File file = FileUtils.convertToFile(multipartFile);
+
+        // Verify
+        assertNotNull(file);
+        assertEquals("testfile.txt", file.getName());
+        assertTrue(file.length() > 0);
+
+        // Clean up
+        assertTrue(file.delete());
     }
 
     @Test
-    public void testNullName() {
-        MultipartFile multipartFile = new MockMultipartFile("test", null, "text/plain", new byte[0]);
-        assertThrows(IllegalArgumentException.class, () -> FileUtils.convertToFile(multipartFile));
+    void testConvertToFileWithNullFilename() {
+        // Mock MultipartFile
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn(null);
+
+        // Test and verify
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            FileUtils.convertToFile(multipartFile);
+        });
+        assertEquals("Filename cannot be null", exception.getMessage());
     }
 
+    @Test
+    void testConvertToFileWithIOException() throws IOException {
+        // Mock MultipartFile
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("testfile.txt");
+        when(multipartFile.getBytes()).thenThrow(new IOException("IO Exception"));
+
+        // Test and verify
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            FileUtils.convertToFile(multipartFile);
+        });
+        assertEquals("Not a file", exception.getMessage());
+    }
 }

@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 

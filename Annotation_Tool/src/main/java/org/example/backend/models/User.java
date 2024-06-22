@@ -1,7 +1,5 @@
 package org.example.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -211,5 +209,13 @@ public class User implements UserDetails{
 
     public boolean checkPassword(String password) {
         return Objects.equals(this.password, password);
+    }
+
+    /**
+     * Sets the username
+     * @param username
+     */
+    public void setUsername(String username) {
+        this.name = username;
     }
 }
