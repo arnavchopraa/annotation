@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -133,4 +135,41 @@ public class UserServiceTest {
         assertTrue(service.checkPassword(user, "password"));
     }
 
+    @Test
+    void testLoadUserByUsername() {
+        // Mock repository response
+        String username = "testUser";
+        User mockUser = new User();
+        mockUser.setId("1");
+        mockUser.setUsername(username);
+        mockUser.setPassword("password"); // Normally you wouldn't return the actual password
+        mockUser.setRole("ROLE_USER");
+
+        when(repo.findById(username)).thenReturn(Optional.of(mockUser));
+
+        // Call the method
+        UserDetails userDetails = service.loadUserByUsername(username);
+
+        // Assertions
+        assertNotNull(userDetails);
+        assertEquals("1", userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword()); // This should ideally not be the real password
+
+        verify(repo, times(1)).findById(username);
+    }
+
+    @Test
+    void testLoadUserByUsernameUserNotFound() {
+        // Mock repository response
+        String username = "nonExistingUser";
+        when(repo.findById(username)).thenReturn(Optional.empty());
+
+        // Call the method and assert exception
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
+                () -> service.loadUserByUsername(username));
+
+        assertEquals("User not found.", exception.getMessage());
+
+        verify(repo, times(1)).findById(username);
+    }
 }
