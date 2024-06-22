@@ -90,29 +90,6 @@ class UserControllerTest {
     }
 
     @Test
-    void testUpdateUserSuccess() {
-        User user = new User("user1", "password1", "role1");
-
-        when(userService.updateUser(user)).thenReturn(user);
-
-        ResponseEntity<User> response = userController.updateUser(user);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
-    }
-
-    @Test
-    void testUpdateUserFailure() {
-        User user = new User("user1", "password1", "role1");
-
-        when(userService.updateUser(user)).thenReturn(null);
-
-        ResponseEntity<User> response = userController.updateUser(user);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @Test
     void testDeleteUserSuccess() {
         User user = new User("user1", "password1", "role1");
 

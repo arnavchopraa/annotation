@@ -313,19 +313,19 @@ public class SubmissionController {
      * @return value of the lock
      */
     @Operation(summary = "Lock file",
-            parameters = {
-                @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                @ApiResponse(responseCode = "200",
-                        description = "Successfully locked file",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = Boolean.class)
-                        )
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully locked file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
                 ),
-                    @ApiResponse(responseCode = "404", description = "Did not find file")
-            }
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
     )
     @PutMapping("/{id}/lock")
     public ResponseEntity<Boolean> lockFile(@PathVariable("id") String id) {
@@ -343,19 +343,19 @@ public class SubmissionController {
      * @return value of the lock
      */
     @Operation(summary = "Unlock file",
-            parameters = {
-                    @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "Successfully unlocked file",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = Boolean.class)
-                            )
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Did not find file")
-            }
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully unlocked file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
+                ),
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
     )
     @PutMapping("/{id}/unlock")
     public ResponseEntity<Boolean> unlockFile(@PathVariable("id") String id) {
@@ -373,19 +373,19 @@ public class SubmissionController {
      * @return value of the lock field - either true or false
      */
     @Operation(summary = "Get lock of file",
-            parameters = {
-                    @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "Successfully retrieved lock status of file",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = Boolean.class)
-                            )
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Did not find file")
-            }
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved lock status of file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
+                ),
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
     )
     @GetMapping("/{id}/getLock")
     public ResponseEntity<Boolean> getLock(@PathVariable("id") String id) {
