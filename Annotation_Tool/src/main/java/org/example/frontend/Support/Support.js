@@ -13,7 +13,7 @@ dashboard.addEventListener('click', (e) => {
     if(role === 'student') {
         window.location.href = "../Student/Student.html";
     } else {
-        window.location.href = "../Annotation/Annotation.js";
+        window.location.href = "../Annotation/Annotation.html";
     }
 });
 
@@ -156,12 +156,78 @@ function faqOpenAndClose() {
 
 document.getElementById('contactSubmit').addEventListener('click', function () {
     // do backend logic here
+    const inboxAddress = '';
+
+    const cfName = document.getElementById('cFName')
+    const clName = document.getElementById('cLName')
+    const cEmail = document.getElementById('cEmail')
+    const cPhone = document.getElementById('cPhone')
+    const cMessage = document.getElementById('cPhone')
+    let fd = new FormData()
+    fd.append('firstName', cfName.value)
+    fd.append('lastName', clName.value)
+    fd.append('email', cEmail.value)
+    fd.append('phone', cPhone.value)
+    fd.append('message', cMessage.value)
     // if (response.ok)
-    displaySavedPopUp("Your message has been successfully submitted!");
+    fetch(`http://localhost:8080/frontend/sendMail/${inboxAddress}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: fd
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+        if (response.ok) {
+            // Parse the JSON response
+            displaySavedPopUp("Your message has been successfully submitted!");
+            cfName.value = '';
+            clName.value = '';
+            cEmail.value = '';
+            cPhone.value = '';
+            cMessage.value = '';
+        } else {
+            throw new Error("error")
+        }
+    })
+        .catch(e => {
+            displayErrorPopUp("Something went wrong. Try again.", false);
+        })
+
 });
 
 document.getElementById('feedbackSubmit').addEventListener('click', function () {
     // do backend logic here
+    // do backend logic here
+    const inboxAddress = '';
+
+    const fName = document.getElementById('fName')
+    const fRole = document.getElementById('fRole')
+    const fMessage = document.getElementById('fMessage')
+    let fd = new FormData()
+    fd.append('name', fName.value)
+    fd.append('role', fRole.value)
+    fd.append('message', fMessage.value)
     // if (response.ok)
-    displaySavedPopUp("Your feedback has been successfully submitted!");
+    fetch(`http://localhost:8080/frontend/sendFeedback/${inboxAddress}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: fd
+    }).then(response => {
+        // Check if the response is successful (status code 200)
+        if (response.ok) {
+            // Parse the JSON response
+            displaySavedPopUp("Your feedback has been successfully submitted!");
+            fName.value = '';
+            fRole.value = '';
+            fMessage.value = '';
+        } else {
+            throw new Error("error")
+        }
+    })
+        .catch(e => {
+            displayErrorPopUp("Something went wrong. Try again.", false);
+        })
 });
