@@ -97,8 +97,6 @@ public class UserController {
      *
      * @param authorizationHeader the authorization header, containing the token of the user
      * @return a page details entity containing the username and the role of the user
-     *
-     * !! - Please, better error handling :)
      */
     @Operation(summary = "Retrieve page details of authenticated user",
         parameters = {
@@ -157,23 +155,6 @@ public class UserController {
         }
         User user1 = service.addUser(user);
 
-        if (user1 == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(user1);
-    }
-
-    /**
-     * This method updates a user in the database
-     *
-     * @param user the user to be updated
-     * @return the user that was updated
-     *
-     * This is wrong again. No path parameter is specified. I will not be including this in the API spec.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        User user1 = service.updateUser(user);
         if (user1 == null) {
             return ResponseEntity.badRequest().build();
         }

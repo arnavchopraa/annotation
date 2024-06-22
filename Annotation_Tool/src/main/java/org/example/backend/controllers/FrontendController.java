@@ -45,39 +45,6 @@ public class FrontendController {
     }
 
     /**
-     * POST - Endpoint for retrieving pdf files from frontend, and passing them to backend
-     * @param file received file from frontend
-     * @return 200 OK - Parsed text from the file
-     *         400 Bad Request - Conversion to PDF fails
-     *         400 Bad Request - Parsing PDF fails
-     *
-     *         ??? - IS THIS UNUSED? if yes, please comment in the MR so I can delete it.
-     */
-    @PostMapping("/frontend")
-    public ResponseEntity<PairUtils> retrieveFile(@RequestParam("file") MultipartFile file) {
-        try {
-            File aPDFFile = FileUtils.convertToFile(file);
-            PairUtils result = parsingService.parsePDF(aPDFFile);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (PDFException e) {
-            return new ResponseEntity<>(new PairUtils(e.getMessage(), null, "invalid"), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * GET - Endpoint for retrieving the list of codes from the database
-     * @return 200 OK - List of codes
-     *
-     * ??? - IS THIS REPEATED with getAnnotationCodes() from AnnotationCodeController? if yes, please comment in the MR.
-     */
-    @GetMapping("/frontend/codes")
-    public ResponseEntity<List<AnnotationCode>> getCodes() {
-        return ResponseEntity.ok(Streamable.of(annotationCodeService.getAnnotationCodes()).toList());
-    }
-
-    /**
      * Endpoint used to download all files, for a coordinator, containing all modifications done on the frontend.
      *
      * @param id Email of the coordinator for which to download all assigned files.

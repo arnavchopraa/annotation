@@ -61,6 +61,9 @@ public class SubmissionDB {
     @Column(name="is_submitted")
     private boolean isSubmitted;
 
+    @Column(name="isLocked")
+    private boolean isLocked;
+
     /**
      * This method encrypts the submission to a supported format for JSON
      *
@@ -71,7 +74,8 @@ public class SubmissionDB {
         String base64File = null;
         if(submissionDB.getFileSubmission() == null)
             return new SubmissionDTO(submissionDB.getId(), null, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
-                    , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
+                    , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(),
+                    submissionDB.isSubmitted(), submissionDB.isLocked());
         try {
             byte[] fileByte = submissionDB.getFileSubmission().getBinaryStream().readAllBytes();
             base64File = Base64.getEncoder().encodeToString(fileByte);
@@ -79,7 +83,8 @@ public class SubmissionDB {
             e.printStackTrace();
         }
         return new SubmissionDTO(submissionDB.getId(), base64File, submissionDB.getGroupName(), submissionDB.getAssignedCoordinators()
-                , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(), submissionDB.isSubmitted());
+                , submissionDB.getFileName(), submissionDB.getLastSubmitted(), submissionDB.getLastEdited(),
+                submissionDB.isSubmitted(), submissionDB.isLocked());
     }
 
     /**
@@ -93,7 +98,7 @@ public class SubmissionDB {
         try {
             return new SubmissionDB(submissionDTO.getId(), new SerialBlob(decodedBytes), submissionDTO.getGroupName()
                     , submissionDTO.getAssignedCoordinators(), submissionDTO.getFileName(), submissionDTO.getLastSubmitted()
-                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted());
+                    , submissionDTO.getLastEdited(), submissionDTO.isSubmitted(), submissionDTO.isSubmitted());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -43,4 +43,39 @@ class UserTest {
         user.setRole("supervisor");
         assertEquals("supervisor", user.getRole());
     }
+
+    @Test
+    void allArgsContructor() {
+        User user = new User("email@email.com", "username", PasswordHashingService.hashPassword("password123"), "supervisor");
+        String newPass = null;
+        newPass = PasswordHashingService.hashPassword("password123");
+        assertEquals("email@email.com", user.getId());
+        assertEquals("username", user.getName());
+        assertEquals(newPass, user.getPassword());
+        assertEquals("supervisor", user.getRole());
+    }
+
+    @Test
+    void noArgsContructor() {
+        User user = new User();
+        assertNull(user.getName());
+        assertNull(user.getPassword());
+        assertNull(user.getRole());
+    }
+
+    @Test
+    void idGetterAndSetter() {
+        User user = new User();
+        user.setId("username");
+        assertEquals("username", user.getId());
+    }
+
+    @Test
+    void toStringTest() {
+        User user = new User("username", PasswordHashingService.hashPassword("password123"), "supervisor");
+        String newPass = null;
+        newPass = PasswordHashingService.hashPassword("password123");
+        assertEquals("User@" + Integer.toHexString(user.hashCode()) +
+                ":[email=null,name=username,password=" + newPass + ",role=supervisor]", user.toString());
+    }
 }
