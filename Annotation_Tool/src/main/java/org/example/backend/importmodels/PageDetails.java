@@ -1,17 +1,13 @@
 package org.example.backend.importmodels;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class PageDetails {
     private String email;
     private String role;
-
-
 }

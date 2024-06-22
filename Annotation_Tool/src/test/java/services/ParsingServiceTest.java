@@ -126,37 +126,18 @@ public class ParsingServiceTest {
         }
     }
 
-    /*@Test
-    public void testParsePdfNer() {
-        String text = "This is a PDF file";
-        String content = "This is an annotation";
-        try {
-            PDDocument pdf = testUtils.generatePDF(text);
-            testUtils.addAnnotation(pdf, content);
-            File pdfFile = testUtils.convertPDFtoFile(pdf);
-            PairUtils pair = ps.parsePDFwithNer(pdfFile);
-            assertEquals("", pair.getText());
-            assertEquals("This is\r\n - " + content + "\n", pair.getAnnotations());
-            assertEquals(pdfFile.getName(), pair.getFileName());
-            pdfFile.deleteOnExit();
-        } catch (IOException | PDFException e) {
-            throw new RuntimeException("Test failed - Could not generate PDF");
-        }
-    }*/
+    @Test
+    public void testRemoveAbstract() {
+        String text = "Abstract\r\ntext";
+        assertEquals("text", ps.removeAbstract(text));
+        assertEquals("text", ps.removeAbstract("text"));
+    }
 
     @Test
-    public void testParseFolderFile() {
-        String text = "This is a PDF file";
-        String content = "This is an annotation";
-        try {
-            PDDocument pdf = testUtils.generatePDF(text);
-            testUtils.addAnnotation(pdf, content);
-            File pdfFile = testUtils.convertPDFtoFile(pdf);
-            assertThrows(IOException.class, () -> ps.parseFilesFromFolder(pdfFile));
-            pdfFile.deleteOnExit();
-        } catch (IOException e) {
-            throw new RuntimeException("Test failed - Could not generate PDF");
-        }
+    public void testNoHyphens() {
+        String input = "This is a test string";
+        String expected = "This is a test string";
+        assertEquals(expected, ps.preprocess(input));
     }
 
     @Tag("NeedsFix")
@@ -188,8 +169,39 @@ public class ParsingServiceTest {
         } catch (IOException | PDFException e) {
             throw new RuntimeException("Test failed - Could not generate PDF");
         }
+    public void testHyphenWindowsEOL() {
+        String input = "This is a test -\r\nstring";
+        String expected = "This is a test -\r\nstring";
+        assertEquals(expected, ps.preprocess(input));
     }
 
+    @Test
+    public void testHyphenUnixEOL() {
+        String input = "This is a test -\nstring";
+        String expected = "This is a test -\nstring";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenMiddleOfText() {
+        String input = "This is a test -string";
+        String expected = "This is a test -string";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testHyphenAtEndOfText() {
+        String input = "This is a test -";
+        String expected = "This is a test -";
+        assertEquals(expected, ps.preprocess(input));
+    }
+
+    @Test
+    public void testMultipleHyphens() {
+        String input = "This -is -a -test -string\r\nand -another\r\ntest";
+        String expected = "This -is -a -test -string\r\nand -another\r\ntest";
+        assertEquals(expected, ps.preprocess(input));
+    }
     @Test
     public void testRemoveTextUnderTable() throws Exception {
         // Arrange

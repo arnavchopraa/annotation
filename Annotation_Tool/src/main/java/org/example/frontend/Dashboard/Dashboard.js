@@ -422,6 +422,16 @@ function sortSubmitted(order) {
                 return -1
             return 1
         }
+        if(a.submitted == true) {
+            if(order === 'asc')
+                return -1
+            return 1
+        }
+        if(b.submitted == true) {
+            if(order === 'asc')
+                return 1
+            return -1
+        }
         if(a.lastSubmitted < b.lastSubmitted) {
             if(order == 'asc') {
                 return 1;

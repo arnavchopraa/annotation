@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class ParsingService {
 
-    private AnnotationCodeService annotationCodeService;
+    private final AnnotationCodeService annotationCodeService;
 
     private String removedCaptions = "";
 

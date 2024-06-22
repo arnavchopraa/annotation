@@ -1,5 +1,6 @@
 package org.example.backend.utils;
 
+import lombok.Getter;
 import org.apache.pdfbox.contentstream.PDFGraphicsStreamEngine;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class PageDrawerUtils extends PDFGraphicsStreamEngine {
     private GeneralPath path = new GeneralPath();
+    @Getter
     private int clipWindingRule = -1;
     private List<Line> lines = new ArrayList<>();
     private float lastx;

@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.example.database.SubmissionRepository;
 import org.example.backend.services.SubmissionService;
 import org.example.backend.models.SubmissionDB;
 
@@ -40,12 +39,11 @@ public class SubmissionController {
     /**
      * Constructor for the SubmissionController
      *
-     * @param repo the repository for the submission
      * @param service the service for the submission
      * @param annotationCodeService the service for the annotation code
      */
     @Autowired
-    public SubmissionController(SubmissionRepository repo, SubmissionService service, AnnotationCodeService annotationCodeService){
+    public SubmissionController(SubmissionService service, AnnotationCodeService annotationCodeService){
         this.service = service;
         this.annotationCodeService = annotationCodeService;
         this.exportService = new ExportService(service, annotationCodeService);
@@ -173,23 +171,6 @@ public class SubmissionController {
     }
 
     /**
-     * This method adds a submission to the database
-     *
-     * @param submissionDTO the submission to be added
-     * @return the submission that was added
-     *
-     * This is just wrong. Maybe you wanted the path without {id}? I will not be including this in the API specification.
-     */
-    @PostMapping("/{id}")
-    public ResponseEntity<SubmissionDB> addSubmission(@RequestBody SubmissionDTO submissionDTO) {
-        SubmissionDB sub1 = service.addSubmission(SubmissionDB.convertToBlob(submissionDTO));
-        if (sub1 == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(sub1);
-    }
-
-    /**
      * This method updates a submission in the database
      *
      * @param id the id of the submission
@@ -260,6 +241,7 @@ public class SubmissionController {
     /**
      * This method searches for submissions containing some text in their email
      * which also have the given coordinator
+     *
      * @param text The text that must be in the submission email
      * @param coordinator The coordinator which the submissions must have
      * @return A list of submission which match this
@@ -290,11 +272,24 @@ public class SubmissionController {
 
     /**
      * This method returns all the documents that have been submitted sorted by the last submitted date
+     *
      * @param id the email of the coordinator
      * @return the submissions sorted by the last submitted date
-     *
-     * ??? - IS THIS UNUSED? if yes, please comment in the MR so I can delete this.
      */
+    @Operation(summary = "Recently submitted documents",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the coordinator", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved last submitted files",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = SubmissionDTO.class))
+                    )
+                )
+        }
+    )
     @GetMapping("/{id}/submitted")
     public ResponseEntity<List<SubmissionDTO>> getSubmittedSortedByLastSubmitted(@PathVariable("id") String id) {
         List<SubmissionDTO> submissions = service.getCoordinatorsSubmissions(id).stream()
@@ -315,6 +310,21 @@ public class SubmissionController {
      * @param id id of the file to be locked
      * @return value of the lock
      */
+    @Operation(summary = "Lock file",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully locked file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
+                ),
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
+    )
     @PutMapping("/{id}/lock")
     public ResponseEntity<Boolean> lockFile(@PathVariable("id") String id) {
         SubmissionDB updated = service.setIsLocked(id, true);
@@ -330,6 +340,21 @@ public class SubmissionController {
      * @param id id of the file to be unlocked
      * @return value of the lock
      */
+    @Operation(summary = "Unlock file",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully unlocked file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
+                ),
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
+    )
     @PutMapping("/{id}/unlock")
     public ResponseEntity<Boolean> unlockFile(@PathVariable("id") String id) {
         SubmissionDB updated = service.setIsLocked(id, false);
@@ -345,6 +370,21 @@ public class SubmissionController {
      * @param id id of the file to check
      * @return value of the lock field - either true or false
      */
+    @Operation(summary = "Get lock of file",
+        parameters = {
+            @Parameter(name = "id", description = "ID of the file", required = true, in = ParameterIn.PATH)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved lock status of file",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class)
+                    )
+                ),
+            @ApiResponse(responseCode = "404", description = "Did not find file")
+        }
+    )
     @GetMapping("/{id}/getLock")
     public ResponseEntity<Boolean> getLock(@PathVariable("id") String id) {
         SubmissionDB sub = service.getSubmission(id);

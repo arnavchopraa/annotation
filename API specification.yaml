@@ -367,6 +367,30 @@ paths:
                 $ref: "#/components/schemas/SubmissionDB"
         '404':
           description: "Could not find submission"
+  /submissions/{id}/submitted:
+    get:
+      summary: Get all submitted files
+      description: Retrieve all submissions that have been submitted by a coordinator, sorted by most recent.
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the coordinator who is responsible for those submissions"
+          required: true
+          schema:
+            type: string
+            example: "supervisor@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved recent submissions"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubmissionDTO"
   /submissions/export/{id}:
     get:
       summary: Download a submission
@@ -451,6 +475,80 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SubmissionDTO"
+  /submissions/{id}/lock:
+    put:
+      summary: Lock a file
+      description: Place a lock on a file, once a user starts editing it
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the file to be locked"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully locked file"
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        '404':
+          description: "File not found"
+  /submissions/{id}/unlock:
+    put:
+      summary: Unlock a file
+      description: Unlock a file, once a user is done editing it
+      tags:
+        - Submissions
+        - Supervisor
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the file to be unlocked"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully unlocked file"
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: false
+        '404':
+          description: "File not found"
+  /submissions/{id}/getLock:
+    get:
+      summary: Get the lock status of a file
+      description: Retrieve whether the file is locked, or not
+      tags:
+        - Submissions
+      parameters:
+        - in: path
+          name: "id"
+          description: "ID of the file"
+          required: true
+          schema:
+            type: string
+            example: "student@tudelft.nl"
+      responses:
+        '200':
+          description: "Successfully retrieved file status"
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: false
+        '404':
+          description: "File not found"
   /users:
     get:
       summary: Get all users
@@ -574,7 +672,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PasswordsRequest"
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                  example: "oldPass"
+                newPassword:
+                  type: string
+                  example: "newPass"
       responses:
         '200':
           description: "Successfully updated user's password"
@@ -687,15 +792,6 @@ components:
         is_locked:
           type: boolean
           example: false
-    PasswordsRequest:
-      type: object
-      properties:
-        oldPassword:
-          type: string
-          example: "oldPass"
-        newPassword:
-          type: string
-          example: "newPass"
   securitySchemes:
     bearerAuth:
       type: http

@@ -8,7 +8,7 @@ const token = localStorage.getItem('token');
     * Add the codes from the backend to the container and display them as buttons.
 **/
 function fetchCodes() {
-    var endpoint = "http://localhost:8080/frontend/codes";
+    var endpoint = "http://localhost:8080/annotations/";
     fetch(endpoint, {
         method: 'GET',
         headers: {
