@@ -1,18 +1,26 @@
 image: openjdk:19-slim
 
+services:
+  - name: selenium/standalone-chrome
+    alias: chrome
+
 stages:
   - build_annotation_tool
+  - startSpringBoot
+  - test
 
 variables:
   #Java_Home: "/usr/lib/jvm/java-8-openjdk-amd64"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GRADLE_USER_HOME: ".gradle" # Change the gradle user home to cache the gradle dependencies
-
+  SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"
+  PRING_JPA_SHOW_SQL: "true"
 cache:
   key: "$CI_COMMIT_REF_NAME"
   paths: # Cache the gradle dependencies
     - .gradle/wrapper 
     - .gradle/caches
+    - build/
 
 before_script:
   - echo "Setting up the environment..."
@@ -24,4 +32,31 @@ build_annotation_tool:
     - echo "Building the project..."
     - cd Annotation_Tool
     - chmod +x ./gradlew  # Change the gradlew file permission
-    - ./gradlew build # Build the project
+    - ./gradlew clean assemble # Build the project
+    - ./gradlew checkstyleMain checkstyleTest # Check the code style
+
+startSpringBoot:
+  stage: startSpringBoot
+  dependencies:
+        - build_annotation_tool
+  script:
+    - echo "Starting the Spring Boot application..."
+    - cd Annotation_Tool
+    - chmod +x ./gradlew  # Change the gradlew file permission
+    - ./gradlew bootRun & # Start the Spring Boot application in the background
+  timeout: 120s # Timeout for the Spring Boot application to start
+
+test:
+  stage: test
+  dependencies:
+    - startSpringBoot
+  script:
+    - echo "Running the tests..."
+    - cd Annotation_Tool
+    - chmod +x ./gradlew  # Change the gradlew file permission
+    - ./gradlew test jacocoTestReport -Dwebdriver.chrome.driver=drivers/Chrome/chromedriver.exe
+  artifacts:
+    paths:
+      - build/reports/jacoco/test/html/index.html # Save the test reports
+      - build/reports/jacoco/test/jacocoTestReport.xml
+  coverage: '/(\d+\.\d+|\d+)%/' # Regex to check the coverage

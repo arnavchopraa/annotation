@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Annotation_Tool.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Annotation_Tool.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Annotation_Tool.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Annotation_Tool.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/developing-an-annotation-tool-to-train-an-llm-to-provide-automatic-feedback-on-students-theses.iml" filepath="$PROJECT_DIR$/.idea/developing-an-annotation-tool-to-train-an-llm-to-provide-automatic-feedback-on-students-theses.iml" />
     </modules>
   </component>

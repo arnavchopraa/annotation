@@ -261,3 +261,8 @@ input[type="submit"] {
 .SSO-text {
     font-weight: 500;
 }
+
+.error-message {
+    font-size: 15px;
+    color: #A9554C;
+}
