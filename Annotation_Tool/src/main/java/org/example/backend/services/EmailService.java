@@ -7,8 +7,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class EmailService {
-    private final String username = "annotationtool.sp@gmail.com";
-    private final String password = "nvud kbac dhxp jyut";
+    private final String username = "e03601394@gmail.com";
+    private final String password = "wwoj svho qusj glrx";
     private final String host = "smtp.gmail.com";
     private final String port = "465";
 

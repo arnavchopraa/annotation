@@ -156,7 +156,7 @@ function faqOpenAndClose() {
 
 document.getElementById('contactSubmit').addEventListener('click', function () {
     // do backend logic here
-    const inboxAddress = '';
+    const inboxAddress = 'e03601394@gmail.com';
 
     const cfName = document.getElementById('cFName')
     const clName = document.getElementById('cLName')
@@ -174,24 +174,38 @@ document.getElementById('contactSubmit').addEventListener('click', function () {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
-        body: fd
+        body: JSON.stringify({
+            firstName: cfName.value,
+            lastName: clName.value,
+            email: cEmail.value,
+            phone: cPhone.value,
+            message: cMessage.value
+        })
     }).then(response => {
         // Check if the response is successful (status code 200)
         if (response.ok) {
             // Parse the JSON response
-            displaySavedPopUp("Your message has been successfully submitted!");
             cfName.value = '';
             clName.value = '';
             cEmail.value = '';
             cPhone.value = '';
             cMessage.value = '';
+            displaySavedPopUp("Your message has been successfully submitted!");
         } else {
-            throw new Error("error")
+            if(response.status === 400) {
+                throw new Error("400")
+            } else {
+                throw new Error("500")
+            }
         }
     })
         .catch(e => {
-            displayErrorPopUp("Something went wrong. Try again.", false);
+            if(e === 400)
+                displayErrorPopUp("Please fill all of the inputs of the form!", false);
+            else
+                displayErrorPopUp("Something went wrong. Please try again!", false);
         })
 
 });
@@ -199,7 +213,7 @@ document.getElementById('contactSubmit').addEventListener('click', function () {
 document.getElementById('feedbackSubmit').addEventListener('click', function () {
     // do backend logic here
     // do backend logic here
-    const inboxAddress = '';
+    const inboxAddress = 'e03601394@gmail.com';
 
     const fName = document.getElementById('fName')
     const fRole = document.getElementById('fRole')
@@ -208,26 +222,39 @@ document.getElementById('feedbackSubmit').addEventListener('click', function () 
     fd.append('name', fName.value)
     fd.append('role', fRole.value)
     fd.append('message', fMessage.value)
+    console.log(fd)
     // if (response.ok)
     fetch(`http://localhost:8080/frontend/sendFeedback/${inboxAddress}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
-        body: fd
+        body: JSON.stringify({
+            name: fName.value,
+            role: fRole.value,
+            message: fMessage.value
+        })
     }).then(response => {
         // Check if the response is successful (status code 200)
         if (response.ok) {
             // Parse the JSON response
-            displaySavedPopUp("Your feedback has been successfully submitted!");
             fName.value = '';
             fRole.value = '';
             fMessage.value = '';
+            return response.text();
         } else {
-            throw new Error("error")
+            if(response.status === 400) {
+                throw new Error("400")
+            } else {
+                throw new Error("500")
+            }
         }
-    })
+    }).then(txt => displaySavedPopUp("Your feedback has been successfully submitted!"))
         .catch(e => {
-            displayErrorPopUp("Something went wrong. Try again.", false);
+            if(e === 400)
+                displayErrorPopUp("Please fill all of the inputs of the form!", false);
+            else
+                displayErrorPopUp("Something went wrong. Please try again!", false);
         })
 });
