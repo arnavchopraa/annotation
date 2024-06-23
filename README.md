@@ -17,7 +17,7 @@ The first step of the tool involves logging in to your account. Since this is a 
 #### For supervisors
 
 The supervisors will have access to a dashboard, which should showcase all reports associated to them.
-    
+
 ![Dashboard](documents/Images/Dashboard.png)
 
 The supervisor can click on any of them, in which case they will be taken to the "Annotating page". There, they can freely modify the file and make use of feedback codes, which will always be displayed on the right. After they are done, they can choose to submit the file by clicking on the "Submit" button at the top of the page.
@@ -70,6 +70,8 @@ Our application makes use of some dependencies, which provide access to tools us
 **Mockito & JUnit:** These dependencies are crucial towards achieving testing goals in our application. We use JUnit to compare results of methods with an expected value. Mockito is used to mock the behaviour of certain classes, so that we have more control over which functionality we want to test.
 
 **JavaMail:** This dependency is used to ensure email functionality in our application. Currently, emailing credentials is very important, as it is the main way in which accounts are created for new users. Moreover, it ensures that we receive the contact and feedback forms.
+
+**Spring security, Spring web security, JWT Tokens:** These dependencies allow users to authenticate themselves before they are able to perform any requests to the server. This also allows them to have different authorities, depending on their role. 
 
 ## Support
 If you require any help using our website, please try accessing the pages related to instructions on the website, which feature detailed instructions on how to use the Annotation Tool. If you still require additional help, you can access the support page, which features a contact form and a section containing Frequently Answered Questions. We will ensure that we respond as soon as possible to your requests. If you require additional help, please feel free to reach out to us at e03601394@gmail.com.
