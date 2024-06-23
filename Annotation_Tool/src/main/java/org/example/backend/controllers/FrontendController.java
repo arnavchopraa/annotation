@@ -26,7 +26,7 @@ public class FrontendController {
     private final SubmissionService submissionService;
     private final ExportService exportService;
 
-    private final EmailService emailService;
+    private final EmailService emailService = new EmailService();
 
     /**
      * This method creates a new instance of the FrontendController class
@@ -40,7 +40,6 @@ public class FrontendController {
         this.annotationCodeService = annotationCodeService;
         this.submissionService = submissionService;
         this.exportService = new ExportService(submissionService, annotationCodeService);
-        this.emailService = new EmailService();
     }
 
     /**
